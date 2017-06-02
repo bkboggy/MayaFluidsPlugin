@@ -8,8 +8,8 @@
 class AdvectNode : public MPxNode
 {
 public:
-					AdvectNode();
-	virtual			~AdvectNode();
+	                AdvectNode();
+	virtual         ~AdvectNode();
 	static void*	creator();
 
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
