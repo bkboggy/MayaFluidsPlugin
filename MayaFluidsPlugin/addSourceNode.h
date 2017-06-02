@@ -12,8 +12,10 @@ public:
 	virtual         ~AddSourceNode();
 	static void*    creator();
 
+    static MStatus  initialize();
+
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus  initialize();
+    static void     add_source(int N, float* x, float* s, float dt);
 
 	static MTypeId  id;
 

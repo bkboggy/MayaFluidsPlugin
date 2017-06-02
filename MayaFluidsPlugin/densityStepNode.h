@@ -12,8 +12,10 @@ public:
 	virtual         ~DensityStepNode();
 	static void*    creator();
 
-	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus  initialize();
+    static MStatus  initialize();
+
+	virtual MStatus compute(const MPlug& plug, MDataBlock& data);	
+    static void     dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt);
 
 	static MTypeId  id;
 

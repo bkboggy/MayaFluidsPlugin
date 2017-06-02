@@ -12,8 +12,10 @@ public:
 	virtual         ~SetBoundariesNode();
 	static void*    creator();
 
+    static MStatus  initialize();
+
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus  initialize();
+    static void     set_bnd(int N, int b, float* x);
 
 	static MTypeId  id;
 

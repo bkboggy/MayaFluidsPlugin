@@ -12,8 +12,10 @@ public:
 	virtual         ~LinearSolveNode();
 	static void*    creator();
 
-	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus  initialize();
+    static MStatus  initialize();
+
+	virtual MStatus compute(const MPlug& plug, MDataBlock& data);	
+    static void     lin_solve(int N, int b, float* x, float* x0, float a, float c);
 
 	static MTypeId  id;
 

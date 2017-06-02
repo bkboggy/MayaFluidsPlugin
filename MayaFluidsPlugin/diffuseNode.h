@@ -12,8 +12,10 @@ public:
 	virtual         ~DiffuseNode();
 	static void*    creator();
 
+    static MStatus  initialize();
+
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus  initialize();
+    static void     diffuse(int N, int b, float* x, float* x0, float diff, float dt);
 
 	static MTypeId  id;
 

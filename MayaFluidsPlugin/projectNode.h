@@ -12,9 +12,11 @@ public:
 	virtual         ~ProjectNode();
 	static void*    creator();
 
-	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus  initialize();
+    static MStatus  initialize();
 
+	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
+    static void     project(int N, float* u, float* v, float* p, float* div);
+	
 	static MTypeId  id;
 
 	static MObject  aOutValue;

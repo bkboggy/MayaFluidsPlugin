@@ -12,8 +12,9 @@ public:
 	virtual			~GaussianNode();
 	static void*	creator();
 
+    static MStatus	initialize();
+
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus	initialize();
 
 	static MTypeId	id;
 

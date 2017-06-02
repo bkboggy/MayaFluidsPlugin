@@ -12,8 +12,10 @@ public:
 	virtual         ~VelocityStepNode();
 	static void*    creator();
 
+    static MStatus  initialize();
+
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus  initialize();
+    static void     vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt);
 
 	static MTypeId  id;
 

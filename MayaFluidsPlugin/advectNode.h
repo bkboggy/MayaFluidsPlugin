@@ -12,8 +12,10 @@ public:
 	virtual         ~AdvectNode();
 	static void*    creator();
 
-	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus  initialize();
+    static MStatus  initialize();
+
+	virtual MStatus compute(const MPlug& plug, MDataBlock& data);	
+    static void     advect(int N, int b, float* d, float* d0, float* u, float* v, float dt);
 
 	static MTypeId  id;
 
