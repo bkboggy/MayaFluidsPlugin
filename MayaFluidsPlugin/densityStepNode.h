@@ -8,25 +8,25 @@
 class DensityStepNode : public MPxNode
 {
 public:
-					DensityStepNode();
-	virtual			~DensityStepNode();
-	static void*	creator();
+	                DensityStepNode();
+	virtual         ~DensityStepNode();
+	static void*    creator();
 
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus	initialize();
+	static MStatus  initialize();
 
-	static MTypeId	id;
+	static MTypeId  id;
 
-	static MObject	aOutValue;
-	static MObject	aInValue;
+	static MObject  aOutValue;
+	static MObject  aInValue;
 	
-	static MObject	aN;
-	static MObject	ax;
-	static MObject	ax0;
-	static MObject	au;
-	static MObject	av;
-	static MObject	adiff;
-	static MObject	adt;
+	static MObject  aN;
+	static MObject  ax;
+	static MObject  ax0;
+	static MObject  au;
+	static MObject  av;
+	static MObject  adiff;
+	static MObject  adt;
 };
 
 #endif

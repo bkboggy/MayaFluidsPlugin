@@ -10,23 +10,23 @@ class AdvectNode : public MPxNode
 public:
 	                AdvectNode();
 	virtual         ~AdvectNode();
-	static void*	creator();
+	static void*    creator();
 
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus	initialize();
+	static MStatus  initialize();
 
-	static MTypeId	id;
+	static MTypeId  id;
 
-	static MObject	aOutValue;
-	static MObject	aInValue;
+	static MObject  aOutValue;
+	static MObject  aInValue;
 
-	static MObject	aN;
-	static MObject	ab;
-	static MObject	ad;
-	static MObject	ad0;
-	static MObject	au;
-	static MObject	av;
-	static MObject	adt;
+	static MObject  aN;
+	static MObject  ab;
+	static MObject  ad;
+	static MObject  ad0;
+	static MObject  au;
+	static MObject  av;
+	static MObject  adt;
 };
 
 #endif

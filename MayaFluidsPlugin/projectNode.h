@@ -8,23 +8,23 @@
 class ProjectNode : public MPxNode
 {
 public:
-					ProjectNode();
-	virtual			~ProjectNode();
-	static void*	creator();
+	                ProjectNode();
+	virtual         ~ProjectNode();
+	static void*    creator();
 
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus	initialize();
+	static MStatus  initialize();
 
-	static MTypeId	id;
+	static MTypeId  id;
 
-	static MObject	aOutValue;
-	static MObject	aInValue;
+	static MObject  aOutValue;
+	static MObject  aInValue;
 	
-	static MObject	aN;
-	static MObject	au;
-	static MObject	av;
-	static MObject	ap;
-	static MObject	adiv;
+	static MObject  aN;
+	static MObject  au;
+	static MObject  av;
+	static MObject  ap;
+	static MObject  adiv;
 };
 
 #endif

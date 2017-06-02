@@ -8,21 +8,21 @@
 class SetBoundariesNode : public MPxNode
 {
 public:
-					SetBoundariesNode();
-	virtual			~SetBoundariesNode();
-	static void*	creator();
+	                SetBoundariesNode();
+	virtual         ~SetBoundariesNode();
+	static void*    creator();
 
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus	initialize();
+	static MStatus  initialize();
 
-	static MTypeId	id;
+	static MTypeId  id;
 
-	static MObject	aOutValue;
-	static MObject	aInValue;
+	static MObject  aOutValue;
+	static MObject  aInValue;
 	
-	static MObject	aN;
-	static MObject	ab;
-	static MObject	ax;
+	static MObject  aN;
+	static MObject  ab;
+	static MObject  ax;
 };
 
 #endif

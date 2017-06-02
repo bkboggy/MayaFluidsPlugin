@@ -8,22 +8,22 @@
 class AddSourceNode : public MPxNode
 {
 public:
-					AddSourceNode();
-	virtual			~AddSourceNode();
-	static void*	creator();
+	                AddSourceNode();
+	virtual         ~AddSourceNode();
+	static void*    creator();
 
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus	initialize();
+	static MStatus  initialize();
 
-	static MTypeId	id;
+	static MTypeId  id;
 
-	static MObject	aOutValue;
-	static MObject	aInValue;
+	static MObject  aOutValue;
+	static MObject  aInValue;
 
-	static MObject	aN;
-	static MObject	ax;
-	static MObject	as;
-	static MObject	adt;
+	static MObject  aN;
+	static MObject  ax;
+	static MObject  as;
+	static MObject  adt;
 };
 
 #endif

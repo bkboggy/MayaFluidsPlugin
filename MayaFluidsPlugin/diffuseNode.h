@@ -8,24 +8,24 @@
 class DiffuseNode : public MPxNode
 {
 public:
-					DiffuseNode();
-	virtual			~DiffuseNode();
-	static void*	creator();
+	                DiffuseNode();
+	virtual         ~DiffuseNode();
+	static void*    creator();
 
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus	initialize();
+	static MStatus  initialize();
 
-	static MTypeId	id;
+	static MTypeId  id;
 
-	static MObject	aOutValue;
-	static MObject	aInValue;
+	static MObject  aOutValue;
+	static MObject  aInValue;
 	
-	static MObject	aN;
-	static MObject	ab;
-	static MObject	ax;
-	static MObject	ax0;
-	static MObject	adiff;
-	static MObject	adt;
+	static MObject  aN;
+	static MObject  ab;
+	static MObject  ax;
+	static MObject  ax0;
+	static MObject  adiff;
+	static MObject  adt;
 };
 
 #endif

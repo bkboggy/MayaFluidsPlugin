@@ -8,24 +8,24 @@
 class LinearSolveNode : public MPxNode
 {
 public:
-					LinearSolveNode();
-	virtual			~LinearSolveNode();
-	static void*	creator();
+	                LinearSolveNode();
+	virtual         ~LinearSolveNode();
+	static void*    creator();
 
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus	initialize();
+	static MStatus  initialize();
 
-	static MTypeId	id;
+	static MTypeId  id;
 
-	static MObject	aOutValue;
-	static MObject	aInValue;
+	static MObject  aOutValue;
+	static MObject  aInValue;
 	
-	static MObject	aN;
-	static MObject	ab;
-	static MObject	ax;
-	static MObject	ax0;
-	static MObject	aa;
-	static MObject	ac;
+	static MObject  aN;
+	static MObject  ab;
+	static MObject  ax;
+	static MObject  ax0;
+	static MObject  aa;
+	static MObject  ac;
 };
 
 #endif

@@ -8,25 +8,25 @@
 class VelocityStepNode : public MPxNode
 {
 public:
-					VelocityStepNode();
-	virtual			~VelocityStepNode();
-	static void*	creator();
+	                VelocityStepNode();
+	virtual         ~VelocityStepNode();
+	static void*    creator();
 
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
-	static MStatus	initialize();
+	static MStatus  initialize();
 
-	static MTypeId	id;
+	static MTypeId  id;
 
-	static MObject	aOutValue;
-	static MObject	aInValue;
+	static MObject  aOutValue;
+	static MObject  aInValue;
 	
-	static MObject	aN;
-	static MObject	au;
-	static MObject	av;
-	static MObject	au0;
-	static MObject	av0;
-	static MObject	avisc;
-	static MObject	adt;
+	static MObject  aN;
+	static MObject  au;
+	static MObject  av;
+	static MObject  au0;
+	static MObject  av0;
+	static MObject  avisc;
+	static MObject  adt;
 };
 
 #endif
