@@ -32,7 +32,12 @@ MStatus AddSourceNode::initialize()
 {
 	MStatus status;
 
-	// TODO: Add attribute initialization logic.
+	MFnNumericAttribute nAttr;
+
+	aOutValue = nAttr.create("outValue", "outValue", MFnNumericData::kFloat);
+	nAttr.setWritable(false);
+	nAttr.setStorable(false);
+	addAttribute(aOutValue);
 
 	return MS::kSuccess;
 }

@@ -19,7 +19,14 @@ public:
 
 	static MObject	aOutValue;
 	static MObject	aInValue;
-	// TODO: ADD PARAMETERS
+
+	static MObject	aN;
+	static MObject	ab;
+	static MObject	ad;
+	static MObject	ad0;
+	static MObject	au;
+	static MObject	av;
+	static MObject	adt;
 };
 
 #endif
