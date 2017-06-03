@@ -27,25 +27,25 @@ MStatus AddSourceNode::initialize()
     MFnTypedAttribute tAttr;
 
     aN = nAttr.create("N", "N", MFnNumericData::kInt);
-    nAttr.setWritable(false);
-    nAttr.setStorable(false);  
     addAttribute(aN);
     attributeAffects(aN, aNOut);
     attributeAffects(aN, axOut);
 
     adt = nAttr.create("dt", "dt", MFnNumericData::kFloat);
-    nAttr.setWritable(false);
-    nAttr.setStorable(false);
     addAttribute(adt);
     attributeAffects(adt, adtOut);
     attributeAffects(adt, axOut); 
 
-    ax = tAttr.create("x", "x", MFnTypedAttribute::kReset);
+    ax = tAttr.create("x", "x", MFnData::kFloatArray);
+    tAttr.isArray(&status);
+    CHECK_MSTATUS_AND_RETURN_IT(status)
     addAttribute(ax);
     attributeAffects(ax, axOut);  
 
-    as = tAttr.create("s", "s", MFnTypedAttribute::kReset);
+    as = tAttr.create("s", "s", MFnData::kFloatArray);
     tAttr.setKeyable(true);
+    tAttr.isArray(&status);
+    CHECK_MSTATUS_AND_RETURN_IT(status)
     addAttribute(as);
     attributeAffects(as, axOut); 
 
@@ -54,9 +54,11 @@ MStatus AddSourceNode::initialize()
     nAttr.setStorable(false);
     addAttribute(aNOut);
 
-    axOut = tAttr.create("xOut", "xOut", MFnTypedAttribute::kReset);
+    axOut = tAttr.create("xOut", "xOut", MFnData::kFloatArray);
     tAttr.setWritable(false);
     tAttr.setStorable(false);
+    tAttr.isArray(&status);
+    CHECK_MSTATUS_AND_RETURN_IT(status)
     addAttribute(axOut);
 
     adtOut = nAttr.create("dtOut", "dtOut", MFnNumericData::kFloat);
@@ -80,9 +82,11 @@ MStatus AddSourceNode::compute(const MPlug& plug, MDataBlock& data)
     CHECK_MSTATUS_AND_RETURN_IT(status);
     float dtValue = data.inputValue(adt, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    //xValue =
+    MArrayDataHandle xValue = data.inputArrayValue(ax, &status)
+        .inputArrayValue();
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    //sValue =
+    MArrayDataHandle sValue = data.inputArrayValue(as, &status)
+        .inputArrayValue();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     int size = (NValue + 2)*(NValue + 2);
