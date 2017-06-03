@@ -3,6 +3,7 @@
 
 #include <maya/MPxNode.h>
 #include <maya/MFnNumericAttribute.h>
+#include <maya/MFnTypedAttribute.h>
 #include <math.h>
 
 class AddSourceNode : public MPxNode
@@ -19,13 +20,14 @@ public:
 
 	static MTypeId  id;
 
-	static MObject  aOutValue;
-	static MObject  aInValue;
-
 	static MObject  aN;
 	static MObject  ax;
 	static MObject  as;
 	static MObject  adt;
+
+    static MObject aNOut;
+    static MObject axOut;
+    static MObject adtOut;
 };
 
 #endif

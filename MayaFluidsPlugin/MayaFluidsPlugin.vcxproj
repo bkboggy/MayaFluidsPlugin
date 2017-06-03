@@ -33,7 +33,6 @@
     <ClCompile Include="advectNode.cpp" />
     <ClCompile Include="densityStepNode.cpp" />
     <ClCompile Include="diffuseNode.cpp" />
-    <ClCompile Include="gaussianNode.cpp" />
     <ClCompile Include="linearSolveNode.cpp" />
     <ClCompile Include="pluginMain.cpp" />
     <ClCompile Include="projectNode.cpp" />
