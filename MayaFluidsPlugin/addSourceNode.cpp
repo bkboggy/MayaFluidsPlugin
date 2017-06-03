@@ -38,6 +38,30 @@ MStatus AddSourceNode::compute(const MPlug& plug, MDataBlock& data)
 
 	// TODO: Add compute logic.
 
+    /*
+    float inputValue = data.inputValue(aInValue, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    float magnitude = data.inputValue(aMagnitude, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    float mean = data.inputValue(aMean, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    float variance = data.inputValue(aVariance, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    if (variance <= 0.0f)
+    {
+        variance = 0.00001f;
+    }
+
+    float xMinusB = inputValue - mean;
+    float output = magnitude * exp(-(xMinusB*xMinusB) / (2.0f*variance));
+
+    MDataHandle hOutput = data.outputValue(aOutValue, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.setFloat(output);
+    hOutput.setClean();
+    */
+
 	return MS::kSuccess;
 }
 

@@ -1,19 +1,17 @@
-#include "gaussianNode.h"
+#include "addSourceNode.h"
+#include "advectNode.h"
+#include "densityStepNode.h"
+#include "diffuseNode.h"
+#include "linearSolveNode.h"
+#include "projectNode.h"
+#include "setBoundariesNode.h"
+#include "velocityStepNode.h"
 #include <maya/MFnPlugin.h>
 
 MStatus initializePlugin(MObject obj)
 {
 	MStatus status;
 	MFnPlugin fnPlugin(obj, "Bogdan Kravtsov & Raymond Aceves", "1.0.0", "Any");
-
-	/*
-	status = fnPlugin.registerNode(
-		"gaussian",
-		GaussianNode::id,
-		GaussianNode::creator,
-		GaussianNode::initialize);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
-	*/
 
 	status = fnPlugin.registerNode(
 		"fd_addSource",
@@ -76,13 +74,6 @@ MStatus initializePlugin(MObject obj)
 
 MStatus uninitializePlugin(MObject obj)
 {
-	/*
-	MStatus status;
-	MFnPlugin fnPlugin(obj);
-	status = fnPlugin.deregisterNode(GaussianNode::id);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
-	*/
-
 	MStatus status;
 	MFnPlugin fnPlugin(obj);
 	status = fnPlugin.deregisterNode(AddSourceNode::id);

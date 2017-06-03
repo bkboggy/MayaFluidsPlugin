@@ -23,7 +23,6 @@
     <ClInclude Include="advectNode.h" />
     <ClInclude Include="densityStepNode.h" />
     <ClInclude Include="diffuseNode.h" />
-    <ClInclude Include="gaussianNode.h" />
     <ClInclude Include="linearSolveNode.h" />
     <ClInclude Include="projectNode.h" />
     <ClInclude Include="setBoundariesNode.h" />

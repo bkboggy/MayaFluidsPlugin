@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GaussianNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="addSourceNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
