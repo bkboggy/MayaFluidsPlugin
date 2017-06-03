@@ -4,6 +4,10 @@ MTypeId AddSourceNode::id(0x00000031);
 
 MObject AddSourceNode::aOutValue;
 MObject AddSourceNode::aInValue;
+MObject AddSourceNode::aN;
+MObject AddSourceNode::ax;
+MObject AddSourceNode::as;
+MObject AddSourceNode::adt;
 
 AddSourceNode::AddSourceNode() {}
 
@@ -12,6 +16,15 @@ AddSourceNode::~AddSourceNode() {}
 void* AddSourceNode::creator()
 {
 	return new AddSourceNode();
+}
+
+MStatus AddSourceNode::initialize()
+{
+    MStatus status;
+
+    // TODO: Add attribute initialization logic.
+
+    return MS::kSuccess;
 }
 
 MStatus AddSourceNode::compute(const MPlug& plug, MDataBlock& data)
@@ -28,16 +41,13 @@ MStatus AddSourceNode::compute(const MPlug& plug, MDataBlock& data)
 	return MS::kSuccess;
 }
 
-MStatus AddSourceNode::initialize()
+void AddSourceNode::add_source(int N, float* x, float* s, float dt)
 {
-	MStatus status;
+    // Size of the simluation, including the boundaries.
+    int size = (N + 2)*(N + 2);
 
-	MFnNumericAttribute nAttr;
-
-	aOutValue = nAttr.create("outValue", "outValue", MFnNumericData::kFloat);
-	nAttr.setWritable(false);
-	nAttr.setStorable(false);
-	addAttribute(aOutValue);
-
-	return MS::kSuccess;
+    for (int i = 0; i < size; i++)
+    {
+        x[i] += dt*s[i];
+    }
 }

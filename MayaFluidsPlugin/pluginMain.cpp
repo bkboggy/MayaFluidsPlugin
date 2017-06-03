@@ -4,7 +4,7 @@
 MStatus initializePlugin(MObject obj)
 {
 	MStatus status;
-	MFnPlugin fnPlugin(obj, "Bogdan Kravtsov", "1.0.0", "Any");
+	MFnPlugin fnPlugin(obj, "Bogdan Kravtsov & Raymond Aceves", "1.0.0", "Any");
 
 	/*
 	status = fnPlugin.registerNode(
