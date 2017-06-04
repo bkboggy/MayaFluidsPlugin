@@ -1,3 +1,4 @@
+#include "initializeDomainNode.h"
 #include "addSourceNode.h"
 #include "advectNode.h"
 #include "densityStepNode.h"
@@ -12,6 +13,12 @@ MStatus initializePlugin(MObject obj)
 {
 	MStatus status;
 	MFnPlugin fnPlugin(obj, "Bogdan Kravtsov & Raymond Aceves", "1.0.0", "Any");
+
+    status = fnPlugin.registerNode(
+        "fd_initializeDomain",
+        InitializeDomainNode::id,
+        InitializeDomainNode::creator,
+        InitializeDomainNode::initialize);
 
 	status = fnPlugin.registerNode(
 		"fd_addSource",
@@ -77,29 +84,32 @@ MStatus uninitializePlugin(MObject obj)
 	MStatus status;
 	MFnPlugin fnPlugin(obj);
 
-	status = fnPlugin.deregisterNode(AddSourceNode::id);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = fnPlugin.deregisterNode(VelocityStepNode::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	status = fnPlugin.deregisterNode(SetBoundariesNode::id);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = fnPlugin.deregisterNode(DensityStepNode::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	status = fnPlugin.deregisterNode(LinearSolveNode::id);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = fnPlugin.deregisterNode(ProjectNode::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    status = fnPlugin.deregisterNode(AdvectNode::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    	
 	status = fnPlugin.deregisterNode(DiffuseNode::id);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
+	
+    status = fnPlugin.deregisterNode(LinearSolveNode::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	status = fnPlugin.deregisterNode(AdvectNode::id);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = fnPlugin.deregisterNode(SetBoundariesNode::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	status = fnPlugin.deregisterNode(ProjectNode::id);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = fnPlugin.deregisterNode(AddSourceNode::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	status = fnPlugin.deregisterNode(DensityStepNode::id);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
-
-	status = fnPlugin.deregisterNode(VelocityStepNode::id);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = fnPlugin.deregisterNode(InitializeDomainNode::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
 	return MS::kSuccess;
 }

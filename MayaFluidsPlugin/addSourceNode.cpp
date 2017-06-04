@@ -2,14 +2,12 @@
 
 MTypeId AddSourceNode::id(0x00000031);
 
+MObject AddSourceNode::axOut;
+
 MObject AddSourceNode::aN;
 MObject AddSourceNode::ax;
 MObject AddSourceNode::as;
 MObject AddSourceNode::adt;
-
-MObject AddSourceNode::aNOut;
-MObject AddSourceNode::axOut;
-MObject AddSourceNode::adtOut;
 
 AddSourceNode::AddSourceNode() {}
 
@@ -25,46 +23,33 @@ MStatus AddSourceNode::initialize()
     MStatus status;
     MFnNumericAttribute nAttr;
     MFnTypedAttribute tAttr;
+    
+    axOut = tAttr.create("xOut", "xOut", MFnData::kDoubleArray);
+    tAttr.setWritable(false);
+    tAttr.setStorable(false);
+    addAttribute(axOut);
 
     aN = nAttr.create("N", "N", MFnNumericData::kInt);
+    nAttr.setKeyable(true);
     addAttribute(aN);
-    attributeAffects(aN, aNOut);
     attributeAffects(aN, axOut);
 
-    adt = nAttr.create("dt", "dt", MFnNumericData::kFloat);
+    adt = nAttr.create("dt", "dt", MFnNumericData::kDouble);
+    nAttr.setKeyable(true);
     addAttribute(adt);
-    attributeAffects(adt, adtOut);
     attributeAffects(adt, axOut); 
 
-    ax = tAttr.create("x", "x", MFnData::kFloatArray);
+    ax = tAttr.create("x", "x", MFnData::kDoubleArray);
+    tAttr.setKeyable(true);
     tAttr.isArray(&status);
     CHECK_MSTATUS_AND_RETURN_IT(status)
     addAttribute(ax);
     attributeAffects(ax, axOut);  
 
-    as = tAttr.create("s", "s", MFnData::kFloatArray);
+    as = tAttr.create("s", "s", MFnData::kDoubleArray);
     tAttr.setKeyable(true);
-    tAttr.isArray(&status);
-    CHECK_MSTATUS_AND_RETURN_IT(status)
     addAttribute(as);
     attributeAffects(as, axOut); 
-
-    aNOut = nAttr.create("NOut", "NOut", MFnNumericData::kInt);
-    nAttr.setWritable(false);
-    nAttr.setStorable(false);
-    addAttribute(aNOut);
-
-    axOut = tAttr.create("xOut", "xOut", MFnData::kFloatArray);
-    tAttr.setWritable(false);
-    tAttr.setStorable(false);
-    tAttr.isArray(&status);
-    CHECK_MSTATUS_AND_RETURN_IT(status)
-    addAttribute(axOut);
-
-    adtOut = nAttr.create("dtOut", "dtOut", MFnNumericData::kFloat);
-    nAttr.setWritable(false);
-    nAttr.setStorable(false);
-    addAttribute(adtOut);
 
     return MS::kSuccess;
 }
@@ -73,41 +58,41 @@ MStatus AddSourceNode::compute(const MPlug& plug, MDataBlock& data)
 {
 	MStatus status;
 
-    if (plug != aNOut && plug != axOut && plug != adtOut)
+    if (plug != axOut)
 	{
 		return MS::kUnknownParameter;
 	}
 
     int NValue = data.inputValue(aN, &status).asInt();
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    float dtValue = data.inputValue(adt, &status).asFloat();
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-    MArrayDataHandle xValue = data.inputArrayValue(ax, &status)
-        .inputArrayValue();
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-    MArrayDataHandle sValue = data.inputArrayValue(as, &status)
-        .inputArrayValue();
+
+    float dtValue = data.inputValue(adt, &status).asDouble();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    MDataHandle xDataHandle = data.inputValue(ax, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    MFnDoubleArrayData xFnData(xDataHandle.data());
+    MDoubleArray xArr = xFnData.array();
+
+    MDataHandle sDataHandle = data.inputValue(as, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    MFnDoubleArrayData sFnData(xDataHandle.data());
+    MDoubleArray sArr = sFnData.array();
+ 
+    MDoubleArray xArrOut;
+  
     int size = (NValue + 2)*(NValue + 2);
     for (int i = 0; i < size; i++)
     {
-        //xValue[i] += dtValue*sValue[i];
-    }
+        xArrOut[i] += dtValue*sArr[i];
+    }  
 
-    MDataHandle hOutput = data.outputValue(aNOut, &status);
+    MDataHandle hOutput = data.outputValue(axOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    hOutput.setInt(NValue);
-    hOutput.setClean();
-
-    MArrayDataHandle hArrOutput = data.outputArrayValue(axOut, &status);
+    MFnDoubleArrayData xFnDataOut;
+    MObject xOut = xFnDataOut.create(xArrOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    //hArrOutput.set(xValue);
-    hArrOutput.setClean();
-
-    hOutput = data.outputValue(adtOut, &status);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-    hOutput.setFloat(dtValue);
+    hOutput.set(xOut);
     hOutput.setClean();
 
 	return MS::kSuccess;

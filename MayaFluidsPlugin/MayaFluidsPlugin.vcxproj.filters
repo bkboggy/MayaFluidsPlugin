@@ -39,6 +39,9 @@
     <ClInclude Include="velocityStepNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="initializeDomainNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pluginMain.cpp">
@@ -66,6 +69,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VelocityStepNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="initializeDomainNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
