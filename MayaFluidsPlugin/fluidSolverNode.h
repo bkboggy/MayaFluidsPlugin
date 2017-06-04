@@ -45,6 +45,10 @@ public:
     // Inputs.
     static MObject aN;
     static MObject aDt;
+    static MObject aDiff;
+    static MObject aVisc;
+    static MObject aForce;
+    static MObject aSource;
     static MObject aX0;
     static MObject aU0;
     static MObject aV0;
