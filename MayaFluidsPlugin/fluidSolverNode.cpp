@@ -173,7 +173,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     float source = data.inputValue(aSource, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    MDataHandle arrDataHandle = data.outputValue(aU0, &status);
+    MDataHandle arrDataHandle = data.inputValue(aU0, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData u0FnData(arrDataHandle.data());
     MFloatArray u0Arr = u0FnData.array();
@@ -183,7 +183,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     u0Arr.get(u0);
     u0Arr.get(u);
 
-    arrDataHandle = data.outputValue(aV0, &status);
+    arrDataHandle = data.inputValue(aV0, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData v0FnData(arrDataHandle.data());
     MFloatArray v0Arr = v0FnData.array();
@@ -193,7 +193,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     v0Arr.get(v0);
     v0Arr.get(v);
 
-    arrDataHandle = data.outputValue(aW0, &status);
+    arrDataHandle = data.inputValue(aW0, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData w0FnData(arrDataHandle.data());
     MFloatArray w0Arr = w0FnData.array();
@@ -203,7 +203,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     w0Arr.get(w0);
     w0Arr.get(w);
 
-    arrDataHandle = data.outputValue(aX0, &status);
+    arrDataHandle = data.inputValue(aX0, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData x0FnData(arrDataHandle.data());
     MFloatArray x0Arr = x0FnData.array();
@@ -231,6 +231,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOut.set(dataOut);
     hOut.setClean();
+    data.setClean(plug);
 
     hOut = data.outputValue(aV, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -238,6 +239,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOut.set(dataOut);
     hOut.setClean();
+    data.setClean(plug);
 
     hOut = data.outputValue(aW, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -245,6 +247,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOut.set(dataOut);
     hOut.setClean();
+    data.setClean(plug);
 
     hOut = data.outputValue(aX, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -252,8 +255,8 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOut.set(dataOut);
     hOut.setClean();
+    data.setClean(plug);
 
-    //data.setClean(plug);
     return MS::kSuccess;
 }
 
