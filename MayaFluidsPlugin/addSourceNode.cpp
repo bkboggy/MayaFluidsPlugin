@@ -41,8 +41,6 @@ MStatus AddSourceNode::initialize()
 
     ax = tAttr.create("x", "x", MFnData::kDoubleArray);
     tAttr.setKeyable(true);
-    tAttr.isArray(&status);
-    CHECK_MSTATUS_AND_RETURN_IT(status)
     addAttribute(ax);
     attributeAffects(ax, axOut);  
 
@@ -66,7 +64,7 @@ MStatus AddSourceNode::compute(const MPlug& plug, MDataBlock& data)
     int NValue = data.inputValue(aN, &status).asInt();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float dtValue = data.inputValue(adt, &status).asDouble();
+    double dtValue = data.inputValue(adt, &status).asDouble();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     MDataHandle xDataHandle = data.inputValue(ax, &status);
@@ -79,12 +77,12 @@ MStatus AddSourceNode::compute(const MPlug& plug, MDataBlock& data)
     MFnDoubleArrayData sFnData(xDataHandle.data());
     MDoubleArray sArr = sFnData.array();
  
-    MDoubleArray xArrOut;
+    MDoubleArray xArrOut(xArr);
   
     int size = (NValue + 2)*(NValue + 2);
     for (int i = 0; i < size; i++)
     {
-        xArrOut[i] += dtValue*sArr[i];
+        xArrOut.set(dtValue*sArr[i], i);
     }  
 
     MDataHandle hOutput = data.outputValue(axOut, &status);

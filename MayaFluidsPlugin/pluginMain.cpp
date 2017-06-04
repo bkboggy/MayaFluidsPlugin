@@ -1,3 +1,7 @@
+#include "fluidSolverNode.h"
+#include <maya/MFnPlugin.h>
+
+/*
 #include "initializeDomainNode.h"
 #include "addSourceNode.h"
 #include "advectNode.h"
@@ -7,12 +11,20 @@
 #include "projectNode.h"
 #include "setBoundariesNode.h"
 #include "velocityStepNode.h"
-#include <maya/MFnPlugin.h>
+*/
 
 MStatus initializePlugin(MObject obj)
 {
 	MStatus status;
 	MFnPlugin fnPlugin(obj, "Bogdan Kravtsov & Raymond Aceves", "1.0.0", "Any");
+
+    status = fnPlugin.registerNode(
+        "fluidSolverNode",
+        FluidSolverNode::id,
+        FluidSolverNode::creator,
+        FluidSolverNode::initialize);
+
+    /*
 
     status = fnPlugin.registerNode(
         "fd_initializeDomain",
@@ -75,6 +87,7 @@ MStatus initializePlugin(MObject obj)
 		VelocityStepNode::creator,
 		VelocityStepNode::initialize);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
+    */
 
 	return MS::kSuccess;
 }
@@ -84,6 +97,10 @@ MStatus uninitializePlugin(MObject obj)
 	MStatus status;
 	MFnPlugin fnPlugin(obj);
 
+    status = fnPlugin.deregisterNode(FluidSolverNode::id);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    /*
     status = fnPlugin.deregisterNode(VelocityStepNode::id);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
@@ -110,6 +127,7 @@ MStatus uninitializePlugin(MObject obj)
 
     status = fnPlugin.deregisterNode(InitializeDomainNode::id);
     CHECK_MSTATUS_AND_RETURN_IT(status);
+    */
 
 	return MS::kSuccess;
 }

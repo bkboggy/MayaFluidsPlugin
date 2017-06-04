@@ -42,6 +42,9 @@
     <ClInclude Include="initializeDomainNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="fluidSolverNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pluginMain.cpp">
@@ -72,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="initializeDomainNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fluidSolverNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

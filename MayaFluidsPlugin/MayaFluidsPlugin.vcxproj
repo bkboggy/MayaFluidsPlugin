@@ -23,6 +23,7 @@
     <ClInclude Include="advectNode.h" />
     <ClInclude Include="densityStepNode.h" />
     <ClInclude Include="diffuseNode.h" />
+    <ClInclude Include="fluidSolverNode.h" />
     <ClInclude Include="initializeDomainNode.h" />
     <ClInclude Include="linearSolveNode.h" />
     <ClInclude Include="projectNode.h" />
@@ -34,6 +35,7 @@
     <ClCompile Include="advectNode.cpp" />
     <ClCompile Include="densityStepNode.cpp" />
     <ClCompile Include="diffuseNode.cpp" />
+    <ClCompile Include="fluidSolverNode.cpp" />
     <ClCompile Include="initializeDomainNode.cpp" />
     <ClCompile Include="linearSolveNode.cpp" />
     <ClCompile Include="pluginMain.cpp" />
