@@ -19,31 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="addSourceNode.h" />
-    <ClInclude Include="advectNode.h" />
-    <ClInclude Include="densityStepNode.h" />
-    <ClInclude Include="diffuseNode.h" />
     <ClInclude Include="fluidDomainNode.h" />
     <ClInclude Include="fluidSolverNode.h" />
-    <ClInclude Include="initializeDomainNode.h" />
-    <ClInclude Include="linearSolveNode.h" />
-    <ClInclude Include="projectNode.h" />
-    <ClInclude Include="setBoundariesNode.h" />
-    <ClInclude Include="velocityStepNode.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="addSourceNode.cpp" />
-    <ClCompile Include="advectNode.cpp" />
-    <ClCompile Include="densityStepNode.cpp" />
-    <ClCompile Include="diffuseNode.cpp" />
     <ClCompile Include="fluidDomainNode.cpp" />
     <ClCompile Include="fluidSolverNode.cpp" />
-    <ClCompile Include="initializeDomainNode.cpp" />
-    <ClCompile Include="linearSolveNode.cpp" />
     <ClCompile Include="pluginMain.cpp" />
-    <ClCompile Include="projectNode.cpp" />
-    <ClCompile Include="setBoundariesNode.cpp" />
-    <ClCompile Include="velocityStepNode.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

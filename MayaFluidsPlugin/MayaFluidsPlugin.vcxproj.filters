@@ -13,41 +13,8 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Old">
-      <UniqueIdentifier>{2bf0a6ef-e825-4ab7-ac73-44e6fba8b0ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Old">
-      <UniqueIdentifier>{66bd0849-8aab-41b5-86f9-14fa2d55db42}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="diffuseNode.h">
-      <Filter>Header Files\Old</Filter>
-    </ClInclude>
-    <ClInclude Include="addSourceNode.h">
-      <Filter>Header Files\Old</Filter>
-    </ClInclude>
-    <ClInclude Include="advectNode.h">
-      <Filter>Header Files\Old</Filter>
-    </ClInclude>
-    <ClInclude Include="densityStepNode.h">
-      <Filter>Header Files\Old</Filter>
-    </ClInclude>
-    <ClInclude Include="velocityStepNode.h">
-      <Filter>Header Files\Old</Filter>
-    </ClInclude>
-    <ClInclude Include="initializeDomainNode.h">
-      <Filter>Header Files\Old</Filter>
-    </ClInclude>
-    <ClInclude Include="linearSolveNode.h">
-      <Filter>Header Files\Old</Filter>
-    </ClInclude>
-    <ClInclude Include="projectNode.h">
-      <Filter>Header Files\Old</Filter>
-    </ClInclude>
-    <ClInclude Include="setBoundariesNode.h">
-      <Filter>Header Files\Old</Filter>
-    </ClInclude>
     <ClInclude Include="fluidSolverNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -58,33 +25,6 @@
   <ItemGroup>
     <ClCompile Include="fluidSolverNode.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="initializeDomainNode.cpp">
-      <Filter>Source Files\Old</Filter>
-    </ClCompile>
-    <ClCompile Include="linearSolveNode.cpp">
-      <Filter>Source Files\Old</Filter>
-    </ClCompile>
-    <ClCompile Include="projectNode.cpp">
-      <Filter>Source Files\Old</Filter>
-    </ClCompile>
-    <ClCompile Include="setBoundariesNode.cpp">
-      <Filter>Source Files\Old</Filter>
-    </ClCompile>
-    <ClCompile Include="addSourceNode.cpp">
-      <Filter>Source Files\Old</Filter>
-    </ClCompile>
-    <ClCompile Include="advectNode.cpp">
-      <Filter>Source Files\Old</Filter>
-    </ClCompile>
-    <ClCompile Include="densityStepNode.cpp">
-      <Filter>Source Files\Old</Filter>
-    </ClCompile>
-    <ClCompile Include="diffuseNode.cpp">
-      <Filter>Source Files\Old</Filter>
-    </ClCompile>
-    <ClCompile Include="velocityStepNode.cpp">
-      <Filter>Source Files\Old</Filter>
     </ClCompile>
     <ClCompile Include="pluginMain.cpp">
       <Filter>Source Files</Filter>
