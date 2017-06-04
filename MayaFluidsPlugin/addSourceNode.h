@@ -4,6 +4,8 @@
 #include <maya/MPxNode.h>
 #include <maya/MFnNumericAttribute.h>
 #include <maya/MFnTypedAttribute.h>
+#include <maya/MFnDoubleArrayData.h>
+#include <maya/MDoubleArray.h>
 #include <math.h>
 
 class AddSourceNode : public MPxNode
@@ -20,14 +22,12 @@ public:
 
 	static MTypeId  id;
 
+    static MObject axOut;
+
 	static MObject  aN;
 	static MObject  ax;
 	static MObject  as;
-	static MObject  adt;
-
-    static MObject aNOut;
-    static MObject axOut;
-    static MObject adtOut;
+	static MObject  adt;   
 };
 
 #endif
