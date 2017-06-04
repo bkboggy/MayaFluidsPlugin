@@ -55,7 +55,7 @@ void RootNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::DisplayStyle
 		return;
 	}
 
-	MPlug valPlug = dFn.findPlug(aHeight, true, &status);
+	MPlug valPlug = dFn.findPlug(aHeight, &status);
 	if (status != MS::kSuccess)
 	{
 		MGlobal::displayError("Unable to get height plug");
@@ -68,7 +68,7 @@ void RootNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::DisplayStyle
 		return;
 	}
 
-	valPlug = dFn.findPlug(aWidth, true, &status);
+	valPlug = dFn.findPlug(aWidth, &status);
 	if (status != MS::kSuccess)
 	{
 		MGlobal::displayError("Unable to get width plug");
@@ -81,7 +81,7 @@ void RootNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::DisplayStyle
 		return;
 	}
 
-	valPlug = dFn.findPlug(aLength, true, &status);
+	valPlug = dFn.findPlug(aLength, &status);
 	if (status != MS::kSuccess)
 	{
 		MGlobal::displayError("Unable to get length plug");
@@ -93,7 +93,6 @@ void RootNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::DisplayStyle
 		MGlobal::displayError("Unable to get length value");
 		return;
 	}
-	MGlobal::displayInfo("Hello Maya!");
 	view.beginGL();
 
 	glBegin(GL_LINE_LOOP);

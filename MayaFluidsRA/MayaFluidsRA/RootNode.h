@@ -8,6 +8,7 @@
 #include <maya/MPxLocatorNode.h>
 #include <maya/MFnDependencyNode.h>
 #include <maya/MFnNumericAttribute.h>
+#include <maya/MSelectionList.h>
 
 class RootNode : public MPxLocatorNode
 {
