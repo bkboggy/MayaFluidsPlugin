@@ -1,13 +1,7 @@
 #include "fluidSolverNode.h"
 
-// Fluid solver macros.
-#define IX(i,j) ((i)+(N+2)*(j))
-#define SWAP(x0,x) {float * tmp=x0;x0=x;x=tmp;}
-#define FOR_EACH_CELL for ( i=1 ; i<=N ; i++ ) { for ( j=1 ; j<=N ; j++ ) {
-#define END_FOR }}
-
 // Maya node ID.
-MTypeId FluidSolverNode::id;
+MTypeId FluidSolverNode::id(0x00000101);
 
 // Outputs.
 MObject FluidSolverNode::aX;
@@ -16,6 +10,7 @@ MObject FluidSolverNode::aV;
 MObject FluidSolverNode::aW;
 
 // Inputs.
+MObject FluidSolverNode::aTime;
 MObject FluidSolverNode::aN;
 MObject FluidSolverNode::aDt;
 MObject FluidSolverNode::aDiff;
@@ -42,9 +37,13 @@ void* FluidSolverNode::creator()
 // Initializes node attributes.
 MStatus FluidSolverNode::initialize()
 {
+    // Status to be returned.
     MStatus status;
+
+    // Attribute functions.
     MFnNumericAttribute nAttr;
     MFnTypedAttribute tAttr;
+    MFnUnitAttribute uAttr;
 
     // Outputs.
     aX = tAttr.create("x", "x", MFnData::kFloatArray);
@@ -68,6 +67,14 @@ MStatus FluidSolverNode::initialize()
     addAttribute(aW);
 
     // Inputs.
+    aTime = uAttr.create("time", "time", MFnUnitAttribute::kTime);
+    uAttr.setKeyable(true);
+    addAttribute(aTime);
+    attributeAffects(aTime, aX);
+    attributeAffects(aTime, aU);
+    attributeAffects(aTime, aV);
+    attributeAffects(aTime, aW);
+
     aN = nAttr.create("N", "N", MFnNumericData::kInt, 20);
     nAttr.setKeyable(true);
     addAttribute(aN);
@@ -116,24 +123,30 @@ MStatus FluidSolverNode::initialize()
     attributeAffects(aSource, aV);
     attributeAffects(aSource, aW);
 
-    aX0 = tAttr.create("x0", "x0", MFnData::kFloatArray);
+    MFloatArray defaultMArr(100, 0.0f);
+    MFnFloatArrayData fnDefaultMArr;
+    MFnData defaultArrData = fnDefaultMArr.create(defaultMArr, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    MObject defaultArr = defaultArrData.object();
+
+    aX0 = tAttr.create("x0", "x0", MFnData::kFloatArray, defaultArr);
     tAttr.setKeyable(true);
     addAttribute(aX0);
     attributeAffects(aX0, aX);
 
-    aU0 = tAttr.create("u0", "u0", MFnData::kFloatArray);
+    aU0 = tAttr.create("u0", "u0", MFnData::kFloatArray, defaultArr);
     tAttr.setKeyable(true);
     addAttribute(aU0);
     attributeAffects(aU0, aU);
     attributeAffects(aU0, aX);
 
-    aV0 = tAttr.create("v0", "v0", MFnData::kFloatArray);
+    aV0 = tAttr.create("v0", "v0", MFnData::kFloatArray, defaultArr);
     tAttr.setKeyable(true);
     addAttribute(aV0);
     attributeAffects(aV0, aV);
     attributeAffects(aV0, aX);
 
-    aW0 = tAttr.create("w0", "w0", MFnData::kFloatArray);
+    aW0 = tAttr.create("w0", "w0", MFnData::kFloatArray, defaultArr);
     tAttr.setKeyable(true);
     addAttribute(aW0);
     attributeAffects(aW0, aW);
@@ -142,7 +155,7 @@ MStatus FluidSolverNode::initialize()
     return MS::kSuccess;
 }
 
-// Performs node computation.
+// Perform node computations.
 MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
 {
     // Status to be returned.
@@ -173,45 +186,47 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     float source = data.inputValue(aSource, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    MDataHandle arrDataHandle = data.inputValue(aU0, &status);
+    MDataHandle arrDataHandle = data.outputValue(aU, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData u0FnData(arrDataHandle.data());
     MFloatArray u0Arr = u0FnData.array();
     unsigned int u0length = u0Arr.length();
-    float *u0 = new float[u0length];
-    float *u = new float[u0length];
+    float* u0 = new float[u0length];
+    float* u = new float[u0length];
     u0Arr.get(u0);
-    u0Arr.get(u);
+    //u0Arr.get(u);
 
-    arrDataHandle = data.inputValue(aV0, &status);
+    cout << "u0 length: " << u0length << endl;
+
+    arrDataHandle = data.outputValue(aV, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData v0FnData(arrDataHandle.data());
     MFloatArray v0Arr = v0FnData.array();
     unsigned int v0length = v0Arr.length();
-    float *v0 = new float[v0length];
-    float *v = new float[v0length];
+    float* v0 = new float[v0length];
+    float* v = new float[v0length];
     v0Arr.get(v0);
-    v0Arr.get(v);
+    //v0Arr.get(v);
 
-    arrDataHandle = data.inputValue(aW0, &status);
+    arrDataHandle = data.outputValue(aW, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData w0FnData(arrDataHandle.data());
     MFloatArray w0Arr = w0FnData.array();
     unsigned int w0length = w0Arr.length();
-    float *w0 = new float[w0length];
-    float *w = new float[w0length];
+    float* w0 = new float[w0length];
+    float* w = new float[w0length];
     w0Arr.get(w0);
-    w0Arr.get(w);
+    //w0Arr.get(w);
 
-    arrDataHandle = data.inputValue(aX0, &status);
+    arrDataHandle = data.outputValue(aX, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData x0FnData(arrDataHandle.data());
     MFloatArray x0Arr = x0FnData.array();
     unsigned int x0length = x0Arr.length();
-    float *x0 = new float[x0length];
-    float *x = new float[x0length];
+    float* x0 = new float[x0length];
+    float* x = new float[x0length];
     x0Arr.get(x0);
-    x0Arr.get(x);
+    //x0Arr.get(x);
 
     // Compute new density and velocity fields.
     vel_step(N, u, v, u0, v0, w0, visc, dt);
@@ -260,7 +275,13 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     return MS::kSuccess;
 }
 
-void FluidSolverNode::add_source(int N, float *x, float *s, float dt)
+// Fluid solver macros.
+#define IX(i,j) ((i)+(N+2)*(j))
+#define SWAP(x0,x) {float*  tmp=x0;x0=x;x=tmp;}
+#define FOR_EACH_CELL for ( i=1 ; i<=N ; i++ ) { for ( j=1 ; j<=N ; j++ ) {
+#define END_FOR }}
+
+void FluidSolverNode::add_source(int N, float* x, float* s, float dt)
 {
     int i, size = (N + 2)*(N + 2);
     for (i = 0; i < size; i++)
@@ -269,7 +290,7 @@ void FluidSolverNode::add_source(int N, float *x, float *s, float dt)
     }
 }
 
-void FluidSolverNode::set_bnd(int N, int b, float *x)
+void FluidSolverNode::set_bnd(int N, int b, float* x)
 {
     int i;
 
@@ -286,7 +307,7 @@ void FluidSolverNode::set_bnd(int N, int b, float *x)
     x[IX(N + 1, N + 1)] = 0.5f*(x[IX(N, N + 1)] + x[IX(N + 1, N)]);
 }
 
-void FluidSolverNode::lin_solve(int N, int b, float *x, float *x0, float a, float c)
+void FluidSolverNode::lin_solve(int N, int b, float* x, float* x0, float a, float c)
 {
     int i, j, k;
 
@@ -299,13 +320,13 @@ void FluidSolverNode::lin_solve(int N, int b, float *x, float *x0, float a, floa
     }
 }
 
-void FluidSolverNode::diffuse(int N, int b, float *x, float *x0, float diff, float dt)
+void FluidSolverNode::diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 {
     float a = dt*diff*N*N;
-    lin_solve(N, b, x, x0, a, 1 + 4 * a);
+    lin_solve(N, b, x, x0, a, 1 + 4*  a);
 }
 
-void FluidSolverNode::advect(int N, int b, float *d, float *d0, float *u, float *v, float *w, float dt)
+void FluidSolverNode::advect(int N, int b, float* d, float* d0, float* u, float* v, float* w, float dt)
 {
     int i, j, i0, j0, i1, j1;
     float x, y, s0, t0, s1, t1, dt0;
@@ -327,7 +348,7 @@ void FluidSolverNode::advect(int N, int b, float *d, float *d0, float *u, float 
         set_bnd(N, b, d);
 }
 
-void FluidSolverNode::project(int N, float *u, float *v, float *w, float *p, float *div)
+void FluidSolverNode::project(int N, float* u, float* v, float* w, float* p, float* div)
 {
     int i, j;
 
@@ -346,7 +367,7 @@ void FluidSolverNode::project(int N, float *u, float *v, float *w, float *p, flo
         set_bnd(N, 1, u); set_bnd(N, 2, v);
 }
 
-void FluidSolverNode::dens_step(int N, float *x, float *x0, float *u, float *v, float *w, float diff, float dt)
+void FluidSolverNode::dens_step(int N, float* x, float* x0, float* u, float* v, float* w, float diff, float dt)
 {
     add_source(N, x, x0, dt);
     SWAP(x0, x); 
@@ -355,7 +376,7 @@ void FluidSolverNode::dens_step(int N, float *x, float *x0, float *u, float *v, 
     advect(N, 0, x, x0, u, v, w, dt);
 }
 
-void FluidSolverNode::vel_step(int N, float *u, float *v, float *u0, float *v0, float *w0, float visc, float dt)
+void FluidSolverNode::vel_step(int N, float* u, float* v, float* u0, float* v0, float* w0, float visc, float dt)
 {
     add_source(N, u, u0, dt); 
     add_source(N, v, v0, dt);
