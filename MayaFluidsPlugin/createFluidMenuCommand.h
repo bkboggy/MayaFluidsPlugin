@@ -1,5 +1,5 @@
-#ifndef CREATE_FLUID_UI_COMMAND
-#define CREATE_FLUID_UI_COMMAND
+#ifndef CREATE_FLUID_MENU_COMMAND
+#define CREATE_FLUID_MENU_COMMAND
 
 #include <fstream>
 #include <sstream>
@@ -7,12 +7,13 @@
 #include <maya/MGlobal.h>
 #include <maya/MPxCommand.h>
 
-// Creates UI for the fluid simulator.
-class CreateFluidUiCommand : public MPxCommand
+// Creates a menu option at the top bar of the Maya Window for 
+// the fluid simulator.
+class CreateFluidMenuCommand : public MPxCommand
 {
 public:
     // Default constructor.
-    CreateFluidUiCommand();
+    CreateFluidMenuCommand();
     // Executes the command.
     virtual MStatus doIt(const MArgList& argList);
     // Maya command creator method.

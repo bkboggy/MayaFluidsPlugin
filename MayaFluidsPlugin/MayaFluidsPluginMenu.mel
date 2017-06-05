@@ -1,0 +1,9 @@
+if (!`menu -exists fluidsPluginMenu`)
+{
+    menu -parent MayaWindow 
+         -label "Fluids Plugin" 
+         -tearOff false
+         fluidsPluginMenu;
+    menuItem -label "Open"
+             -command "createFluidUI";
+}

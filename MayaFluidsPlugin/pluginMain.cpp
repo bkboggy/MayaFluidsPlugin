@@ -4,6 +4,7 @@
 #include "fluidLocatorNode.h"
 #include "generateFluidCommand.h"
 #include "createFluidUiCommand.h"
+#include "createFluidMenuCommand.h"
 #include <maya/MFnPlugin.h>
 
 MStatus initializePlugin(MObject obj)
@@ -54,6 +55,13 @@ MStatus initializePlugin(MObject obj)
         CreateFluidUiCommand::creator);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    status = fnPlugin.registerCommand(
+        "createFluidMenu",
+        CreateFluidMenuCommand::creator);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    MGlobal::executeCommand("createFluidMenu");
+
 	return MS::kSuccess;
 }
 
@@ -79,6 +87,11 @@ MStatus uninitializePlugin(MObject obj)
 
     status = fnPlugin.deregisterCommand("createFluidUI");
     CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    status = fnPlugin.deregisterCommand("createFluidMenu");
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    MGlobal::executeCommand("deleteUI -menu fluidsPluginMenu");
 
 	return MS::kSuccess;
 }

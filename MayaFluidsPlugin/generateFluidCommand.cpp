@@ -181,7 +181,7 @@ bool GenerateFluidCommand::isUndoable() const
 // Maya command creator method.
 void* GenerateFluidCommand::creator()
 {
-	return new GenerateFluidCommand();
+	return new GenerateFluidCommand;
 }
 
 // Command syntax.

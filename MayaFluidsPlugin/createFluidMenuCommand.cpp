@@ -1,17 +1,17 @@
-#include "createFluidUiCommand.h"
+#include "createFluidMenuCommand.h"
 
 // Default constructor.
-CreateFluidUiCommand::CreateFluidUiCommand()
+CreateFluidMenuCommand::CreateFluidMenuCommand()
 {
 }
 
 // Executes the command.
-MStatus CreateFluidUiCommand::doIt(const MArgList& argList)
+MStatus CreateFluidMenuCommand::doIt(const MArgList& argList)
 {
     MStatus status;
 
     MString pluginPath = MGlobal::executeCommandStringResult("pluginInfo -query -path MayaFluidsPlugin;");
-    pluginPath.substitute("MayaFluidsPlugin.mll", "MayaFluidsPluginUI.mel");
+    pluginPath.substitute("MayaFluidsPlugin.mll", "MayaFluidsPluginMenu.mel");
 
     std::string fileContent;
     std::ifstream file(pluginPath.asChar());
@@ -23,14 +23,14 @@ MStatus CreateFluidUiCommand::doIt(const MArgList& argList)
         const char* cmdTextCStr = cmdTextStr.c_str();
         MGlobal::executeCommand(cmdTextCStr);
         strStream.str("");
-    }   
+    }
     file.close();
 
     return MS::kSuccess;
 }
 
 // Maya command creator method.
-void* CreateFluidUiCommand::creator()
+void* CreateFluidMenuCommand::creator()
 {
-    return new CreateFluidUiCommand;
+    return new CreateFluidMenuCommand;
 }

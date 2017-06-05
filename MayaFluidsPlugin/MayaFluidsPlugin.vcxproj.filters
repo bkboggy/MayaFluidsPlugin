@@ -36,6 +36,9 @@
     <ClInclude Include="createFluidUiCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="createFluidMenuCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fluidSolverNode.cpp">
@@ -62,9 +65,15 @@
     <ClCompile Include="createFluidUiCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="createFluidMenuCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fluidUI.mel">
+    <None Include="MayaFluidsPluginUI.mel">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="MayaFluidsPluginMenu.mel">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
