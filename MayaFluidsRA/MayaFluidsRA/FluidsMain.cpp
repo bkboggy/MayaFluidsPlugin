@@ -40,6 +40,10 @@ MStatus uninitializePlugin(MObject obj)
 
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
+	status = fnPlugin.deregisterNode(RootNode::id);
+
+	CHECK_MSTATUS_AND_RETURN_IT(status);
+
 	status = fnPlugin.deregisterCommand("createFluidRoot");
 
 	CHECK_MSTATUS_AND_RETURN_IT(status);

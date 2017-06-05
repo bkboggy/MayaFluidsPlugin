@@ -1,21 +1,21 @@
-#include "RootNode.h"
+#include "fluidLocatorNode.h"
 
-MTypeId RootNode::id(0x00000101);
-MObject RootNode::aOutValue;
-MObject RootNode::aHeight;
-MObject RootNode::aWidth;
-MObject RootNode::aLength;
-MObject RootNode::aFrameIn;
+MTypeId FluidLocatorNode::id(0x00000102);
+MObject FluidLocatorNode::aOutValue;
+MObject FluidLocatorNode::aHeight;
+MObject FluidLocatorNode::aWidth;
+MObject FluidLocatorNode::aLength;
+MObject FluidLocatorNode::aTimeIn;
 
-RootNode::RootNode() 
+FluidLocatorNode::FluidLocatorNode()
 {
 }
 
-RootNode::~RootNode()
+FluidLocatorNode::~FluidLocatorNode()
 {
 }
 
-MStatus RootNode::compute(const MPlug& plug, MDataBlock& data)
+MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 {
 	MStatus status;
 	float output;
@@ -25,12 +25,12 @@ MStatus RootNode::compute(const MPlug& plug, MDataBlock& data)
 		return MS::kUnknownParameter;
 	}
 
-	float frameIn = data.inputValue(aFrameIn, &status).asFloat();
+	float timeIn = data.inputValue(aTimeIn, &status).asFloat();
 	float height = data.inputValue(aHeight, &status).asFloat();
 	float width = data.inputValue(aWidth, &status).asFloat();
 	float length = data.inputValue(aLength, &status).asFloat();
 
-	output = sin(frameIn);
+	output = sin(timeIn);
 
 	MDataHandle hOutput = data.outputValue(aOutValue, &status);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -41,7 +41,7 @@ MStatus RootNode::compute(const MPlug& plug, MDataBlock& data)
 	return MS::kSuccess;
 }
 
-void RootNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::DisplayStyle  style, M3dView::DisplayStatus stat)
+void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::DisplayStyle  style, M3dView::DisplayStatus stat)
 {
 	MStatus status;
 	float height;
@@ -96,43 +96,43 @@ void RootNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::DisplayStyle
 	view.beginGL();
 
 	glBegin(GL_LINE_LOOP);
-		glVertex3f(width, height, length);
-		glVertex3f(-width, height, length);
-		glVertex3f(-width, height, -length);
-		glVertex3f(width, height, -length);
+	glVertex3f(width, height, length);
+	glVertex3f(-width, height, length);
+	glVertex3f(-width, height, -length);
+	glVertex3f(width, height, -length);
 	glEnd();
 
 	glBegin(GL_LINE_LOOP);
-		glVertex3f(width, -height, length);
-		glVertex3f(-width, -height, length);
-		glVertex3f(-width, -height, -length);
-		glVertex3f(width, -height, -length);
+	glVertex3f(width, -height, length);
+	glVertex3f(-width, -height, length);
+	glVertex3f(-width, -height, -length);
+	glVertex3f(width, -height, -length);
 	glEnd();
 
 	glBegin(GL_LINES);
-		glVertex3f(width, height, length);
-		glVertex3f(width, -height, length);
+	glVertex3f(width, height, length);
+	glVertex3f(width, -height, length);
 
-		glVertex3f(-width, height, length);
-		glVertex3f(-width, -height, length);
+	glVertex3f(-width, height, length);
+	glVertex3f(-width, -height, length);
 
-		glVertex3f(-width, height, -length);
-		glVertex3f(-width, -height, -length);
+	glVertex3f(-width, height, -length);
+	glVertex3f(-width, -height, -length);
 
-		glVertex3f(width, height, -length);
-		glVertex3f(width, -height, -length);
+	glVertex3f(width, height, -length);
+	glVertex3f(width, -height, -length);
 	glEnd();
 
 	view.endGL();
-	
+
 }
 
-void* RootNode::creator()
+void* FluidLocatorNode::creator()
 {
-	return new RootNode();
+	return new FluidLocatorNode();
 }
 
-MStatus RootNode::initialize()
+MStatus FluidLocatorNode::initialize()
 {
 	MStatus status;
 	MFnNumericAttribute nAttr;
@@ -142,10 +142,10 @@ MStatus RootNode::initialize()
 	nAttr.setStorable(false);
 	addAttribute(aOutValue);
 
-	aFrameIn= nAttr.create("frameIn", "frameIn", MFnNumericData::kFloat);
+	aTimeIn = nAttr.create("timeIn", "timeIn", MFnNumericData::kFloat);
 	nAttr.setKeyable(true);
-	addAttribute(aFrameIn);
-	attributeAffects(aFrameIn, aOutValue);
+	addAttribute(aTimeIn);
+	attributeAffects(aTimeIn, aOutValue);
 
 	aHeight = nAttr.create("height", "height", MFnNumericData::kFloat);
 	nAttr.setKeyable(true);

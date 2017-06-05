@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaFluidsPlugin", "MayaFluidsPlugin\MayaFluidsPlugin.vcxproj", "{396C6412-763B-43E7-8EC5-9F54C3123885}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MayaFluidsRA", "MayaFluidsRA\MayaFluidsRA\MayaFluidsRA.vcxproj", "{17415944-ACC7-4F02-8483-990B2F0132AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +21,6 @@ Global
 		{396C6412-763B-43E7-8EC5-9F54C3123885}.Release|x64.Build.0 = Release|x64
 		{396C6412-763B-43E7-8EC5-9F54C3123885}.Release|x86.ActiveCfg = Release|Win32
 		{396C6412-763B-43E7-8EC5-9F54C3123885}.Release|x86.Build.0 = Release|Win32
-		{17415944-ACC7-4F02-8483-990B2F0132AB}.Debug|x64.ActiveCfg = Debug|x64
-		{17415944-ACC7-4F02-8483-990B2F0132AB}.Debug|x64.Build.0 = Debug|x64
-		{17415944-ACC7-4F02-8483-990B2F0132AB}.Debug|x86.ActiveCfg = Debug|Win32
-		{17415944-ACC7-4F02-8483-990B2F0132AB}.Debug|x86.Build.0 = Debug|Win32
-		{17415944-ACC7-4F02-8483-990B2F0132AB}.Release|x64.ActiveCfg = Release|x64
-		{17415944-ACC7-4F02-8483-990B2F0132AB}.Release|x64.Build.0 = Release|x64
-		{17415944-ACC7-4F02-8483-990B2F0132AB}.Release|x86.ActiveCfg = Release|Win32
-		{17415944-ACC7-4F02-8483-990B2F0132AB}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
