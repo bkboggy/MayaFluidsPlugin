@@ -1,5 +1,5 @@
-#ifndef ROOTNODE_H
-#define ROOTNODE_H
+#ifndef FLUIDLOCATORNODE_H
+#define FLUIDLOCATORNODE_H
 
 #include <maya/MTypeId.h>
 #include <maya/MStatus.h>
@@ -11,11 +11,11 @@
 #include <maya/MSelectionList.h>
 #include <math.h>
 
-class RootNode : public MPxLocatorNode
+class FluidLocatorNode : public MPxLocatorNode
 {
 public:
-	RootNode();
-	virtual ~RootNode();
+	FluidLocatorNode();
+	virtual ~FluidLocatorNode();
 
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
 	virtual void draw(M3dView&, const MDagPath&, M3dView::DisplayStyle, M3dView::DisplayStatus);
@@ -24,7 +24,7 @@ public:
 	static MStatus initialize();
 
 	static MObject aOutValue;
-	static MObject aFrameIn;
+	static MObject aTimeIn;
 	static MObject aHeight;
 	static MObject aWidth;
 	static MObject aLength;
