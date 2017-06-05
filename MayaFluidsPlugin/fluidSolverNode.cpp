@@ -191,11 +191,10 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     MFloatArray u0Arr = u0FnData.array();
     unsigned int u0length = u0Arr.length();
     float* u0 = new float[u0length];
-    float* u = new float[u0length];
     u0Arr.get(u0);
-
-    cout << "u0 length: " << u0length << endl;
-
+    float* u = new float[u0length];
+    Utilities::initializeFloatArray(u, u0length, 0.0f);
+    
     arrDataHandle = data.outputValue(aV, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData v0FnData(arrDataHandle.data());
@@ -204,7 +203,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     float* v0 = new float[v0length];
     v0Arr.get(v0);
     float* v = new float[v0length];
-    initializeFloatArray(v);
+    Utilities::initializeFloatArray(v, v0length, 0.0f);
 
     arrDataHandle = data.outputValue(aW, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -212,9 +211,9 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     MFloatArray w0Arr = w0FnData.array();
     unsigned int w0length = w0Arr.length();
     float* w0 = new float[w0length];
-    float* w = new float[w0length];
     w0Arr.get(w0);
-    //w0Arr.get(w);
+    float* w = new float[w0length];
+    Utilities::initializeFloatArray(w, w0length, 0.0f);
 
     arrDataHandle = data.outputValue(aX, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -222,9 +221,9 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     MFloatArray x0Arr = x0FnData.array();
     unsigned int x0length = x0Arr.length();
     float* x0 = new float[x0length];
-    float* x = new float[x0length];
     x0Arr.get(x0);
-    //x0Arr.get(x);
+    float* x = new float[x0length];
+    Utilities::initializeFloatArray(x, x0length, 0.0f);
 
     // Compute new density and velocity fields.
     vel_step(N, u, v, u0, v0, w0, visc, dt);

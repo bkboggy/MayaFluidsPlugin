@@ -19,14 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="fluidCreateCommand.h" />
     <ClInclude Include="fluidDomainNode.h" />
+    <ClInclude Include="fluidLocatorNode.h" />
     <ClInclude Include="fluidSolverNode.h" />
+    <ClInclude Include="fluidTimeNode.h" />
     <ClInclude Include="utilities.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="fluidCreateCommand.cpp" />
     <ClCompile Include="fluidDomainNode.cpp" />
+    <ClCompile Include="fluidLocatorNode.cpp" />
     <ClCompile Include="fluidSolverNode.cpp" />
+    <ClCompile Include="fluidTimeNode.cpp" />
     <ClCompile Include="pluginMain.cpp" />
+    <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
