@@ -37,15 +37,7 @@ MStatus FluidDomainNode::initialize()
     MFnNumericAttribute nAttr;
     MFnTypedAttribute tAttr;
 
-    // Outputs.
-    aN = nAttr.create("N", "N", MFnNumericData::kInt);
-    nAttr.setKeyable(true);
-    addAttribute(aN);
-    attributeAffects(aN, aX);
-    attributeAffects(aN, aU);
-    attributeAffects(aN, aV);
-    attributeAffects(aN, aW);
-
+    // Attributes.
     aDt = nAttr.create("dt", "dt", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     addAttribute(aDt);
@@ -85,6 +77,14 @@ MStatus FluidDomainNode::initialize()
     tAttr.setWritable(false);
     tAttr.setStorable(false);
     addAttribute(aW);
+
+    aN = nAttr.create("N", "N", MFnNumericData::kInt);
+    nAttr.setKeyable(true);
+    addAttribute(aN);
+    attributeAffects(aN, aX);
+    attributeAffects(aN, aU);
+    attributeAffects(aN, aV);
+    attributeAffects(aN, aW);
 
     return MS::kSuccess;
 }

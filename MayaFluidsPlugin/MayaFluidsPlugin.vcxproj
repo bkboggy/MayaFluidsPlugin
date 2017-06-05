@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="fluidDomainNode.h" />
     <ClInclude Include="fluidSolverNode.h" />
+    <ClInclude Include="utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="fluidDomainNode.cpp" />

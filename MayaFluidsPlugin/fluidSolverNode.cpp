@@ -45,7 +45,7 @@ MStatus FluidSolverNode::initialize()
     MFnTypedAttribute tAttr;
     MFnUnitAttribute uAttr;
 
-    // Outputs.
+    // Attributes.
     aX = tAttr.create("x", "x", MFnData::kFloatArray);
     tAttr.setWritable(false);
     tAttr.setStorable(false);
@@ -66,7 +66,6 @@ MStatus FluidSolverNode::initialize()
     tAttr.setStorable(false);
     addAttribute(aW);
 
-    // Inputs.
     aTime = uAttr.create("time", "time", MFnUnitAttribute::kTime);
     uAttr.setKeyable(true);
     addAttribute(aTime);
@@ -194,7 +193,6 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     float* u0 = new float[u0length];
     float* u = new float[u0length];
     u0Arr.get(u0);
-    //u0Arr.get(u);
 
     cout << "u0 length: " << u0length << endl;
 
@@ -204,9 +202,9 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     MFloatArray v0Arr = v0FnData.array();
     unsigned int v0length = v0Arr.length();
     float* v0 = new float[v0length];
-    float* v = new float[v0length];
     v0Arr.get(v0);
-    //v0Arr.get(v);
+    float* v = new float[v0length];
+    initializeFloatArray(v);
 
     arrDataHandle = data.outputValue(aW, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -272,6 +270,12 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     hOut.setClean();
     data.setClean(plug);
 
+    // Clean up.
+    delete[] x;
+    delete[] u;
+    delete[] v;
+    delete[] w;
+
     return MS::kSuccess;
 }
 
@@ -281,6 +285,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
 #define FOR_EACH_CELL for ( i=1 ; i<=N ; i++ ) { for ( j=1 ; j<=N ; j++ ) {
 #define END_FOR }}
 
+// Adds source density.
 void FluidSolverNode::add_source(int N, float* x, float* s, float dt)
 {
     int i, size = (N + 2)*(N + 2);
@@ -290,11 +295,10 @@ void FluidSolverNode::add_source(int N, float* x, float* s, float dt)
     }
 }
 
+// Sets boundaries.
 void FluidSolverNode::set_bnd(int N, int b, float* x)
 {
-    int i;
-
-    for (i = 1; i <= N; i++) 
+    for (int i = 1; i <= N; i++) 
     {
         x[IX(0, i)] = b == 1 ? -x[IX(1, i)] : x[IX(1, i)];
         x[IX(N + 1, i)] = b == 1 ? -x[IX(N, i)] : x[IX(N, i)];
@@ -307,11 +311,12 @@ void FluidSolverNode::set_bnd(int N, int b, float* x)
     x[IX(N + 1, N + 1)] = 0.5f*(x[IX(N, N + 1)] + x[IX(N + 1, N)]);
 }
 
+// Linear fluid solver.
 void FluidSolverNode::lin_solve(int N, int b, float* x, float* x0, float a, float c)
 {
-    int i, j, k;
+    int i, j;
 
-    for (k = 0; k<20; k++) 
+    for (int k = 0; k<20; k++) 
     {
         FOR_EACH_CELL
             x[IX(i, j)] = (x0[IX(i, j)] + a*(x[IX(i - 1, j)] + x[IX(i + 1, j)] + x[IX(i, j - 1)] + x[IX(i, j + 1)])) / c;
@@ -320,12 +325,14 @@ void FluidSolverNode::lin_solve(int N, int b, float* x, float* x0, float a, floa
     }
 }
 
+// Diffuses density.
 void FluidSolverNode::diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 {
     float a = dt*diff*N*N;
     lin_solve(N, b, x, x0, a, 1 + 4*  a);
 }
 
+// Advects density and velocity.
 void FluidSolverNode::advect(int N, int b, float* d, float* d0, float* u, float* v, float* w, float dt)
 {
     int i, j, i0, j0, i1, j1;
@@ -348,6 +355,7 @@ void FluidSolverNode::advect(int N, int b, float* d, float* d0, float* u, float*
         set_bnd(N, b, d);
 }
 
+// Normalizes velocity.
 void FluidSolverNode::project(int N, float* u, float* v, float* w, float* p, float* div)
 {
     int i, j;
@@ -367,19 +375,21 @@ void FluidSolverNode::project(int N, float* u, float* v, float* w, float* p, flo
         set_bnd(N, 1, u); set_bnd(N, 2, v);
 }
 
+// Calculates new density.
 void FluidSolverNode::dens_step(int N, float* x, float* x0, float* u, float* v, float* w, float diff, float dt)
 {
-    add_source(N, x, x0, dt);
-    SWAP(x0, x); 
+    //add_source(N, x, x0, dt);
+    //SWAP(x0, x); 
     diffuse(N, 0, x, x0, diff, dt);
     SWAP(x0, x); 
     advect(N, 0, x, x0, u, v, w, dt);
 }
 
+// Calculates new velocity.
 void FluidSolverNode::vel_step(int N, float* u, float* v, float* u0, float* v0, float* w0, float visc, float dt)
 {
-    add_source(N, u, u0, dt); 
-    add_source(N, v, v0, dt);
+    //add_source(N, u, u0, dt); 
+    //add_source(N, v, v0, dt);
     SWAP(u0, u); 
     diffuse(N, 1, u, u0, visc, dt);
     SWAP(v0, v); 
