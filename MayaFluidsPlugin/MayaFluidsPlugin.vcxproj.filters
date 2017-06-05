@@ -24,13 +24,16 @@
     <ClInclude Include="fluidLocatorNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="fluidCreateCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="fluidTimeNode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="generateFluidCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="createFluidUiCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,13 +50,16 @@
     <ClCompile Include="fluidLocatorNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fluidCreateCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="fluidTimeNode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="generateFluidCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="createFluidUiCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

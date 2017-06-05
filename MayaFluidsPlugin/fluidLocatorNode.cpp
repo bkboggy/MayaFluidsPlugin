@@ -2,10 +2,15 @@
 
 MTypeId FluidLocatorNode::id(0x00000102);
 MObject FluidLocatorNode::aOutValue;
+MObject FluidLocatorNode::aVoxelCount;
 MObject FluidLocatorNode::aHeight;
 MObject FluidLocatorNode::aWidth;
 MObject FluidLocatorNode::aLength;
-MObject FluidLocatorNode::aTimeIn;
+MObject FluidLocatorNode::aTime;
+MObject FluidLocatorNode::aDensity;
+MObject FluidLocatorNode::aVelocityU;
+MObject FluidLocatorNode::aVelocityV;
+MObject FluidLocatorNode::aVelocityW;
 
 FluidLocatorNode::FluidLocatorNode()
 {
@@ -25,7 +30,7 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 		return MS::kUnknownParameter;
 	}
 
-	float timeIn = data.inputValue(aTimeIn, &status).asFloat();
+	float timeIn = data.inputValue(aTime, &status).asFloat();
 	float height = data.inputValue(aHeight, &status).asFloat();
 	float width = data.inputValue(aWidth, &status).asFloat();
 	float length = data.inputValue(aLength, &status).asFloat();
@@ -135,17 +140,24 @@ void* FluidLocatorNode::creator()
 MStatus FluidLocatorNode::initialize()
 {
 	MStatus status;
+    MFnUnitAttribute uAttr;
 	MFnNumericAttribute nAttr;
+    MFnTypedAttribute tAttr;
 
 	aOutValue = nAttr.create("outValue", "outValue", MFnNumericData::kFloat);
 	nAttr.setWritable(false);
 	nAttr.setStorable(false);
 	addAttribute(aOutValue);
 
-	aTimeIn = nAttr.create("timeIn", "timeIn", MFnNumericData::kFloat);
+	aTime = uAttr.create("time", "time", MTime(1.0));
 	nAttr.setKeyable(true);
-	addAttribute(aTimeIn);
-	attributeAffects(aTimeIn, aOutValue);
+	addAttribute(aTime);
+	attributeAffects(aTime, aOutValue);
+
+    aVoxelCount = nAttr.create("voxelCount", "voxelCount", MFnNumericData::kInt);
+    nAttr.setKeyable(true);
+    addAttribute(aVoxelCount);
+    attributeAffects(aVoxelCount, aOutValue);
 
 	aHeight = nAttr.create("height", "height", MFnNumericData::kFloat);
 	nAttr.setKeyable(true);
@@ -161,6 +173,32 @@ MStatus FluidLocatorNode::initialize()
 	nAttr.setKeyable(true);
 	addAttribute(aLength);
 	attributeAffects(aLength, aOutValue);
+
+    MFloatArray defaultMArr(100, 0.0f);
+    MFnFloatArrayData fnDefaultMArr;
+    MFnData defaultArrData = fnDefaultMArr.create(defaultMArr, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    MObject defaultArr = defaultArrData.object();
+
+    aDensity = tAttr.create("density", "density", MFnData::kFloatArray, defaultArr);
+    tAttr.setKeyable(true);
+    addAttribute(aDensity);
+    attributeAffects(aDensity, aDensity);
+
+    aVelocityU = tAttr.create("velocityU", "velocityU", MFnData::kFloatArray, defaultArr);
+    tAttr.setKeyable(true);
+    addAttribute(aVelocityU);
+    attributeAffects(aVelocityU, aOutValue);
+
+    aVelocityW = tAttr.create("velocityV", "velocityV", MFnData::kFloatArray, defaultArr);
+    tAttr.setKeyable(true);
+    addAttribute(aVelocityW);
+    attributeAffects(aVelocityW, aOutValue);
+
+    aVelocityW = tAttr.create("velocityW", "velocityW", MFnData::kFloatArray, defaultArr);
+    tAttr.setKeyable(true);
+    addAttribute(aVelocityW);
+    attributeAffects(aVelocityW, aOutValue);
 
 	return MS::kSuccess;
 }

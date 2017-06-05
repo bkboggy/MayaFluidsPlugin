@@ -47,23 +47,23 @@ public:
     static MTypeId id;
 
     // Outputs.
-    static MObject aX;       // New density field.
-    static MObject aU;       // New u-component of velocity field.
-    static MObject aV;       // New v-component of velocity field.
-    static MObject aW;       // New w-component of velocity field.
+    static MObject aDensity;            // New density field.
+    static MObject aVelocityU;          // New u-component of velocity field.
+    static MObject aVelocityV;          // New v-component of velocity field.
+    static MObject aVelocityW;          // New w-component of velocity field.
 
     // Inputs.
-    static MObject aTime;    // Simulation time (sec, frame, etc.).
-    static MObject aN;       // Number of voxels.
-    static MObject aDt;      // Timestep.
-    static MObject aDiff;    // Diffusion rate.
-    static MObject aVisc;    // Viscosity.
-    static MObject aForce;   // Force multipler.
-    static MObject aSource;  // Source multipler.
-    static MObject aX0;      // Previous density field.
-    static MObject aU0;      // Previous u-component of velocity field.
-    static MObject aV0;      // Previous v-component of velocity field.
-    static MObject aW0;      // Previous w-component of velocity field.
+    static MObject aTime;               // Simulation time (sec, frame, etc.).
+    static MObject aVoxelCount;         // Number of voxels.
+    static MObject aTimestep;           // Timestep.
+    static MObject aDiffusion;          // Diffusion rate.
+    static MObject aViscosity;          // Viscosity.
+    static MObject aForceMultipler;     // Force multipler.
+    static MObject aSourceMultiplier;   // Source multipler.
+    static MObject aPrevDensity;        // Previous density field.
+    static MObject aPrevVelocityU;      // Previous u-component of velocity field.
+    static MObject aPrevVelocityV;      // Previous v-component of velocity field.
+    static MObject aPrevVelocityW;      // Previous w-component of velocity field.
 };
 
 #endif

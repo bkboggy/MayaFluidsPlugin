@@ -1,14 +1,19 @@
-#ifndef FLUIDLOCATORNODE_H
-#define FLUIDLOCATORNODE_H
+#ifndef FLUID_LOCATOR_NODE_H
+#define FLUID_LOCATOR_NODE_H
 
+#include <maya/MFloatArray.h>
 #include <maya/MTypeId.h>
 #include <maya/MStatus.h>
 #include <maya/M3dView.h>
 #include <maya/MGlobal.h>
 #include <maya/MPxLocatorNode.h>
 #include <maya/MFnDependencyNode.h>
+#include <maya/MFnFloatArrayData.h>
 #include <maya/MFnNumericAttribute.h>
+#include <maya/MFnTypedAttribute.h>
+#include <maya/MFnUnitAttribute.h>
 #include <maya/MSelectionList.h>
+#include <maya/MTime.h>
 #include <math.h>
 
 class FluidLocatorNode : public MPxLocatorNode
@@ -24,10 +29,15 @@ public:
 	static MStatus initialize();
 
 	static MObject aOutValue;
-	static MObject aTimeIn;
+	static MObject aTime;
+    static MObject aVoxelCount;
 	static MObject aHeight;
 	static MObject aWidth;
 	static MObject aLength;
+    static MObject aDensity;
+    static MObject aVelocityU;
+    static MObject aVelocityV;
+    static MObject aVelocityW;
 
 	static MTypeId id;
 };

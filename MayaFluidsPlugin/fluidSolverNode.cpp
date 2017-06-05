@@ -4,23 +4,23 @@
 MTypeId FluidSolverNode::id(0x00000101);
 
 // Outputs.
-MObject FluidSolverNode::aX;
-MObject FluidSolverNode::aU;
-MObject FluidSolverNode::aV;
-MObject FluidSolverNode::aW;
+MObject FluidSolverNode::aDensity;
+MObject FluidSolverNode::aVelocityU;
+MObject FluidSolverNode::aVelocityV;
+MObject FluidSolverNode::aVelocityW;
 
 // Inputs.
 MObject FluidSolverNode::aTime;
-MObject FluidSolverNode::aN;
-MObject FluidSolverNode::aDt;
-MObject FluidSolverNode::aDiff;
-MObject FluidSolverNode::aVisc;
-MObject FluidSolverNode::aForce;
-MObject FluidSolverNode::aSource;
-MObject FluidSolverNode::aX0;
-MObject FluidSolverNode::aU0;
-MObject FluidSolverNode::aV0;
-MObject FluidSolverNode::aW0;
+MObject FluidSolverNode::aVoxelCount;
+MObject FluidSolverNode::aTimestep;
+MObject FluidSolverNode::aDiffusion;
+MObject FluidSolverNode::aViscosity;
+MObject FluidSolverNode::aForceMultipler;
+MObject FluidSolverNode::aSourceMultiplier;
+MObject FluidSolverNode::aPrevDensity;
+MObject FluidSolverNode::aPrevVelocityU;
+MObject FluidSolverNode::aPrevVelocityV;
+MObject FluidSolverNode::aPrevVelocityW;
 
 // Default constructor.
 FluidSolverNode::FluidSolverNode() {}
@@ -46,81 +46,81 @@ MStatus FluidSolverNode::initialize()
     MFnUnitAttribute uAttr;
 
     // Attributes.
-    aX = tAttr.create("x", "x", MFnData::kFloatArray);
+    aDensity = tAttr.create("density", "density", MFnData::kFloatArray);
     tAttr.setWritable(false);
     tAttr.setStorable(false);
-    addAttribute(aX);
+    addAttribute(aDensity);
 
-    aU = tAttr.create("u", "u", MFnData::kFloatArray);
+    aVelocityU = tAttr.create("velocityU", "velocityU", MFnData::kFloatArray);
     tAttr.setWritable(false);
     tAttr.setStorable(false);
-    addAttribute(aU);
+    addAttribute(aVelocityU);
 
-    aV = tAttr.create("v", "v", MFnData::kFloatArray);
+    aVelocityV = tAttr.create("velocityV", "velocityV", MFnData::kFloatArray);
     tAttr.setWritable(false);
     tAttr.setStorable(false);
-    addAttribute(aV);
+    addAttribute(aVelocityV);
 
-    aW = tAttr.create("w", "w", MFnData::kFloatArray);
+    aVelocityW = tAttr.create("velocityW", "velocityW", MFnData::kFloatArray);
     tAttr.setWritable(false);
     tAttr.setStorable(false);
-    addAttribute(aW);
+    addAttribute(aVelocityW);
 
     aTime = uAttr.create("time", "time", MFnUnitAttribute::kTime);
     uAttr.setKeyable(true);
     addAttribute(aTime);
-    attributeAffects(aTime, aX);
-    attributeAffects(aTime, aU);
-    attributeAffects(aTime, aV);
-    attributeAffects(aTime, aW);
+    attributeAffects(aTime, aDensity);
+    attributeAffects(aTime, aVelocityU);
+    attributeAffects(aTime, aVelocityV);
+    attributeAffects(aTime, aVelocityW);
 
-    aN = nAttr.create("N", "N", MFnNumericData::kInt, 20);
+    aVoxelCount = nAttr.create("voxelCount", "voxelCount", MFnNumericData::kInt, 10);
     nAttr.setKeyable(true);
-    addAttribute(aN);
-    attributeAffects(aN, aX);
-    attributeAffects(aN, aU);
-    attributeAffects(aN, aV);
-    attributeAffects(aN, aW);
+    addAttribute(aVoxelCount);
+    attributeAffects(aVoxelCount, aDensity);
+    attributeAffects(aVoxelCount, aVelocityU);
+    attributeAffects(aVoxelCount, aVelocityV);
+    attributeAffects(aVoxelCount, aVelocityW);
 
-    aDt = nAttr.create("dt", "dt", MFnNumericData::kFloat, 0.0005f);
+    aTimestep = nAttr.create("timestep", "timestep", MFnNumericData::kFloat, 0.001f);
     nAttr.setKeyable(true);
-    addAttribute(aDt);
-    attributeAffects(aDt, aX);
-    attributeAffects(aDt, aU);
-    attributeAffects(aDt, aV);
-    attributeAffects(aDt, aW);
+    addAttribute(aTimestep);
+    attributeAffects(aTimestep, aDensity);
+    attributeAffects(aTimestep, aVelocityU);
+    attributeAffects(aTimestep, aVelocityV);
+    attributeAffects(aTimestep, aVelocityW);
 
-    aDiff = nAttr.create("diff", "diff", MFnNumericData::kFloat, 0.0f);
+    aDiffusion = nAttr.create("diffusion", "diffusion", MFnNumericData::kFloat, 0.0f);
     nAttr.setKeyable(true);
-    addAttribute(aDiff);
-    attributeAffects(aDiff, aX);
-    attributeAffects(aDiff, aU);
-    attributeAffects(aDiff, aV);
-    attributeAffects(aDiff, aW);
+    addAttribute(aDiffusion);
+    attributeAffects(aDiffusion, aDensity);
+    attributeAffects(aDiffusion, aVelocityU);
+    attributeAffects(aDiffusion, aVelocityV);
+    attributeAffects(aDiffusion, aVelocityW);
 
-    aVisc = nAttr.create("visc", "visc", MFnNumericData::kFloat, 0.0f);
+    aViscosity = nAttr.create("viscosity", "viscosity", MFnNumericData::kFloat, 0.0f);
     nAttr.setKeyable(true);
-    addAttribute(aVisc);
-    attributeAffects(aVisc, aX);
-    attributeAffects(aVisc, aU);
-    attributeAffects(aVisc, aV);
-    attributeAffects(aVisc, aW);
+    addAttribute(aViscosity);
+    attributeAffects(aViscosity, aDensity);
+    attributeAffects(aViscosity, aVelocityU);
+    attributeAffects(aViscosity, aVelocityV);
+    attributeAffects(aViscosity, aVelocityW);
 
-    aForce = nAttr.create("force", "force", MFnNumericData::kFloat, 5.0f);
+    aForceMultipler = nAttr.create("forceMultiplier", "forceMultiplier", MFnNumericData::kFloat, 5.0f);
     nAttr.setKeyable(true);
-    addAttribute(aForce);
-    attributeAffects(aForce, aX);
-    attributeAffects(aForce, aU);
-    attributeAffects(aForce, aV);
-    attributeAffects(aForce, aW);
+    addAttribute(aForceMultipler);
+    attributeAffects(aForceMultipler, aDensity);
+    attributeAffects(aForceMultipler, aVelocityU);
+    attributeAffects(aForceMultipler, aVelocityV);
+    attributeAffects(aForceMultipler, aVelocityW);
 
-    aSource = nAttr.create("source", "source", MFnNumericData::kFloat, 200.0f);
+    aSourceMultiplier = nAttr.create("sourceMultiplier", "sourceMultiplier", MFnNumericData::kFloat, 200.0f);
     nAttr.setKeyable(true);
-    addAttribute(aSource);
-    attributeAffects(aSource, aX);
-    attributeAffects(aSource, aU);
-    attributeAffects(aSource, aV);
-    attributeAffects(aSource, aW);
+    addAttribute(aSourceMultiplier);
+    attributeAffects(aSourceMultiplier, aDensity);
+    attributeAffects(aSourceMultiplier, aVelocityU);
+    attributeAffects(aSourceMultiplier, aVelocityV);
+    attributeAffects(aSourceMultiplier, aVelocityW);
 
     MFloatArray defaultMArr(100, 0.0f);
     MFnFloatArrayData fnDefaultMArr;
@@ -128,28 +128,28 @@ MStatus FluidSolverNode::initialize()
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MObject defaultArr = defaultArrData.object();
 
-    aX0 = tAttr.create("x0", "x0", MFnData::kFloatArray, defaultArr);
+    aPrevDensity = tAttr.create("prevDensity", "prevDensity", MFnData::kFloatArray, defaultArr);
     tAttr.setKeyable(true);
-    addAttribute(aX0);
-    attributeAffects(aX0, aX);
+    addAttribute(aPrevDensity);
+    attributeAffects(aPrevDensity, aDensity);
 
-    aU0 = tAttr.create("u0", "u0", MFnData::kFloatArray, defaultArr);
+    aPrevVelocityU = tAttr.create("prevVelocityU", "preVelocityU", MFnData::kFloatArray, defaultArr);
     tAttr.setKeyable(true);
-    addAttribute(aU0);
-    attributeAffects(aU0, aU);
-    attributeAffects(aU0, aX);
+    addAttribute(aPrevVelocityU);
+    attributeAffects(aPrevVelocityU, aVelocityU);
+    attributeAffects(aPrevVelocityU, aDensity);
 
-    aV0 = tAttr.create("v0", "v0", MFnData::kFloatArray, defaultArr);
+    aPrevVelocityV = tAttr.create("prevVelocityV", "prevVelocityV", MFnData::kFloatArray, defaultArr);
     tAttr.setKeyable(true);
-    addAttribute(aV0);
-    attributeAffects(aV0, aV);
-    attributeAffects(aV0, aX);
+    addAttribute(aPrevVelocityV);
+    attributeAffects(aPrevVelocityV, aVelocityV);
+    attributeAffects(aPrevVelocityV, aDensity);
 
-    aW0 = tAttr.create("w0", "w0", MFnData::kFloatArray, defaultArr);
+    aPrevVelocityW = tAttr.create("prevVelocityW", "preVelocityW", MFnData::kFloatArray, defaultArr);
     tAttr.setKeyable(true);
-    addAttribute(aW0);
-    attributeAffects(aW0, aW);
-    attributeAffects(aW0, aX);
+    addAttribute(aPrevVelocityW);
+    attributeAffects(aPrevVelocityW, aVelocityW);
+    attributeAffects(aPrevVelocityW, aDensity);
 
     return MS::kSuccess;
 }
@@ -161,31 +161,31 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     MStatus status;
 
     // Check if node is working on an appropriate plug.
-    if (plug != aX && plug != aU && plug != aV && plug != aW)
+    if (plug != aDensity && plug != aVelocityU && plug != aVelocityV && plug != aVelocityW)
     {
         return MS::kUnknownParameter;
     }
 
     // Initialize fluid calculation variables with default values.
-    int N = data.inputValue(aN, &status).asInt();
+    int N = data.inputValue(aVoxelCount, &status).asInt();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float dt = data.inputValue(aDt, &status).asFloat();
+    float dt = data.inputValue(aTimestep, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float diff = data.inputValue(aDiff, &status).asFloat();
+    float diff = data.inputValue(aDiffusion, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float visc = data.inputValue(aVisc, &status).asFloat();
+    float visc = data.inputValue(aViscosity, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float force = data.inputValue(aForce, &status).asFloat();
+    float force = data.inputValue(aForceMultipler, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float source = data.inputValue(aSource, &status).asFloat();
+    float source = data.inputValue(aSourceMultiplier, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    MDataHandle arrDataHandle = data.outputValue(aU, &status);
+    MDataHandle arrDataHandle = data.outputValue(aVelocityU, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData u0FnData(arrDataHandle.data());
     MFloatArray u0Arr = u0FnData.array();
@@ -195,7 +195,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     float* u = new float[u0length];
     Utilities::initializeFloatArray(u, u0length, 0.0f);
     
-    arrDataHandle = data.outputValue(aV, &status);
+    arrDataHandle = data.outputValue(aVelocityV, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData v0FnData(arrDataHandle.data());
     MFloatArray v0Arr = v0FnData.array();
@@ -205,7 +205,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     float* v = new float[v0length];
     Utilities::initializeFloatArray(v, v0length, 0.0f);
 
-    arrDataHandle = data.outputValue(aW, &status);
+    arrDataHandle = data.outputValue(aVelocityW, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData w0FnData(arrDataHandle.data());
     MFloatArray w0Arr = w0FnData.array();
@@ -215,7 +215,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     float* w = new float[w0length];
     Utilities::initializeFloatArray(w, w0length, 0.0f);
 
-    arrDataHandle = data.outputValue(aX, &status);
+    arrDataHandle = data.outputValue(aDensity, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData x0FnData(arrDataHandle.data());
     MFloatArray x0Arr = x0FnData.array();
@@ -226,8 +226,11 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     Utilities::initializeFloatArray(x, x0length, 0.0f);
 
     // Compute new density and velocity fields.
-    vel_step(N, u, v, u0, v0, w0, visc, dt);
-    dens_step(N, x, x0, u, v, w, diff, dt);
+    if (N > 0 && x0length > 0 && u0length > 0 && v0length > 0 && w0length > 0)
+    {
+        vel_step(N, u, v, u0, v0, w0, visc, dt);
+        dens_step(N, x, x0, u, v, w, diff, dt);
+    }
 
     // Get output values.
     MFloatArray uOut(u, u0length);
@@ -236,7 +239,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     MFloatArray xOut(x, x0length);
 
     // Pass new density and velocity fields as outputs.
-    MDataHandle hOut = data.outputValue(aU, &status);
+    MDataHandle hOut = data.outputValue(aVelocityU, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData fnDataOut;
     MObject dataOut = fnDataOut.create(uOut, &status);
@@ -245,7 +248,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     hOut.setClean();
     data.setClean(plug);
 
-    hOut = data.outputValue(aV, &status);
+    hOut = data.outputValue(aVelocityV, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     dataOut = fnDataOut.create(vOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -253,7 +256,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     hOut.setClean();
     data.setClean(plug);
 
-    hOut = data.outputValue(aW, &status);
+    hOut = data.outputValue(aVelocityW, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     dataOut = fnDataOut.create(wOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -261,7 +264,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     hOut.setClean();
     data.setClean(plug);
 
-    hOut = data.outputValue(aX, &status);
+    hOut = data.outputValue(aDensity, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     dataOut = fnDataOut.create(xOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);

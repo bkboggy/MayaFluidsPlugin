@@ -1,15 +1,17 @@
-#include "fluidCreateCommand.h"
+#include "generateFluidCommand.h"
 
 const char* helpFlag = "-h";
 const char* helpFlagLong = "-help";
 
 const char* helpText = "This will create and link all necessary nodes for the Fluid Simulation.";
 
-FluidCreateCommand::FluidCreateCommand()
+// Default constructor.
+GenerateFluidCommand::GenerateFluidCommand()
 {
 }
 
-MStatus FluidCreateCommand::doIt(const MArgList& argList)
+// Executes the command.
+MStatus GenerateFluidCommand::doIt(const MArgList& argList)
 {
 	MStatus status;
 
@@ -25,7 +27,8 @@ MStatus FluidCreateCommand::doIt(const MArgList& argList)
 	return redoIt();
 }
 
-MStatus FluidCreateCommand::redoIt()
+// Attempts to restore previous execution of the command.
+MStatus GenerateFluidCommand::redoIt()
 {
 	MStatus status;
 
@@ -51,16 +54,16 @@ MStatus FluidCreateCommand::redoIt()
 	status = sl.getDependNode(0, oTime);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	//get the outTime plug from time1 Node
+	// Get the outTime plug from time1 Node.
 	MFnDependencyNode fnTime(oTime);
 	MPlug outTime = fnTime.findPlug("outTime", &status);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	//get the inValue plug from the FrameReaderNode
-	MPlug input = fn.findPlug("inValue", &status);
+	// Get the inTime plug from the fluidTimeNode.
+	MPlug input = fn.findPlug("inTime", &status);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	//connect the two plugs
+	// Connect the two plugs.
 	MDagModifier dagMod;
 	dagMod.connect(outTime, input);
 	status = dagMod.doIt();
@@ -97,33 +100,45 @@ MStatus FluidCreateCommand::redoIt()
 	fSolverName = solverFn.name();
 
 	//connect fTime to fSolver
-	MGlobal::executeCommand("connectAttr " + fTimeName + ".outValue " + fSolverName + ".time");
+	MGlobal::executeCommand("connectAttr " + fTimeName + ".outTime " + fSolverName + ".time");
 
 	//connect fDomain to fSolver
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".N " + fSolverName + ".N");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".diff " + fSolverName + ".diff");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".dt " + fSolverName + ".dt");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".force " + fSolverName + ".force");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".source " + fSolverName + ".source");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".visc " + fSolverName + ".visc");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".u " + fSolverName + ".u0");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".v " + fSolverName + ".v0");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".w " + fSolverName + ".w0");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".x " + fSolverName + ".x0");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityU " + fSolverName + ".prevVelocityU");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityV " + fSolverName + ".prevVelocityV");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityW " + fSolverName + ".prevVelocityW");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".density " + fSolverName + ".prevDensity");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCount " + fSolverName + ".voxelCount");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".diffusion " + fSolverName + ".diffusion");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".timestep " + fSolverName + ".timestep");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".forceMultiplier " + fSolverName + ".forceMultiplier");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceMultiplier " + fSolverName + ".sourceMultiplier");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".viscosity " + fSolverName + ".viscosity");
 
-	//connect fSolver to fLocator
-	//TODO
+    // Connect fDomain to fLocator.
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".height " + fLocatorName + ".height");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".width " + fLocatorName + ".width");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".length " + fLocatorName + ".length");
+
+
+	// Connect fSolver to fLocator.
+    MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityU " + fLocatorName + ".velocityU");
+    MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityV " + fLocatorName + ".velocityV");
+    MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityW " + fLocatorName + ".velocityW");
+    MGlobal::executeCommand("connectAttr " + fSolverName + ".density " + fLocatorName + ".density");
+    MGlobal::executeCommand("connectAttr " + fSolverName + ".voxelCount " + fLocatorName + ".voxelCount");
+    //MGlobal::executeCommand("connectAttr " + fSolverName + ".time " + fLocatorName + ".time");
 
 	//restore the selection list
 	status = MGlobal::setActiveSelectionList(previous_list);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	setResult(fTimeName+", "+fDomainName+", "+fSolverName+", "+fLocatorName+", "+fLocatorTransformName);
+	setResult(fTimeName + ", " + fDomainName + ", " + fSolverName + ", " + fLocatorName + ", " + fLocatorTransformName);
 
 	return MS::kSuccess;
 }
 
-MStatus FluidCreateCommand::undoIt()
+// Attempts to undo actions completed by the command.
+MStatus GenerateFluidCommand::undoIt()
 {
 	MStatus status;
 	MSelectionList pl;
@@ -157,17 +172,20 @@ MStatus FluidCreateCommand::undoIt()
 	return MS::kSuccess;
 }
 
-bool FluidCreateCommand::isUndoable() const
+// Flags indicating whether the command is undoable.
+bool GenerateFluidCommand::isUndoable() const
 {
 	return true;
 }
 
-void* FluidCreateCommand::creator()
+// Maya command creator method.
+void* GenerateFluidCommand::creator()
 {
-	return new FluidCreateCommand();
+	return new GenerateFluidCommand();
 }
 
-MSyntax FluidCreateCommand::newSyntax()
+// Command syntax.
+MSyntax GenerateFluidCommand::newSyntax()
 {
 	MSyntax syntax;
 

@@ -19,7 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="fluidCreateCommand.h" />
+    <ClInclude Include="createFluidUiCommand.h" />
+    <ClInclude Include="generateFluidCommand.h" />
     <ClInclude Include="fluidDomainNode.h" />
     <ClInclude Include="fluidLocatorNode.h" />
     <ClInclude Include="fluidSolverNode.h" />
@@ -27,7 +28,8 @@
     <ClInclude Include="utilities.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="fluidCreateCommand.cpp" />
+    <ClCompile Include="createFluidUiCommand.cpp" />
+    <ClCompile Include="generateFluidCommand.cpp" />
     <ClCompile Include="fluidDomainNode.cpp" />
     <ClCompile Include="fluidLocatorNode.cpp" />
     <ClCompile Include="fluidSolverNode.cpp" />

@@ -1,5 +1,5 @@
-#ifndef FLUIDTIMENODE_H
-#define FLUIDTIMENODE_H
+#ifndef FLUID_TIME_NODE_H
+#define FLUID_TIME_NODE_H
 
 #include <maya/MPxNode.h>
 #include <maya/MFnNumericAttribute.h>
@@ -18,8 +18,8 @@ public:
 
 	static MTypeId id;
 
-	static MObject aInValue;
-	static MObject aOutValue;
+	static MObject aInTime;
+	static MObject aOutTime;
 	static MObject aMin;
 	static MObject aMax;
 	static MObject aScale;

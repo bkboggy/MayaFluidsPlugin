@@ -1,5 +1,5 @@
-#ifndef FLUIDCREATECOMMAND_H
-#define FLUIDCREATECOMMAND_H
+#ifndef GENERATE_FLUID_COMMAND_H
+#define GENERATE_FLUID_COMMAND_H
 
 #include "fluidTimeNode.h"
 #include "fluidLocatorNode.h"
@@ -14,18 +14,26 @@
 #include <maya/MArgDatabase.h>
 #include <maya/MDagPath.h>
 
-class FluidCreateCommand : public MPxCommand
+// Generates fluid.
+class GenerateFluidCommand : public MPxCommand
 {
 public:
-	FluidCreateCommand();
+    // Default constructor.
+	GenerateFluidCommand();
+    // Executes the command.
 	virtual MStatus doIt(const MArgList& argList);
+    // Attempts to restore previous execution of the command.
 	virtual MStatus redoIt();
+    // Attempts to undo actions completed by the command.
 	virtual MStatus undoIt();
+    // Flags indicating whether the command is undoable.
 	virtual bool isUndoable() const;
+    // Maya command creator method.
 	static void* creator();
+    // Command syntax.
 	static MSyntax newSyntax();
 private:
-	//used to store names of nodes created
+	// Used to store names of nodes created.
 	MString fLocatorTransformName;
 	MString fLocatorName;
 	MString fTimeName;

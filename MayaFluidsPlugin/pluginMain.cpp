@@ -2,7 +2,8 @@
 #include "fluidSolverNode.h"
 #include "fluidTimeNode.h"
 #include "fluidLocatorNode.h"
-#include "fluidCreateCommand.h"
+#include "generateFluidCommand.h"
+#include "createFluidUiCommand.h"
 #include <maya/MFnPlugin.h>
 
 MStatus initializePlugin(MObject obj)
@@ -43,10 +44,15 @@ MStatus initializePlugin(MObject obj)
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
 	status = fnPlugin.registerCommand(
-		"createFluidSimulation",
-		FluidCreateCommand::creator,
-		FluidCreateCommand::newSyntax);
+		"generateFluidSimulation",
+		GenerateFluidCommand::creator,
+		GenerateFluidCommand::newSyntax);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    status = fnPlugin.registerCommand(
+        "createFluidUI",
+        CreateFluidUiCommand::creator);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
 	return MS::kSuccess;
 }
@@ -68,8 +74,11 @@ MStatus uninitializePlugin(MObject obj)
 	status = fnPlugin.deregisterNode(FluidLocatorNode::id);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	status = fnPlugin.deregisterCommand("createFluidSimulation");
+	status = fnPlugin.deregisterCommand("generateFluidSimulation");
 	CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    status = fnPlugin.deregisterCommand("createFluidUI");
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
 	return MS::kSuccess;
 }

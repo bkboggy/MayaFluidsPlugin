@@ -3,17 +3,20 @@
 // Maya node ID.
 MTypeId FluidDomainNode::id(0x00000100);
 
-// Outputs.
-MObject FluidDomainNode::aN;
-MObject FluidDomainNode::aDt;
-MObject FluidDomainNode::aDiff;
-MObject FluidDomainNode::aVisc;
-MObject FluidDomainNode::aForce;
-MObject FluidDomainNode::aSource;
-MObject FluidDomainNode::aX;
-MObject FluidDomainNode::aU;
-MObject FluidDomainNode::aV;
-MObject FluidDomainNode::aW;
+// Attributes.
+MObject FluidDomainNode::aVoxelCount;
+MObject FluidDomainNode::aTimestep;
+MObject FluidDomainNode::aDiffusion;
+MObject FluidDomainNode::aViscosity;
+MObject FluidDomainNode::aForceMultiplier;
+MObject FluidDomainNode::aSourceMultiplier;
+MObject FluidDomainNode::aDensity;
+MObject FluidDomainNode::aVelocityU;
+MObject FluidDomainNode::aVelocityV;
+MObject FluidDomainNode::aVelocityW;
+MObject FluidDomainNode::aWidth; 
+MObject FluidDomainNode::aHeight;
+MObject FluidDomainNode::aLength;
 
 // Default constructor.
 FluidDomainNode::FluidDomainNode() {}
@@ -38,53 +41,65 @@ MStatus FluidDomainNode::initialize()
     MFnTypedAttribute tAttr;
 
     // Attributes.
-    aDt = nAttr.create("dt", "dt", MFnNumericData::kFloat);
+    aTimestep = nAttr.create("timestep", "timestep", MFnNumericData::kFloat, 0.001f);
     nAttr.setKeyable(true);
-    addAttribute(aDt);
+    addAttribute(aTimestep);
 
-    aDiff = nAttr.create("diff", "diff", MFnNumericData::kFloat);
+    aDiffusion = nAttr.create("diffusion", "diffusion", MFnNumericData::kFloat, 0.0f);
     nAttr.setKeyable(true);
-    addAttribute(aDiff);
+    addAttribute(aDiffusion);
 
-    aVisc = nAttr.create("visc", "visc", MFnNumericData::kFloat);
+    aViscosity = nAttr.create("viscosity", "viscosity", MFnNumericData::kFloat, 0.0f);
     nAttr.setKeyable(true);
-    addAttribute(aVisc);
+    addAttribute(aViscosity);
 
-    aForce = nAttr.create("force", "force", MFnNumericData::kFloat);
+    aForceMultiplier = nAttr.create("forceMultiplier", "forceMultiplier", MFnNumericData::kFloat, 5.0f);
     nAttr.setKeyable(true);
-    addAttribute(aForce);
+    addAttribute(aForceMultiplier);
 
-    aSource = nAttr.create("source", "source", MFnNumericData::kFloat);
+    aSourceMultiplier = nAttr.create("sourceMultiplier", "sourceMultiplier", MFnNumericData::kFloat, 200.0f);
     nAttr.setKeyable(true);
-    addAttribute(aSource);
+    addAttribute(aSourceMultiplier);
 
-    aX = tAttr.create("x", "x", MFnData::kFloatArray);
+    aWidth = nAttr.create("width", "width", MFnNumericData::kFloat, 5.0f);
+    nAttr.setKeyable(true);
+    addAttribute(aWidth);
+
+    aHeight = nAttr.create("height", "height", MFnNumericData::kFloat, 5.0f);
+    nAttr.setKeyable(true);
+    addAttribute(aHeight);
+
+    aLength = nAttr.create("length", "length", MFnNumericData::kFloat, 5.0f);
+    nAttr.setKeyable(true);
+    addAttribute(aLength);
+
+    aDensity = tAttr.create("density", "density", MFnData::kFloatArray);
     tAttr.setWritable(false);
     tAttr.setStorable(false);
-    addAttribute(aX);
+    addAttribute(aDensity);
 
-    aU = tAttr.create("u", "u", MFnData::kFloatArray);
+    aVelocityU = tAttr.create("velocityU", "velocityU", MFnData::kFloatArray);
     tAttr.setWritable(false);
     tAttr.setStorable(false);
-    addAttribute(aU);
+    addAttribute(aVelocityU);
 
-    aV = tAttr.create("v", "v", MFnData::kFloatArray);
+    aVelocityV = tAttr.create("velocityV", "velocityV", MFnData::kFloatArray);
     tAttr.setWritable(false);
     tAttr.setStorable(false);
-    addAttribute(aV);
+    addAttribute(aVelocityV);
 
-    aW = tAttr.create("w", "w", MFnData::kFloatArray);
+    aVelocityW = tAttr.create("velocityW", "velocityW", MFnData::kFloatArray);
     tAttr.setWritable(false);
     tAttr.setStorable(false);
-    addAttribute(aW);
+    addAttribute(aVelocityW);
 
-    aN = nAttr.create("N", "N", MFnNumericData::kInt);
+    aVoxelCount = nAttr.create("voxelCount", "voxelCount", MFnNumericData::kInt, 10);
     nAttr.setKeyable(true);
-    addAttribute(aN);
-    attributeAffects(aN, aX);
-    attributeAffects(aN, aU);
-    attributeAffects(aN, aV);
-    attributeAffects(aN, aW);
+    addAttribute(aVoxelCount);
+    attributeAffects(aVoxelCount, aDensity);
+    attributeAffects(aVoxelCount, aVelocityU);
+    attributeAffects(aVoxelCount, aVelocityV);
+    attributeAffects(aVoxelCount, aVelocityW);
 
     return MS::kSuccess;
 }

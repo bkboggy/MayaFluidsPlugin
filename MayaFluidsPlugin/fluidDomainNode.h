@@ -27,17 +27,20 @@ public:
     // Maya node ID.
     static MTypeId id;
 
-    // Outputs.
-    static MObject aN;       // Number of voxels.
-    static MObject aDt;      // Timestep.
-    static MObject aDiff;    // Diffusion rate.
-    static MObject aVisc;    // Viscosity.
-    static MObject aForce;   // Force multipler.
-    static MObject aSource;  // Source multipler.
-    static MObject aX;       // Density field.
-    static MObject aU;       // U-component of velocity field.
-    static MObject aV;       // V-component of velocity field.
-    static MObject aW;       // W-component of velocity field.
+    // Attributes.
+    static MObject aVoxelCount;        // Number of voxels.
+    static MObject aTimestep;          // Timestep.
+    static MObject aDiffusion;         // Diffusion rate.
+    static MObject aViscosity;         // Viscosity.
+    static MObject aForceMultiplier;   // Force multipler.
+    static MObject aSourceMultiplier;  // Source multipler.
+    static MObject aDensity;           // Density field.
+    static MObject aVelocityU;         // U-component of velocity field.
+    static MObject aVelocityV;         // V-component of velocity field.
+    static MObject aVelocityW;         // W-component of velocity field.
+    static MObject aWidth;             // Domain width.
+    static MObject aHeight;            // Domain height.
+    static MObject aLength;            // Domain length.
 };
 
 #endif
