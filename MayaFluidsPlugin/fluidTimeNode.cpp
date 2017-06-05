@@ -29,25 +29,24 @@ MStatus FluidTimeNode::compute(const MPlug& plug, MDataBlock& data)
 		return MS::kUnknownParameter;
 	}
 
-	float input = data.inputValue(aInValue, &status).asFloat();
-	float min = data.inputValue(aMin, &status).asFloat();
-	float max = data.inputValue(aMax, &status).asFloat();
-	float scale = data.inputValue(aScale, &status).asFloat();
+	MTime input = data.inputValue(aInValue, &status).asTime();
+	double min = data.inputValue(aMin, &status).asDouble();
+	double max = data.inputValue(aMax, &status).asDouble();
+	double scale = data.inputValue(aScale, &status).asDouble();
 
 	if (scale <= 0.0f)
 	{
 		scale = 0.01f;
 	}
 
-	cout << "FrameReader: reading " << input << endl;
-	float output;
+	MTime output;
 	if (input > max)
 	{
-		output = (max - min) / scale;
+		output = ((input + max) - input) / scale;
 	}
 	else if (input < min)
 	{
-		output = 0.0f;
+		output = MTime(0.0);
 	}
 	else
 	{
@@ -56,7 +55,7 @@ MStatus FluidTimeNode::compute(const MPlug& plug, MDataBlock& data)
 
 	MDataHandle hOutput = data.outputValue(aOutValue, &status);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
-	hOutput.setFloat(output);
+	hOutput.set(output);
 	hOutput.setClean();
 	data.setClean(plug);
 
@@ -66,29 +65,30 @@ MStatus FluidTimeNode::compute(const MPlug& plug, MDataBlock& data)
 MStatus FluidTimeNode::initialize()
 {
 	MStatus status;
+	MFnUnitAttribute uAttr;
 	MFnNumericAttribute nAttr;
 
-	aOutValue = nAttr.create("outValue", "outValue", MFnNumericData::kFloat);
+	aOutValue = uAttr.create("outValue", "outValue", MTime(0.0));
 	nAttr.setWritable(false);
 	nAttr.setStorable(false);
 	addAttribute(aOutValue);
 
-	aInValue = nAttr.create("inValue", "inValue", MFnNumericData::kFloat);
+	aInValue = uAttr.create("inValue", "inValue",MTime(0.0));
 	nAttr.setKeyable(true);
 	addAttribute(aInValue);
 	attributeAffects(aInValue, aOutValue);
 
-	aMin = nAttr.create("min", "min", MFnNumericData::kFloat);
+	aMin = nAttr.create("min", "min", MFnNumericData::kDouble);
 	nAttr.setKeyable(true);
 	addAttribute(aMin);
 	attributeAffects(aMin, aOutValue);
 
-	aMax = nAttr.create("max", "max", MFnNumericData::kFloat);
+	aMax = nAttr.create("max", "max", MFnNumericData::kDouble);
 	nAttr.setKeyable(true);
 	addAttribute(aMax);
 	attributeAffects(aMax, aOutValue);
 
-	aScale = nAttr.create("scale", "scale", MFnNumericData::kFloat);
+	aScale = nAttr.create("scale", "scale", MFnNumericData::kDouble);
 	nAttr.setKeyable(true);
 	addAttribute(aScale);
 	attributeAffects(aScale, aOutValue);

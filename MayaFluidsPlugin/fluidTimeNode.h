@@ -3,6 +3,8 @@
 
 #include <maya/MPxNode.h>
 #include <maya/MFnNumericAttribute.h>
+#include <maya/MTime.h>
+#include <maya/MFnUnitAttribute.h>
 
 class FluidTimeNode : public MPxNode
 {

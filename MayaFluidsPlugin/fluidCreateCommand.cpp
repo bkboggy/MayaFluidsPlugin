@@ -34,11 +34,11 @@ MStatus FluidCreateCommand::redoIt()
 	MSelectionList previous_list;
 	status = MGlobal::getActiveSelectionList(previous_list);
 
+	//*** start of complicated method of creating connection
 	//create FrameReaderNode
 	MFnDependencyNode fn;
 	fn.create(FluidTimeNode::id);
-	fReaderName = fn.name();
-	setResult(fReaderName);
+	fTimeName = fn.name();
 
 	//get the time1 node
 	status = MGlobal::selectByName("time1", MGlobal::kReplaceList);
@@ -67,17 +67,59 @@ MStatus FluidCreateCommand::redoIt()
 	status = dagMod.doIt();
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	//create Root Node
-	MFnDependencyNode rootFn;
-	rootFn.create(FluidLocatorNode::id);
-	rootName = rootFn.name();
-	setResult(rootName);
+	//*** end of complicated method of creating connection
+	//*** below shows easy way to connect nodes
 
-	MGlobal::executeCommand("connectAttr " + fReaderName + ".outValue " + rootName + ".frameIn");
+	//create Locator Node
+	//this creates a transformNode
+	MFnDependencyNode locatorTransFn;
+	locatorTransFn.create(FluidLocatorNode::id);
+	fLocatorTransformName = locatorTransFn.name();
+
+	//need to get the LocatorName from child of transformNode
+	status = MGlobal::selectByName(fLocatorTransformName, MGlobal::kReplaceList);
+	CHECK_MSTATUS_AND_RETURN_IT(status);
+
+	MDagPath transDagPath;
+	status = MGlobal::getActiveSelectionList(sl);
+	CHECK_MSTATUS_AND_RETURN_IT(status);
+	sl.getDagPath(0, transDagPath);
+	MFnDependencyNode locatorFn(transDagPath.child(0));
+	fLocatorName = locatorFn.name();
+
+	//create Domain Node
+	MFnDependencyNode domainFn;
+	domainFn.create(FluidDomainNode::id);
+	fDomainName = domainFn.name();
+
+	//create Solver Node
+	MFnDependencyNode solverFn;
+	solverFn.create(FluidSolverNode::id);
+	fSolverName = solverFn.name();
+
+	//connect fTime to fSolver
+	MGlobal::executeCommand("connectAttr " + fTimeName + ".outValue " + fSolverName + ".time");
+
+	//connect fDomain to fSolver
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".N " + fSolverName + ".N");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".diff " + fSolverName + ".diff");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".dt " + fSolverName + ".dt");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".force " + fSolverName + ".force");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".source " + fSolverName + ".source");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".visc " + fSolverName + ".visc");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".u " + fSolverName + ".u0");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".v " + fSolverName + ".v0");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".w " + fSolverName + ".w0");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".x " + fSolverName + ".x0");
+
+	//connect fSolver to fLocator
+	//TODO
 
 	//restore the selection list
 	status = MGlobal::setActiveSelectionList(previous_list);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
+
+	setResult(fTimeName+", "+fDomainName+", "+fSolverName+", "+fLocatorName+", "+fLocatorTransformName);
 
 	return MS::kSuccess;
 }
@@ -90,14 +132,24 @@ MStatus FluidCreateCommand::undoIt()
 	status = MGlobal::getActiveSelectionList(pl);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	status = MGlobal::selectByName(fReaderName, MGlobal::kReplaceList);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
-
+	//delete fluidTimeNode
+	status = MGlobal::selectByName(fTimeName, MGlobal::kReplaceList);
 	MGlobal::executeCommand("delete");
 
-	status = MGlobal::selectByName(rootName, MGlobal::kReplaceList);
-	CHECK_MSTATUS_AND_RETURN_IT(status);
+	//delete fluidDomainNode
+	status = MGlobal::selectByName(fDomainName, MGlobal::kReplaceList);
+	MGlobal::executeCommand("delete");
 
+	//delete fluidSolverNode
+	status = MGlobal::selectByName(fSolverName, MGlobal::kReplaceList);
+	MGlobal::executeCommand("delete");
+
+	//delete fluidLocatorNode
+	status = MGlobal::selectByName(fLocatorName, MGlobal::kReplaceList);
+	MGlobal::executeCommand("delete");
+
+	//delete transformNode
+	status = MGlobal::selectByName(fLocatorTransformName, MGlobal::kReplaceList);
 	MGlobal::executeCommand("delete");
 
 	status = MGlobal::setActiveSelectionList(pl);

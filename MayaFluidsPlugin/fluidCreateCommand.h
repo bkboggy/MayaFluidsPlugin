@@ -3,6 +3,8 @@
 
 #include "fluidTimeNode.h"
 #include "fluidLocatorNode.h"
+#include "fluidDomainNode.h"
+#include "fluidSolverNode.h"
 #include <maya/MPxCommand.h>
 #include <maya/MSyntax.h>
 #include <maya/MSelectionList.h>
@@ -10,6 +12,7 @@
 #include <maya/MFnDependencyNode.h>
 #include <maya/MDagModifier.h>
 #include <maya/MArgDatabase.h>
+#include <maya/MDagPath.h>
 
 class FluidCreateCommand : public MPxCommand
 {
@@ -22,7 +25,11 @@ public:
 	static void* creator();
 	static MSyntax newSyntax();
 private:
-	MString rootName;
-	MString fReaderName;
+	//used to store names of nodes created
+	MString fLocatorTransformName;
+	MString fLocatorName;
+	MString fTimeName;
+	MString fDomainName;
+	MString fSolverName;
 };
 #endif
