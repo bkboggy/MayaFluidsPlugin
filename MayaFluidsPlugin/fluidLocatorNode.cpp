@@ -20,6 +20,12 @@ FluidLocatorNode::~FluidLocatorNode()
 {
 }
 
+void FluidLocatorNode::postConstructor()
+{
+    MFnDependencyNode nodeFn(thisMObject());
+    nodeFn.setName("fluidLocatorShape#");
+}
+
 MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 {
 	MStatus status;

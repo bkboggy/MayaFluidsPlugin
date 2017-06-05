@@ -22,10 +22,11 @@ public:
 	FluidLocatorNode();
 	virtual ~FluidLocatorNode();
 
+    virtual void postConstructor();
 	virtual MStatus compute(const MPlug& plug, MDataBlock& data);
 	virtual void draw(M3dView&, const MDagPath&, M3dView::DisplayStyle, M3dView::DisplayStatus);
 
-	static void* creator();
+	static void* creator(); 
 	static MStatus initialize();
 
 	static MObject aOutValue;
