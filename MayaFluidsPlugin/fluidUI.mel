@@ -1,0 +1,41 @@
+global proc showFluidPluginWindow()
+{
+    int $developing = true;
+    if ($developing && `window -exists windowFluidPlugin`) 
+    {
+        deleteUI windowFluidPlugin;
+        windowPref -remove windowFluidPlugin;
+    }
+    if (!`window -exists windowFluidPlugin`)
+    {
+        window -title "Fluid Plugin by Bogdan Kravtsov and Raymond Aceves, 2017" 
+               -widthHeight 800 600
+               -topEdge 100
+               -leftEdge 300
+               windowFluidPlugin;
+            paneLayout -configuration "horizontal2" 
+                       -paneSize 1 100 10
+                       -paneSize 2 100 90;
+                columnLayout -adjustableColumn true;
+                    formLayout -numberOfDivisions 100
+                               formFluidSettings;
+                        button -label "Generate"
+                               -command "createFluidSimulation"
+                               btnGenerate;
+                        setParent ..;
+                    formLayout -edit
+                               -attachPosition btnGenerate "top" 0 20
+                               -attachPosition btnGenerate "left" 0 48
+                               formFluidSettings;
+                    setParent ..;
+                paneLayout -configuration "vertical2"
+                           -paneSize 1 50 100
+                           -paneSize 2 50 100;
+                    modelPanel;
+                    setParent ..;
+                    scriptedPanel -type nodeEditorPanel -label "Node Editor";
+    }
+    showWindow windowFluidPlugin;
+}
+
+showFluidPluginWindow();

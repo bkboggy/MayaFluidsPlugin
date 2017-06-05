@@ -35,6 +35,9 @@
     <ClCompile Include="pluginMain.cpp" />
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="fluidUI.mel" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{396C6412-763B-43E7-8EC5-9F54C3123885}</ProjectGuid>

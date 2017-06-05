@@ -1,6 +1,5 @@
 #include "fluidCreateCommand.h"
 
-
 const char* helpFlag = "-h";
 const char* helpFlagLong = "-help";
 
