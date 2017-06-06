@@ -106,36 +106,35 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
 	}
 	view.beginGL();
 
-	glBegin(GL_LINE_LOOP);
-	glVertex3f(width, height, length);
-	glVertex3f(-width, height, length);
-	glVertex3f(-width, height, -length);
-	glVertex3f(width, height, -length);
-	glEnd();
+    glBegin(GL_LINE_LOOP);
+    glVertex3f(0, 0, 0);
+    glVertex3f(0, height, 0);
+    glVertex3f(width, height, 0);
+    glVertex3f(width, 0, 0);
+    glEnd();
 
-	glBegin(GL_LINE_LOOP);
-	glVertex3f(width, -height, length);
-	glVertex3f(-width, -height, length);
-	glVertex3f(-width, -height, -length);
-	glVertex3f(width, -height, -length);
-	glEnd();
+    glBegin(GL_LINE_LOOP);
+    glVertex3f(0, 0, length);
+    glVertex3f(0, height, length);
+    glVertex3f(width, height, length);
+    glVertex3f(width, 0, length);
+    glEnd();
 
 	glBegin(GL_LINES);
-	glVertex3f(width, height, length);
-	glVertex3f(width, -height, length);
+    glVertex3f(0, 0, 0);
+    glVertex3f(0, 0, length);
 
-	glVertex3f(-width, height, length);
-	glVertex3f(-width, -height, length);
+    glVertex3f(width, 0, 0);
+    glVertex3f(width, 0, length);
 
-	glVertex3f(-width, height, -length);
-	glVertex3f(-width, -height, -length);
+	glVertex3f(0, height, 0);
+    glVertex3f(0, height, length);
 
-	glVertex3f(width, height, -length);
-	glVertex3f(width, -height, -length);
-	glEnd();
+    glVertex3f(width, height, 0);
+    glVertex3f(width, height, length);
+    glEnd();
 
 	view.endGL();
-
 }
 
 void* FluidLocatorNode::creator()
