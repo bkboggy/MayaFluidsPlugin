@@ -42,6 +42,10 @@ public:
     static MObject aWidth;             // Domain width.
     static MObject aHeight;            // Domain height.
     static MObject aLength;            // Domain length.
+    static MObject aMinTime;           // Minimum time.
+    static MObject aMaxTime;           // Maximum time.
+    static MObject aTimeScale;         // Time scale.
+    static MObject aVoxelAlpha;        // Voxel alpha channel.
 };
 
 #endif

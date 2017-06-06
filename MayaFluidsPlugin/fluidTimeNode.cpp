@@ -78,17 +78,20 @@ MStatus FluidTimeNode::initialize()
 	addAttribute(aInTime);
 	attributeAffects(aInTime, aOutTime);
 
-	aMin = nAttr.create("min", "min", MFnNumericData::kDouble, 1.0);
+	aMin = nAttr.create("minTime", "minTime", MFnNumericData::kDouble, 1.0);
+    nAttr.setMin(1.0);
 	nAttr.setKeyable(true);
 	addAttribute(aMin);
 	attributeAffects(aMin, aOutTime);
 
-	aMax = nAttr.create("max", "max", MFnNumericData::kDouble, 200.0);
+	aMax = nAttr.create("maxTime", "maxTime", MFnNumericData::kDouble, 200.0);
+    nAttr.setMin(1.0);
 	nAttr.setKeyable(true);
 	addAttribute(aMax);
 	attributeAffects(aMax, aOutTime);
 
-	aScale = nAttr.create("scale", "scale", MFnNumericData::kDouble, 1.0);
+	aScale = nAttr.create("timeScale", "timeScale", MFnNumericData::kDouble, 1.0);
+    nAttr.setMin(0.0);
 	nAttr.setKeyable(true);
 	addAttribute(aScale);
 	attributeAffects(aScale, aOutTime);

@@ -119,7 +119,12 @@ MStatus GenerateFluidCommand::redoIt()
     MGlobal::executeCommand("connectAttr " + fDomainName + ".width " + fLocatorName + ".width");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".length " + fLocatorName + ".length");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".showVoxels " + fLocatorName + ".showVoxels");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelAlpha " + fLocatorName + ".voxelAlpha");
 
+    // Connect fDomain to fTime
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".minTime " + fTimeName + ".minTime");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".maxTime " + fTimeName + ".maxTime");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".timeScale " + fTimeName + ".timeScale");
 
 	// Connect fSolver to fLocator.
     MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityU " + fLocatorName + ".velocityU");
@@ -127,9 +132,8 @@ MStatus GenerateFluidCommand::redoIt()
     MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityW " + fLocatorName + ".velocityW");
     MGlobal::executeCommand("connectAttr " + fSolverName + ".density " + fLocatorName + ".density");
     MGlobal::executeCommand("connectAttr " + fSolverName + ".voxelCount " + fLocatorName + ".voxelCount");
-    //MGlobal::executeCommand("connectAttr " + fSolverName + ".time " + fLocatorName + ".time");
 
-	//restore the selection list
+	// Restore the selection list.
 	status = MGlobal::setActiveSelectionList(previous_list);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 

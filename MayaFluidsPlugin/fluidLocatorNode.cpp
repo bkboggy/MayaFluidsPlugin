@@ -3,6 +3,7 @@
 MTypeId FluidLocatorNode::id(0x00000102);
 MObject FluidLocatorNode::aOutValue;
 MObject FluidLocatorNode::aShowVoxels;
+MObject FluidLocatorNode::aVoxelAlpha;
 MObject FluidLocatorNode::aVoxelCount;
 MObject FluidLocatorNode::aHeight;
 MObject FluidLocatorNode::aWidth;
@@ -43,6 +44,7 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 	float length = data.inputValue(aLength, &status).asFloat();
     int voxelCount = data.inputValue(aLength, &status).asInt();
     bool showVoxels = data.inputValue(aShowVoxels, &status).asBool();
+    float voxelAlpha = data.inputValue(aVoxelAlpha, &status).asFloat();
 
 	output = sin(timeIn);
 
@@ -63,6 +65,7 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
 	float length;
     int voxelCount;
     bool showVoxels;
+    float voxelAlpha;
 
 	MFnDependencyNode dFn(thisMObject(), &status);
 	if (status != MS::kSuccess)
@@ -136,10 +139,36 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
         return;
     }
 
+    valPlug = dFn.findPlug(aVoxelAlpha, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get voxelAlpha plug.");
+        return;
+    }
+    status = valPlug.getValue(voxelAlpha);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get voxelAlpha value.");
+        return;
+    }
+
 	view.beginGL();
+    glPushAttrib(GL_CURRENT_BIT);
 
     if (showVoxels)
     {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        MColor col = colorRGB(stat);
+        if (stat == M3dView::kLead)
+        {
+            glColor4f(0.26f, 1.0f, 0.64f, voxelAlpha);
+        }
+        else
+        {
+            glColor4f(col.r, col.g, col.b, voxelAlpha);
+        }
+
         float wIncrement = width / voxelCount;
         float hIncrement = height / voxelCount;
         float lIncrement = length / voxelCount;
@@ -192,6 +221,7 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
         glEnd();
     }
 
+    glPopAttrib();
 	view.endGL();
 }
 
@@ -220,6 +250,12 @@ MStatus FluidLocatorNode::initialize()
     aShowVoxels = nAttr.create("showVoxels", "showVoxels", MFnNumericData::kBoolean, false);
     nAttr.setKeyable(true);
     addAttribute(aShowVoxels);
+
+    aVoxelAlpha = nAttr.create("voxelAlpha", "voxelAlpha", MFnNumericData::kFloat, 0.3f);
+    nAttr.setMin(0.0f);
+    nAttr.setMax(1.0f);
+    nAttr.setKeyable(true);
+    addAttribute(aVoxelAlpha);
 
     aVoxelCount = nAttr.create("voxelCount", "voxelCount", MFnNumericData::kInt);
     nAttr.setKeyable(true);

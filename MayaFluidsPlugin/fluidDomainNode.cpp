@@ -6,6 +6,7 @@ MTypeId FluidDomainNode::id(0x00000100);
 // Attributes.
 MObject FluidDomainNode::aVoxelCount;
 MObject FluidDomainNode::aShowVoxels;
+MObject FluidDomainNode::aVoxelAlpha;
 MObject FluidDomainNode::aTimestep;
 MObject FluidDomainNode::aDiffusion;
 MObject FluidDomainNode::aViscosity;
@@ -18,6 +19,9 @@ MObject FluidDomainNode::aVelocityW;
 MObject FluidDomainNode::aWidth; 
 MObject FluidDomainNode::aHeight;
 MObject FluidDomainNode::aLength;
+MObject FluidDomainNode::aMinTime;   
+MObject FluidDomainNode::aMaxTime;   
+MObject FluidDomainNode::aTimeScale; 
 
 // Default constructor.
 FluidDomainNode::FluidDomainNode() {}
@@ -75,23 +79,19 @@ MStatus FluidDomainNode::initialize()
     addAttribute(aLength);
 
     aDensity = tAttr.create("density", "density", MFnData::kFloatArray);
-    tAttr.setWritable(false);
-    tAttr.setStorable(false);
+    nAttr.setKeyable(true);
     addAttribute(aDensity);
 
     aVelocityU = tAttr.create("velocityU", "velocityU", MFnData::kFloatArray);
-    tAttr.setWritable(false);
-    tAttr.setStorable(false);
+    nAttr.setKeyable(true);
     addAttribute(aVelocityU);
 
     aVelocityV = tAttr.create("velocityV", "velocityV", MFnData::kFloatArray);
-    tAttr.setWritable(false);
-    tAttr.setStorable(false);
+    nAttr.setKeyable(true);
     addAttribute(aVelocityV);
 
     aVelocityW = tAttr.create("velocityW", "velocityW", MFnData::kFloatArray);
-    tAttr.setWritable(false);
-    tAttr.setStorable(false);
+    nAttr.setKeyable(true);
     addAttribute(aVelocityW);
 
     aVoxelCount = nAttr.create("voxelCount", "voxelCount", MFnNumericData::kInt, 10);
@@ -105,6 +105,27 @@ MStatus FluidDomainNode::initialize()
     aShowVoxels = nAttr.create("showVoxels", "showVoxels", MFnNumericData::kBoolean, false);
     nAttr.setKeyable(true);
     addAttribute(aShowVoxels);
+
+    aVoxelAlpha = nAttr.create("voxelAlpha", "voxelAlpha", MFnNumericData::kFloat, 0.3f);
+    nAttr.setMin(0.0f);
+    nAttr.setMax(1.0f);
+    nAttr.setKeyable(true);
+    addAttribute(aVoxelAlpha);
+
+    aMinTime = nAttr.create("minTime", "minTime", MFnNumericData::kDouble, 1.0);
+    nAttr.setMin(1.0);
+    nAttr.setKeyable(true);
+    addAttribute(aMinTime);
+
+    aMaxTime = nAttr.create("maxTime", "maxTime", MFnNumericData::kDouble, 200.0);
+    nAttr.setMin(1.0);
+    nAttr.setKeyable(true);
+    addAttribute(aMaxTime);
+
+    aTimeScale = nAttr.create("timeScale", "timeScale", MFnNumericData::kDouble, 1.0);
+    nAttr.setMin(0.0);
+    nAttr.setKeyable(true);
+    addAttribute(aTimeScale);
 
     return MS::kSuccess;
 }

@@ -29,9 +29,12 @@ public:
 	static void* creator(); 
 	static MStatus initialize();
 
+    static MTypeId id;
+
 	static MObject aOutValue;
 	static MObject aTime;
     static MObject aShowVoxels;
+    static MObject aVoxelAlpha;
     static MObject aVoxelCount;
 	static MObject aHeight;
 	static MObject aWidth;
@@ -39,9 +42,7 @@ public:
     static MObject aDensity;
     static MObject aVelocityU;
     static MObject aVelocityV;
-    static MObject aVelocityW;
-
-	static MTypeId id;
+    static MObject aVelocityW;	
 };
 
 #endif
