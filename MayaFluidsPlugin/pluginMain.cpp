@@ -45,7 +45,7 @@ MStatus initializePlugin(MObject obj)
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
 	status = fnPlugin.registerCommand(
-		"generateFluidSimulation",
+		"generateFluid",
 		GenerateFluidCommand::creator,
 		GenerateFluidCommand::newSyntax);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -82,7 +82,7 @@ MStatus uninitializePlugin(MObject obj)
 	status = fnPlugin.deregisterNode(FluidLocatorNode::id);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	status = fnPlugin.deregisterCommand("generateFluidSimulation");
+	status = fnPlugin.deregisterCommand("generateFluid");
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
     status = fnPlugin.deregisterCommand("createFluidUI");

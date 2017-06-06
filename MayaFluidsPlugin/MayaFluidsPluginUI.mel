@@ -20,7 +20,7 @@ global proc showFluidPluginWindow()
                     formLayout -numberOfDivisions 100
                                formFluidSettings;
                         button -label "Generate"
-                               -command "generateFluidSimulation"
+                               -command "generateFluid"
                                btnGenerate;
                         setParent ..;
                     formLayout -edit

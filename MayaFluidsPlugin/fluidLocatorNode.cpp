@@ -40,6 +40,7 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 	float height = data.inputValue(aHeight, &status).asFloat();
 	float width = data.inputValue(aWidth, &status).asFloat();
 	float length = data.inputValue(aLength, &status).asFloat();
+    int voxelCount = data.inputValue(aLength, &status).asInt();
 
 	output = sin(timeIn);
 
@@ -58,81 +59,125 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
 	float height;
 	float width;
 	float length;
+    int voxelCount;
 
 	MFnDependencyNode dFn(thisMObject(), &status);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to initialize dependency node");
+		MGlobal::displayError("Unable to initialize dependency node.");
 		return;
 	}
 
 	MPlug valPlug = dFn.findPlug(aHeight, &status);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to get height plug");
+		MGlobal::displayError("Unable to get height plug.");
 		return;
 	}
 	status = valPlug.getValue(height);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to get height value");
+		MGlobal::displayError("Unable to get height value.");
 		return;
 	}
 
 	valPlug = dFn.findPlug(aWidth, &status);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to get width plug");
+		MGlobal::displayError("Unable to get width plug.");
 		return;
 	}
 	status = valPlug.getValue(width);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to get width value");
+		MGlobal::displayError("Unable to get width value.");
 		return;
 	}
 
 	valPlug = dFn.findPlug(aLength, &status);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to get length plug");
+		MGlobal::displayError("Unable to get length plug.");
 		return;
 	}
 	status = valPlug.getValue(length);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to get length value");
+		MGlobal::displayError("Unable to get length value.");
 		return;
 	}
+
+    valPlug = dFn.findPlug(aVoxelCount, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get voxelCount plug.");
+        return;
+    }
+    status = valPlug.getValue(voxelCount);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get voxelCount value.");
+        return;
+    }
+
 	view.beginGL();
 
-    glBegin(GL_LINE_LOOP);
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, height, 0);
-    glVertex3f(width, height, 0);
-    glVertex3f(width, 0, 0);
-    glEnd();
+    bool drawVoxels = true;  // TODO: MAKE THIS AN ATTRIBUTE
 
-    glBegin(GL_LINE_LOOP);
-    glVertex3f(0, 0, length);
-    glVertex3f(0, height, length);
-    glVertex3f(width, height, length);
-    glVertex3f(width, 0, length);
-    glEnd();
 
-	glBegin(GL_LINES);
-    glVertex3f(0, 0, 0);
-    glVertex3f(0, 0, length);
+    if (drawVoxels)
+    {
+        float wIncrement = width / voxelCount;
+        float hIncrement = height / voxelCount;
+        float lIncrement = length / voxelCount;
 
-    glVertex3f(width, 0, 0);
-    glVertex3f(width, 0, length);
+        glBegin(GL_LINES);
+        for (int i = 0; i <= voxelCount; i++)
+        {
+            for (int j = 0; j <= voxelCount; j++)
+            {
+                glVertex3f(wIncrement*i, 0, lIncrement*j);
+                glVertex3f(wIncrement*i, height, lIncrement*j);
 
-	glVertex3f(0, height, 0);
-    glVertex3f(0, height, length);
+                glVertex3f(wIncrement*i, hIncrement*j, 0);
+                glVertex3f(wIncrement*i, hIncrement*j, length);
 
-    glVertex3f(width, height, 0);
-    glVertex3f(width, height, length);
-    glEnd();
+                glVertex3f(0, hIncrement*i, lIncrement*j);
+                glVertex3f(width, hIncrement*i, lIncrement*j);
+            }
+        }
+        glEnd();
+    }
+    else
+    {
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(0, 0, 0);
+        glVertex3f(0, height, 0);
+        glVertex3f(width, height, 0);
+        glVertex3f(width, 0, 0);
+        glEnd();
+
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(0, 0, length);
+        glVertex3f(0, height, length);
+        glVertex3f(width, height, length);
+        glVertex3f(width, 0, length);
+        glEnd();
+
+        glBegin(GL_LINES);
+        glVertex3f(0, 0, 0);
+        glVertex3f(0, 0, length);
+
+        glVertex3f(width, 0, 0);
+        glVertex3f(width, 0, length);
+
+        glVertex3f(0, height, 0);
+        glVertex3f(0, height, length);
+
+        glVertex3f(width, height, 0);
+        glVertex3f(width, height, length);
+        glEnd();
+    }
 
 	view.endGL();
 }

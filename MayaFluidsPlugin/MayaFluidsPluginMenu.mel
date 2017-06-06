@@ -4,6 +4,8 @@ if (!`menu -exists fluidsPluginMenu`)
          -label "Fluids Plugin" 
          -tearOff false
          fluidsPluginMenu;
-    menuItem -label "Open"
+    menuItem -label "Generate"
+             -command "generateFluid";
+    menuItem -label "Editor..."
              -command "createFluidUI";
 }
