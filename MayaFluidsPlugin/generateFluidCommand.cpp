@@ -118,6 +118,7 @@ MStatus GenerateFluidCommand::redoIt()
     MGlobal::executeCommand("connectAttr " + fDomainName + ".height " + fLocatorName + ".height");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".width " + fLocatorName + ".width");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".length " + fLocatorName + ".length");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".showVoxels " + fLocatorName + ".showVoxels");
 
 
 	// Connect fSolver to fLocator.

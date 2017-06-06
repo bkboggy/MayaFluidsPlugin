@@ -2,6 +2,7 @@
 
 MTypeId FluidLocatorNode::id(0x00000102);
 MObject FluidLocatorNode::aOutValue;
+MObject FluidLocatorNode::aShowVoxels;
 MObject FluidLocatorNode::aVoxelCount;
 MObject FluidLocatorNode::aHeight;
 MObject FluidLocatorNode::aWidth;
@@ -41,6 +42,7 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 	float width = data.inputValue(aWidth, &status).asFloat();
 	float length = data.inputValue(aLength, &status).asFloat();
     int voxelCount = data.inputValue(aLength, &status).asInt();
+    bool showVoxels = data.inputValue(aShowVoxels, &status).asBool();
 
 	output = sin(timeIn);
 
@@ -53,13 +55,14 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 	return MS::kSuccess;
 }
 
-void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::DisplayStyle  style, M3dView::DisplayStatus stat)
+void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::DisplayStyle style, M3dView::DisplayStatus stat)
 {
 	MStatus status;
 	float height;
 	float width;
 	float length;
     int voxelCount;
+    bool showVoxels;
 
 	MFnDependencyNode dFn(thisMObject(), &status);
 	if (status != MS::kSuccess)
@@ -120,12 +123,22 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
         return;
     }
 
+    valPlug = dFn.findPlug(aShowVoxels, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get showVoxel plug.");
+        return;
+    }
+    status = valPlug.getValue(showVoxels);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get showVoxel value.");
+        return;
+    }
+
 	view.beginGL();
 
-    bool drawVoxels = true;  // TODO: MAKE THIS AN ATTRIBUTE
-
-
-    if (drawVoxels)
+    if (showVoxels)
     {
         float wIncrement = width / voxelCount;
         float hIncrement = height / voxelCount;
@@ -203,6 +216,10 @@ MStatus FluidLocatorNode::initialize()
 	nAttr.setKeyable(true);
 	addAttribute(aTime);
 	attributeAffects(aTime, aOutValue);
+
+    aShowVoxels = nAttr.create("showVoxels", "showVoxels", MFnNumericData::kBoolean, false);
+    nAttr.setKeyable(true);
+    addAttribute(aShowVoxels);
 
     aVoxelCount = nAttr.create("voxelCount", "voxelCount", MFnNumericData::kInt);
     nAttr.setKeyable(true);

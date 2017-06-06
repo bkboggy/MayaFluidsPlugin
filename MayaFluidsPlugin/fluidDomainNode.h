@@ -29,6 +29,7 @@ public:
 
     // Attributes.
     static MObject aVoxelCount;        // Number of voxels.
+    static MObject aShowVoxels;        // Indicates whether voxels are shown.
     static MObject aTimestep;          // Timestep.
     static MObject aDiffusion;         // Diffusion rate.
     static MObject aViscosity;         // Viscosity.

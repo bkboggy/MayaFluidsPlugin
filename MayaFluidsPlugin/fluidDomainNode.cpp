@@ -5,6 +5,7 @@ MTypeId FluidDomainNode::id(0x00000100);
 
 // Attributes.
 MObject FluidDomainNode::aVoxelCount;
+MObject FluidDomainNode::aShowVoxels;
 MObject FluidDomainNode::aTimestep;
 MObject FluidDomainNode::aDiffusion;
 MObject FluidDomainNode::aViscosity;
@@ -100,6 +101,10 @@ MStatus FluidDomainNode::initialize()
     attributeAffects(aVoxelCount, aVelocityU);
     attributeAffects(aVoxelCount, aVelocityV);
     attributeAffects(aVoxelCount, aVelocityW);
+
+    aShowVoxels = nAttr.create("showVoxels", "showVoxels", MFnNumericData::kBoolean, false);
+    nAttr.setKeyable(true);
+    addAttribute(aShowVoxels);
 
     return MS::kSuccess;
 }

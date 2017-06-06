@@ -31,6 +31,7 @@ public:
 
 	static MObject aOutValue;
 	static MObject aTime;
+    static MObject aShowVoxels;
     static MObject aVoxelCount;
 	static MObject aHeight;
 	static MObject aWidth;
