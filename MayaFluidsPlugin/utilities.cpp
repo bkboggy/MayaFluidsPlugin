@@ -21,12 +21,20 @@ void Utilities::createSpheres(MString locatorName, float length, float width, fl
 	float y_init = x_offset / 2.0f;
 	float z_offset = length / (float)O;
 	float z_init = x_offset / 2.0f;
+
 	float smallest = x_offset;
-	if (y_offset < x_offset && y_offset < z_offset)
-		smallest = y_offset;
-	else if (z_offset < x_offset && z_offset < y_offset)
-		smallest = z_offset;
+
+    if (y_offset < x_offset && y_offset < z_offset)
+    {
+        smallest = y_offset;
+    }
+    else if (z_offset < x_offset && z_offset < y_offset)
+    {
+        smallest = z_offset;
+    }
+
 	MString rr(std::to_string(smallest/10.0f).c_str());
+
 	for (int i = 0; i < N; i++) {
 		MString ii(std::to_string(i).c_str());
 		MString xx(std::to_string(x_init + ((float)i * x_offset)).c_str());
@@ -45,4 +53,37 @@ void Utilities::createSpheres(MString locatorName, float length, float width, fl
 		}
 	}
 	MGlobal::executeCommand("select " + locatorName);
+}
+
+void Utilities::simulateFluid(MString locatorName, MStringArray sphereNames, MFloatArray density, float width, float height, float length, int N, int M, int O)
+{
+    float x_offset = width / N;
+    float x_init = x_offset / 2;
+    float y_offset = height / M;
+    float y_init = x_offset / 2;
+    float z_offset = length / O;
+    float z_init = x_offset / 2;
+   
+    float smallest = std::fminf(std::fminf(x_offset, y_offset), z_offset);
+    
+
+    for (int x = 0; x < N; x++) {
+        MString x_name(std::to_string(x).c_str());
+        MString x_pos(std::to_string(x_init + ((float)x * x_offset)).c_str());
+        for (int y = 0; y < M; y++) {
+            MString y_name(std::to_string(y).c_str());
+            MString y_pos(std::to_string(y_init + ((float)y * y_offset)).c_str());
+            for (int z = 0; z < O; z++) {
+                MString z_name(std::to_string(z).c_str());
+                MString z_pos(std::to_string(z_init + ((float)z * z_offset)).c_str());
+                MString rr(std::to_string((smallest / 2) * density[x + N * (y + O * z)]).c_str());
+                MGlobal::executeCommand("sphere -n fSphere_" + x_name + "_" + y_name + "_" + z_name + " -r " + rr);
+                MGlobal::executeCommand("move -r " + x_pos + " " + y_pos + " " + z_pos);
+                MGlobal::executeCommand("select " + locatorName);
+                MGlobal::executeCommand("parent -a -s fSphere_" + x_name + "_" + y_name + "_" + z_name);
+                MGlobal::executeCommand("setAttr \"fSphere_" + x_name + "_" + y_name + "_" + z_name + "Shape.template\" 1");
+            }
+        }
+    }
+    MGlobal::executeCommand("select " + locatorName);
 }

@@ -2,7 +2,6 @@
 
 const char* helpFlag = "-h";
 const char* helpFlagLong = "-help";
-
 const char* helpText = "This will create and link all necessary nodes for the Fluid Simulation.";
 
 // Default constructor.
@@ -137,7 +136,7 @@ MStatus GenerateFluidCommand::redoIt()
 	status = MGlobal::setActiveSelectionList(previous_list);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-	Utilities::createSpheres(fLocatorTransformName, 5.0f, 5.0f, 5.0f, 10, 10, 10);
+	//Utilities::createSpheres(fLocatorTransformName, 5.0f, 5.0f, 5.0f, 10, 10, 10);
 
 	setResult(fTimeName + ", " + fDomainName + ", " + fSolverName + ", " + fLocatorName + ", " + fLocatorTransformName);
 

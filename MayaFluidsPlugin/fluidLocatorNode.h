@@ -2,6 +2,7 @@
 #define FLUID_LOCATOR_NODE_H
 
 #include <maya/MFloatArray.h>
+#include <maya/MStringArray.h>
 #include <maya/MTypeId.h>
 #include <maya/MStatus.h>
 #include <maya/M3dView.h>
@@ -9,12 +10,16 @@
 #include <maya/MPxLocatorNode.h>
 #include <maya/MFnDependencyNode.h>
 #include <maya/MFnFloatArrayData.h>
+#include <maya/MFnStringArrayData.h>
 #include <maya/MFnNumericAttribute.h>
 #include <maya/MFnTypedAttribute.h>
 #include <maya/MFnUnitAttribute.h>
 #include <maya/MSelectionList.h>
+#include <maya/MString.h>
+#include <maya/MArrayDataHandle.h>
 #include <maya/MTime.h>
 #include <math.h>
+#include "utilities.h"
 
 class FluidLocatorNode : public MPxLocatorNode
 {
@@ -31,7 +36,7 @@ public:
 
     static MTypeId id;
 
-	static MObject aOutValue;
+    static MObject aFluid;
 	static MObject aTime;
     static MObject aShowVoxels;
     static MObject aVoxelAlpha;
