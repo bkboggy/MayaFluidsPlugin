@@ -26,6 +26,7 @@
     <ClInclude Include="fluidLocatorNode.h" />
     <ClInclude Include="fluidSolverNode.h" />
     <ClInclude Include="fluidTimeNode.h" />
+    <ClInclude Include="multiSphereNode.h" />
     <ClInclude Include="utilities.h" />
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +37,7 @@
     <ClCompile Include="fluidLocatorNode.cpp" />
     <ClCompile Include="fluidSolverNode.cpp" />
     <ClCompile Include="fluidTimeNode.cpp" />
+    <ClCompile Include="multiSphereNode.cpp" />
     <ClCompile Include="pluginMain.cpp" />
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
