@@ -5,6 +5,7 @@
 #include "fluidLocatorNode.h"
 #include "fluidDomainNode.h"
 #include "fluidSolverNode.h"
+#include "utilities.h"
 #include <maya/MPxCommand.h>
 #include <maya/MSyntax.h>
 #include <maya/MSelectionList.h>

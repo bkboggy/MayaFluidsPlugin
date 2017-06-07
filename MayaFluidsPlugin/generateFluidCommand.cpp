@@ -137,6 +137,8 @@ MStatus GenerateFluidCommand::redoIt()
 	status = MGlobal::setActiveSelectionList(previous_list);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 
+	Utilities::createSpheres(fLocatorTransformName, 5.0f, 5.0f, 5.0f, 10, 10, 10);
+
 	setResult(fTimeName + ", " + fDomainName + ", " + fSolverName + ", " + fLocatorName + ", " + fLocatorTransformName);
 
 	return MS::kSuccess;
