@@ -14,6 +14,9 @@ MObject FluidLocatorNode::aVelocityU;
 MObject FluidLocatorNode::aVelocityV;
 MObject FluidLocatorNode::aVelocityW;
 
+// Temporary
+MObject FluidLocatorNode::aRadius;
+
 FluidLocatorNode::FluidLocatorNode()
 {
 }
@@ -47,6 +50,7 @@ MStatus FluidLocatorNode::initialize()
 
     aTime = uAttr.create("time", "time", MTime(1.0));
     nAttr.setKeyable(true);
+    tAttr.setStorable(true);
     addAttribute(aTime);
     attributeAffects(aTime, aFluid);
 
@@ -62,6 +66,7 @@ MStatus FluidLocatorNode::initialize()
 
     aVoxelCount = nAttr.create("voxelCount", "voxelCount", MFnNumericData::kInt);
     nAttr.setKeyable(true);
+    tAttr.setStorable(true);
     addAttribute(aVoxelCount);
     attributeAffects(aVoxelCount, aFluid);
 
@@ -80,6 +85,14 @@ MStatus FluidLocatorNode::initialize()
     addAttribute(aLength);
     attributeAffects(aLength, aFluid);
 
+    // Temporary
+    aRadius = nAttr.create("radius", "radius", MFnNumericData::kFloat, 0.5f);
+    nAttr.setKeyable(true);
+    nAttr.setMin(0.0);
+    nAttr.setMax(1.0);
+    addAttribute(aRadius);
+    attributeAffects(aRadius, aFluid);
+
     /*
     MFloatArray defaultMArr(100, 0.0f);
     MFnFloatArrayData fnDefaultMArr;
@@ -90,21 +103,25 @@ MStatus FluidLocatorNode::initialize()
 
     aDensity = tAttr.create("density", "density", MFnData::kFloatArray);
     tAttr.setKeyable(true);
+    tAttr.setStorable(true);
     addAttribute(aDensity);
-    attributeAffects(aDensity, aDensity);
+    attributeAffects(aDensity, aFluid);
 
     aVelocityU = tAttr.create("velocityU", "velocityU", MFnData::kFloatArray);
     tAttr.setKeyable(true);
+    tAttr.setStorable(true);
     addAttribute(aVelocityU);
     attributeAffects(aVelocityU, aFluid);
 
     aVelocityW = tAttr.create("velocityV", "velocityV", MFnData::kFloatArray);
     tAttr.setKeyable(true);
+    tAttr.setStorable(true);
     addAttribute(aVelocityW);
     attributeAffects(aVelocityW, aFluid);
 
     aVelocityW = tAttr.create("velocityW", "velocityW", MFnData::kFloatArray);
     tAttr.setKeyable(true);
+    tAttr.setStorable(true);
     addAttribute(aVelocityW);
     attributeAffects(aVelocityW, aFluid);
 
@@ -116,12 +133,10 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 	MStatus status;
 	float output;
 
-    /*
 	if (plug != aFluid)
 	{
 		return MS::kUnknownParameter;
 	}
-    */
 
 	float height = data.inputValue(aHeight, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -140,9 +155,13 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     MFnStringArrayData fluidFnData(arrOutDataHandle.data());
     MStringArray fluidOut = fluidFnData.array();  // should probably rename to something else... not sure
 
+    // Temporary
+    float radius = data.inputValue(aRadius, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
     // For testing, later on it'll be input array.
     int size = voxelCount*voxelCount*voxelCount;
-    MFloatArray density(size, 0.5f);
+    MFloatArray density(size, radius);
 
     // Locator transform node.
     MFnDependencyNode nodeFn(thisMObject());
@@ -154,12 +173,9 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
         // Right now, we just set the size whenever it's 0; however, we should check the length and the
         // size -- if they don't match, we should readjust the array, discarding outliers (if smaller),
         // or simply adding space if larger.
-        fluidOut.setLength(size);    
-
-        // It's temporarily here, but we should move it out of this if statement and run simluation on any
-        // change.  Internal logic will determine if creation, deletion or edit is required.
-        Utilities::simulateFluid(name, fluidOut, density, width, height, length, voxelCount, voxelCount, voxelCount);
+        fluidOut.setLength(size);           
     }
+    Utilities::simulateFluid(name, fluidOut, density, width, height, length, voxelCount, voxelCount, voxelCount);
 
     MDataHandle hOut = data.outputValue(aFluid, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -189,6 +205,20 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
 		MGlobal::displayError("Unable to initialize dependency node.");
 		return;
 	}
+
+    MPlug fluidPlug = dFn.findPlug(aFluid, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to getfluid plug.");
+        return;
+    }
+    MObject fluidObj;
+    status = fluidPlug.getValue(fluidObj);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get fluid value.");
+        return;
+    }
 
 	MPlug valPlug = dFn.findPlug(aHeight, &status);
 	if (status != MS::kSuccess)

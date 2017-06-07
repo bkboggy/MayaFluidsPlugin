@@ -48,6 +48,9 @@ public:
     static MObject aVelocityU;
     static MObject aVelocityV;
     static MObject aVelocityW;	
+
+    // Temporary
+    static MObject aRadius;
 };
 
 #endif

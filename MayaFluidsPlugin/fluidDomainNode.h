@@ -28,7 +28,7 @@ public:
     static MTypeId id;
 
     // Attributes.
-    static MObject aVoxelCount;        // Number of voxels.
+    static MObject aVoxelCount;      // Number of voxels.
     static MObject aShowVoxels;        // Indicates whether voxels are shown.
     static MObject aTimestep;          // Timestep.
     static MObject aDiffusion;         // Diffusion rate.
