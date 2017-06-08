@@ -13,6 +13,7 @@ void Utilities::initializeFloatArray(float* arr, int size, float val)
     }
 }
 
+// Simulated fluid by drawing spheres in the Maya viewport.
 void Utilities::simulateFluid(MString locatorName, MStringArray &fluid, MFloatArray &density,
     float domainWidth, float domainHeight, float domainLength, int voxelCountWidth, int voxelCountHeight, int voxelCountLength)
 {
@@ -54,4 +55,25 @@ void Utilities::simulateFluid(MString locatorName, MStringArray &fluid, MFloatAr
         }
     }
     MGlobal::executeCommand("select " + locatorName);
+}
+
+// Clears fluid by deleting spheres and setting the desired size.
+void Utilities::resetFluid(MStringArray &fluid, int size)
+{
+    // If empty, just set the desired size.
+    int length = fluid.length();
+    if (length == 0)
+    {
+        fluid.setLength(size);
+        return;
+    }
+
+    // If there are any elements, delete them.
+    for (int i = 0; i < length; i++)
+    {
+        MGlobal::executeCommand("delete " + fluid[i]);
+    }
+    // Clear and set the new size;
+    fluid.clear();
+    fluid.setLength(size);
 }

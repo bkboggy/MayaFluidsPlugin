@@ -415,30 +415,41 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     MString name = nodeFn.name();
     name.substitute("Shape", "");
 
+    // Get output values which may have an affect on how fluids is drawn.
+    int voxelCountWidthOut = data.outputValue(aVoxelCountWidthOut, &status).asInt();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    int voxelCountHeightOut = data.outputValue(aVoxelCountHeightOut, &status).asInt();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    int voxelCountLengthOut = data.outputValue(aVoxelCountLengthOut, &status).asInt();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    float3& domainOriginOut = data.outputValue(aDomainOriginOut, &status).asFloat3();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    float domainHeightOut = data.outputValue(aDomainHeightOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    float domainWidthOut = data.outputValue(aDomainWidthOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    float domainLengthOut = data.outputValue(aDomainLengthOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
-
-
-    // TODO: Check if old values in outputs are changed and perform fluid operation based
-    // on that (draw, reset, update, etc).    
-    int size = voxelCountWidth*voxelCountHeight*voxelCountLength;
-
-    // TODO: Change it so that it does complete redraw of count
-    //       change in any dimension (size change may not account
-    //       for same volume with different counts in each dimension
-    //       which will cause wrong results from 3D->1D flattening.
-    if (fluid.length() != size)
+    // Compare the cached outputs with the inputs to see if any changes were made.  If there
+    // were, clear the fluid. This is equivalent of the user adjusting the simluation, so there's 
+    // a cost to pay. This may be optimized later on, if necessary.
+    bool reset = false;
+    if (voxelCountWidth != voxelCountWidthOut || voxelCountHeight != voxelCountHeightOut ||
+        voxelCountLength != voxelCountLengthOut || domainWidth != domainWidthOut ||
+        domainHeight != domainHeightOut || domainLength != domainLengthOut || 
+        domainOrigin[0] != domainOriginOut[0] || domainOrigin[1] != domainOriginOut[1] ||
+        domainOrigin[2] != domainOriginOut[2])
     {
-        fluid.clear();
-        fluid.setLength(size);           
+        int size = voxelCountWidth*voxelCountHeight*voxelCountLength;
+        Utilities::resetFluid(fluid, size);
     }
+
+    // Simulate the fluid. Reset flag is passed in order to fascillitate reset of the fluid.
+    // If there is any existing fluid, it'll be deleted.
     Utilities::simulateFluid(name, fluid, density, domainWidth, domainHeight, domainLength, 
         voxelCountWidth, voxelCountHeight, voxelCountLength);
-
-
-
-
-
-    
+ 
     MDataHandle hOutput = data.outputValue(aFluid, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnStringArrayData fluidFnDataOut;
