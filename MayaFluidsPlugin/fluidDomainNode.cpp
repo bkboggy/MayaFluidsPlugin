@@ -386,7 +386,7 @@ MStatus FluidDomainNode::initialize()
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aMinTimeIn);
-    attributeAffects(aMinTimeIn, aMinTimeIn);
+    attributeAffects(aMinTimeIn, aMinTimeOut);
 
     aMaxTimeIn = nAttr.create("maxTimeIn", "maxTimeIn", MFnNumericData::kDouble, 200.0);
     nAttr.setMin(1.0);

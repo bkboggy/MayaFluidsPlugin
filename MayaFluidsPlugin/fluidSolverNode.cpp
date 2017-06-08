@@ -12,6 +12,8 @@ MObject FluidSolverNode::aVelocityW;
 // Inputs.
 MObject FluidSolverNode::aTime;
 MObject FluidSolverNode::aVoxelCountWidth;
+MObject FluidSolverNode::aVoxelCountHeight;
+MObject FluidSolverNode::aVoxelCountLength;
 MObject FluidSolverNode::aTimestep;
 MObject FluidSolverNode::aDiffusionRate;
 MObject FluidSolverNode::aViscosity;
