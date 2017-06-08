@@ -211,14 +211,13 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 	{
 		for (unsigned i = 0; i < outputArray.elementCount(); i++)
 		{
-			MDataHandle indexed = outputArray.outputValue(&status);
-			status = outputArray.next();
-			indexed.setFloat(radius);
+			outputArray.jumpToArrayElement(i);
+			outputArray.outputValue().setFloat(radius);
 		}
 	}
 
 
-	//status = outputArray.setAllClean();
+	status = outputArray.setAllClean();
 
 	//******************************************
 
