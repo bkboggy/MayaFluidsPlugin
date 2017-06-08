@@ -120,6 +120,7 @@ void Utilities::modifySpheres(MString locatorName, MStringArray &sphereNames, MF
 		sphereNames.remove(i);
 	}
 	MGlobal::executeCommand("select " + locatorName);
+	MGlobal::executeCommand("connectAttr " + locatorShapeName + ".outRadius[0] makeNurbSphere1.radius");
 }
 
 void Utilities::simulateFluid(MString locatorName, MStringArray &sphereNames, MFloatArray &density, float width, float height, float length, int N, int M, int O)

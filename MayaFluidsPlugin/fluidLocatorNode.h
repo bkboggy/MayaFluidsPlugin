@@ -19,6 +19,7 @@
 #include <maya/MArrayDataHandle.h>
 #include <maya/MTime.h>
 #include <math.h>
+#include <maya/MArrayDataBuilder.h>
 #include "utilities.h"
 
 class FluidLocatorNode : public MPxLocatorNode
@@ -47,7 +48,8 @@ public:
     static MObject aDensity;
     static MObject aVelocityU;
     static MObject aVelocityV;
-    static MObject aVelocityW;	
+    static MObject aVelocityW;
+	static MObject aOutRadiusArr;
 
     // Temporary
     static MObject aRadius;

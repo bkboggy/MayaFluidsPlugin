@@ -13,6 +13,7 @@ MObject FluidLocatorNode::aDensity;
 MObject FluidLocatorNode::aVelocityU;
 MObject FluidLocatorNode::aVelocityV;
 MObject FluidLocatorNode::aVelocityW;
+MObject FluidLocatorNode::aOutRadiusArr;
 
 // Temporary
 MObject FluidLocatorNode::aRadius;
@@ -48,11 +49,19 @@ MStatus FluidLocatorNode::initialize()
     nAttr.setStorable(false);
     addAttribute(aFluid);
 
+	aOutRadiusArr = nAttr.create("outRadius", "outRadius", MFnNumericData::kFloat);
+	nAttr.setArray(true);
+	nAttr.setWritable(false);
+	nAttr.setStorable(false);
+	nAttr.setUsesArrayDataBuilder(true);
+	addAttribute(aOutRadiusArr);
+
     aTime = uAttr.create("time", "time", MTime(1.0));
     nAttr.setKeyable(true);
     tAttr.setStorable(true);
     addAttribute(aTime);
     attributeAffects(aTime, aFluid);
+	attributeAffects(aTime, aOutRadiusArr);
 
     aShowVoxels = nAttr.create("showVoxels", "showVoxels", MFnNumericData::kBoolean, false);
     nAttr.setKeyable(true);
@@ -69,21 +78,25 @@ MStatus FluidLocatorNode::initialize()
     tAttr.setStorable(true);
     addAttribute(aVoxelCount);
     attributeAffects(aVoxelCount, aFluid);
+	attributeAffects(aVoxelCount, aOutRadiusArr);
 
     aHeight = nAttr.create("height", "height", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     addAttribute(aHeight);
     attributeAffects(aHeight, aFluid);
+	attributeAffects(aHeight, aOutRadiusArr);
 
     aWidth = nAttr.create("width", "width", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     addAttribute(aWidth);
     attributeAffects(aWidth, aFluid);
+	attributeAffects(aWidth, aOutRadiusArr);
 
     aLength = nAttr.create("length", "length", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     addAttribute(aLength);
     attributeAffects(aLength, aFluid);
+	attributeAffects(aLength, aOutRadiusArr);
 
     // Temporary
     aRadius = nAttr.create("radius", "radius", MFnNumericData::kFloat, 0.5f);
@@ -92,82 +105,122 @@ MStatus FluidLocatorNode::initialize()
     nAttr.setMax(1.0);
     addAttribute(aRadius);
     attributeAffects(aRadius, aFluid);
+	attributeAffects(aRadius, aOutRadiusArr);
 
     /*
-    MFloatArray defaultMArr(100, 0.0f);
-    MFnFloatArrayData fnDefaultMArr;
-    MFnData defaultArrData = fnDefaultMArr.create(defaultMArr, &status);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-    MObject defaultArr = defaultArrData.object();
-    */
+	MFloatArray defaultMArr(100, 0.0f);
+	MFnFloatArrayData fnDefaultMArr;
+	MFnData defaultArrData = fnDefaultMArr.create(defaultMArr, &status);
+	CHECK_MSTATUS_AND_RETURN_IT(status);
+	MObject defaultArr = defaultArrData.object();
+	*/
 
-    aDensity = tAttr.create("density", "density", MFnData::kFloatArray);
-    tAttr.setKeyable(true);
-    tAttr.setStorable(true);
-    addAttribute(aDensity);
-    attributeAffects(aDensity, aFluid);
+aDensity = tAttr.create("density", "density", MFnData::kFloatArray);
+tAttr.setKeyable(true);
+tAttr.setStorable(true);
+addAttribute(aDensity);
+attributeAffects(aDensity, aFluid);
+attributeAffects(aDensity, aOutRadiusArr);
 
-    aVelocityU = tAttr.create("velocityU", "velocityU", MFnData::kFloatArray);
-    tAttr.setKeyable(true);
-    tAttr.setStorable(true);
-    addAttribute(aVelocityU);
-    attributeAffects(aVelocityU, aFluid);
+aVelocityU = tAttr.create("velocityU", "velocityU", MFnData::kFloatArray);
+tAttr.setKeyable(true);
+tAttr.setStorable(true);
+addAttribute(aVelocityU);
+attributeAffects(aVelocityU, aFluid);
+attributeAffects(aVelocityU, aOutRadiusArr);
 
-    aVelocityW = tAttr.create("velocityV", "velocityV", MFnData::kFloatArray);
-    tAttr.setKeyable(true);
-    tAttr.setStorable(true);
-    addAttribute(aVelocityW);
-    attributeAffects(aVelocityW, aFluid);
+aVelocityW = tAttr.create("velocityV", "velocityV", MFnData::kFloatArray);
+tAttr.setKeyable(true);
+tAttr.setStorable(true);
+addAttribute(aVelocityW);
+attributeAffects(aVelocityW, aFluid);
+attributeAffects(aVelocityW, aOutRadiusArr);
 
-    aVelocityW = tAttr.create("velocityW", "velocityW", MFnData::kFloatArray);
-    tAttr.setKeyable(true);
-    tAttr.setStorable(true);
-    addAttribute(aVelocityW);
-    attributeAffects(aVelocityW, aFluid);
+aVelocityW = tAttr.create("velocityW", "velocityW", MFnData::kFloatArray);
+tAttr.setKeyable(true);
+tAttr.setStorable(true);
+addAttribute(aVelocityW);
+attributeAffects(aVelocityW, aFluid);
+attributeAffects(aVelocityW, aOutRadiusArr);
 
-    return MS::kSuccess;
+return MS::kSuccess;
 }
 
 MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 {
 	MStatus status;
 	//float output;
-	cout << "Locator:: computing" << endl;
 
-	if (plug != aFluid)
+	if (plug != aFluid && plug != aOutRadiusArr)
 	{
 		return MS::kUnknownParameter;
 	}
 
 	float height = data.inputValue(aHeight, &status).asFloat();
-    CHECK_MSTATUS_AND_RETURN_IT(status);
+	CHECK_MSTATUS_AND_RETURN_IT(status);
 
 	float width = data.inputValue(aWidth, &status).asFloat();
-    CHECK_MSTATUS_AND_RETURN_IT(status);
+	CHECK_MSTATUS_AND_RETURN_IT(status);
 
 	float length = data.inputValue(aLength, &status).asFloat();
-    CHECK_MSTATUS_AND_RETURN_IT(status);
+	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    int voxelCount = data.inputValue(aVoxelCount, &status).asInt();
-    CHECK_MSTATUS_AND_RETURN_IT(status);
+	int voxelCount = data.inputValue(aVoxelCount, &status).asInt();
+	CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    MDataHandle arrOutDataHandle = data.outputValue(aFluid, &status);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-    MFnStringArrayData fluidFnData(arrOutDataHandle.data());
-    MStringArray fluidOut = fluidFnData.array();  // should probably rename to something else... not sure
+	MDataHandle arrOutDataHandle = data.outputValue(aFluid, &status);
+	CHECK_MSTATUS_AND_RETURN_IT(status);
+	MFnStringArrayData fluidFnData(arrOutDataHandle.data());
+	MStringArray fluidOut = fluidFnData.array();  // should probably rename to something else... not sure
 
-    // Temporary
-    float radius = data.inputValue(aRadius, &status).asFloat();
-    CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    // For testing, later on it'll be input array.
-    int size = voxelCount*voxelCount*voxelCount;
-    MFloatArray density(size, radius);
+
+	// Temporary
+	float radius = data.inputValue(aRadius, &status).asFloat();
+	CHECK_MSTATUS_AND_RETURN_IT(status);
+
+	// For testing, later on it'll be input array.
+	int size = voxelCount*voxelCount*voxelCount;
+	MFloatArray density(size, radius);
 	//here is input array
 	MDataHandle arrInDataHandle = data.outputValue(aDensity, &status);
 	CHECK_MSTATUS_AND_RETURN_IT(status);
 	MFnFloatArrayData x0FnData(arrInDataHandle.data());
 	MFloatArray densityArr = x0FnData.array();
+
+
+	//*********************************
+
+	MArrayDataHandle outputArray = data.outputArrayValue(aOutRadiusArr, &status);
+
+	if (outputArray.elementCount() != (unsigned)size)
+	{
+
+		cout << "New plug array" << endl;
+		MArrayDataBuilder builder(aOutRadiusArr, size, &status);
+		for (int i = 0; i < size; i++)
+		{
+			MDataHandle outHandle = builder.addElement(i);
+			outHandle.set(radius);
+			//outHandle.setClean();
+		}
+
+		status = outputArray.set(builder);
+	}
+	else
+	{
+		for (unsigned i = 0; i < outputArray.elementCount(); i++)
+		{
+			MDataHandle indexed = outputArray.outputValue(&status);
+			status = outputArray.next();
+			indexed.setFloat(radius);
+		}
+	}
+
+
+	//status = outputArray.setAllClean();
+
+	//******************************************
 
     // Locator transform node.
     MFnDependencyNode nodeFn(thisMObject());
@@ -184,8 +237,8 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 		//For now, we will just  delete all spheres and recreate.
 		Utilities::modifySpheres(name, fluidOut, density, width, height, length, voxelCount, voxelCount, voxelCount, size, nameShape);
 		//fluidOut.setLength(size);
-	} else 
-		Utilities::simulateFluid(name, fluidOut, density, width, height, length, voxelCount, voxelCount, voxelCount);
+	} //else 
+		//Utilities::simulateFluid(name, fluidOut, density, width, height, length, voxelCount, voxelCount, voxelCount);
 	
 	
 
