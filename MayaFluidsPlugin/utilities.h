@@ -16,7 +16,11 @@ public:
 
     static void createSpheres(MString locatorName, float length, float width, float height, int N, int M, int O);
 
+	static void modifySpheres(MString locatorName, MStringArray &sphereNames, MFloatArray &density, float length, float width, float height, int N, int M, int O, int new_size, MString locatorShapeName);
+
     static void simulateFluid(MString locatorName, MStringArray &sphereNames, MFloatArray &density, float length, float width, float height, int N, int M, int O);
+
+
 };
 
 #endif

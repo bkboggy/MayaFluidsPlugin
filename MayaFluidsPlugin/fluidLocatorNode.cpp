@@ -131,7 +131,8 @@ MStatus FluidLocatorNode::initialize()
 MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 {
 	MStatus status;
-	float output;
+	//float output;
+	cout << "Locator:: computing" << endl;
 
 	if (plug != aFluid)
 	{
@@ -162,20 +163,31 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     // For testing, later on it'll be input array.
     int size = voxelCount*voxelCount*voxelCount;
     MFloatArray density(size, radius);
+	//here is input array
+	MDataHandle arrInDataHandle = data.outputValue(aDensity, &status);
+	CHECK_MSTATUS_AND_RETURN_IT(status);
+	MFnFloatArrayData x0FnData(arrInDataHandle.data());
+	MFloatArray densityArr = x0FnData.array();
 
     // Locator transform node.
     MFnDependencyNode nodeFn(thisMObject());
-    MString name = nodeFn.name();
+	MString nameShape = nodeFn.name();
+	MString name = nameShape;
     name.substitute("Shape", "");
 
-    if (fluidOut.length() == 0)
-    {     
-        // Right now, we just set the size whenever it's 0; however, we should check the length and the
-        // size -- if they don't match, we should readjust the array, discarding outliers (if smaller),
-        // or simply adding space if larger.
-        fluidOut.setLength(size);           
-    }
-    Utilities::simulateFluid(name, fluidOut, density, width, height, length, voxelCount, voxelCount, voxelCount);
+	if (fluidOut.length() != size)
+	{
+		// Right now, we just set the size whenever it's 0; however, we should check the length and the
+		// size -- if they don't match, we should readjust the array, discarding outliers (if smaller),
+		// or simply adding space if larger.
+
+		//For now, we will just  delete all spheres and recreate.
+		Utilities::modifySpheres(name, fluidOut, density, width, height, length, voxelCount, voxelCount, voxelCount, size, nameShape);
+		//fluidOut.setLength(size);
+	} else 
+		Utilities::simulateFluid(name, fluidOut, density, width, height, length, voxelCount, voxelCount, voxelCount);
+	
+	
 
     MDataHandle hOut = data.outputValue(aFluid, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);

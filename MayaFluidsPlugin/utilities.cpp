@@ -55,6 +55,73 @@ void Utilities::createSpheres(MString locatorName, float length, float width, fl
 	MGlobal::executeCommand("select " + locatorName);
 }
 
+void Utilities::modifySpheres(MString locatorName, MStringArray &sphereNames, MFloatArray &density, float width, float height, float length, int N, int M, int O, int new_size, MString locatorShapeName)
+{
+	bool shrinking  = (sphereNames.length() > (unsigned)new_size);
+	float x_offset = width / N;
+	float x_init = x_offset / 2;
+	float y_offset = height / M;
+	float y_init = x_offset / 2;
+	float z_offset = length / O;
+	float z_init = x_offset / 2;
+
+	float smallest = std::fminf(std::fminf(x_offset, y_offset), z_offset);
+	for (int x = 0; x < N; x++) {
+		MString x_name(std::to_string(x).c_str());
+		MString x_pos(std::to_string(x_init + ((float)x * x_offset)).c_str());
+		for (int y = 0; y < M; y++) {
+			MString y_name(std::to_string(y).c_str());
+			MString y_pos(std::to_string(y_init + ((float)y * y_offset)).c_str());
+			for (int z = 0; z < O; z++) {
+				int i = z + N * (y + M * x);
+				MString z_name(std::to_string(z).c_str());
+				MString z_pos(std::to_string(z_init + ((float)z * z_offset)).c_str());
+				MString pos = x_pos + " " + y_pos + " " + z_pos;
+				MString radius(std::to_string((smallest / 2) * density[i]).c_str());
+				MString sphereName = "fSphere_" + x_name + "_" + y_name + "_" + z_name;
+				if (sphereNames[i] != sphereName)
+				{
+					if (shrinking) 
+					{
+						while (sphereNames[i] != sphereName)
+						{
+							MGlobal::executeCommand("select " + sphereNames[i] + " " + sphereNames[i] + "Shape");
+							MGlobal::executeCommand("delete");
+							sphereNames.remove(i);
+						}
+						MGlobal::executeCommand("sphere -e -r " + radius + " " + sphereName);
+						MGlobal::executeCommand("select " + sphereName);
+						MGlobal::executeCommand("move -a " + pos);
+					}
+					else 
+					{
+						sphereNames.insert(sphereName, i);
+						MGlobal::executeCommand("sphere -n " + sphereName + " -r " + radius);
+						MGlobal::executeCommand("move -a " + pos);
+						MGlobal::executeCommand("select " + locatorName);
+						MGlobal::executeCommand("parent -a -s " + sphereName);
+					}
+				}
+				else
+				{
+					MGlobal::executeCommand("sphere -e -r " + radius + " " + sphereName);
+					MGlobal::executeCommand("select " + sphereName);
+					MGlobal::executeCommand("move -a " + pos);
+				}
+			}
+		}
+	}
+
+	while (sphereNames.length() > (unsigned)new_size)
+	{
+		int i = sphereNames.length() - 1;
+		MGlobal::executeCommand("select " + sphereNames[i] + " " + sphereNames[i] + "Shape");
+		MGlobal::executeCommand("delete");
+		sphereNames.remove(i);
+	}
+	MGlobal::executeCommand("select " + locatorName);
+}
+
 void Utilities::simulateFluid(MString locatorName, MStringArray &sphereNames, MFloatArray &density, float width, float height, float length, int N, int M, int O)
 {
     float x_offset = width / N;
@@ -65,7 +132,6 @@ void Utilities::simulateFluid(MString locatorName, MStringArray &sphereNames, MF
     float z_init = x_offset / 2;
    
     float smallest = std::fminf(std::fminf(x_offset, y_offset), z_offset);
-
     for (int x = 0; x < N; x++) {
         MString x_name(std::to_string(x).c_str());
         MString x_pos(std::to_string(x_init + ((float)x * x_offset)).c_str());
@@ -73,7 +139,7 @@ void Utilities::simulateFluid(MString locatorName, MStringArray &sphereNames, MF
             MString y_name(std::to_string(y).c_str());
             MString y_pos(std::to_string(y_init + ((float)y * y_offset)).c_str());
             for (int z = 0; z < O; z++) {
-                int i = x + N * (y + O * z);
+                int i = z + N * (y + M * x);
                 MString z_name(std::to_string(z).c_str());
                 MString z_pos(std::to_string(z_init + ((float)z * z_offset)).c_str());
                 MString pos = x_pos + " " + y_pos + " " + z_pos;
@@ -82,8 +148,8 @@ void Utilities::simulateFluid(MString locatorName, MStringArray &sphereNames, MF
                 if (sphereNames[i] != sphereName)
                 {
                     sphereNames.set(sphereName, i);                
-                    MGlobal::executeCommand("sphere -n " + sphereName + " -r " + radius);
-                    MGlobal::executeCommand("move -r " + pos);
+                    MGlobal::executeCommand("sphere -n " + sphereName + " -r " + radius );
+					MGlobal::executeCommand("move -r " + pos);
                     MGlobal::executeCommand("select " + locatorName);
                     MGlobal::executeCommand("parent -a -s " + sphereName);
                 }
@@ -96,3 +162,5 @@ void Utilities::simulateFluid(MString locatorName, MStringArray &sphereNames, MF
     }
     MGlobal::executeCommand("select " + locatorName);
 }
+
+
