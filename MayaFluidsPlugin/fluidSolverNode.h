@@ -39,9 +39,11 @@ public:
     // Normalizes velocity.
     void project(int N, float* u, float* v, float* w, float* p, float* div);
     // Calculates new density.
-    void dens_step(int N, float* x, float* x0, float* u, float* v, float* w, float diff, float dt);
+    void dens_step(int voxelCountWidth, int voxelCountHeight, int voxelCountLength,
+        float* x, float* x0, float* u, float* v, float* w, float diff, float dt);
     // Calculates new velocity.
-    void vel_step(int N, float* u, float* v, float* u0, float* v0, float* w0, float visc, float dt);
+    void vel_step(int voxelCountWidth, int voxelCountHeight, int voxelCountLength,
+        float* u, float* v, float* u0, float* v0, float* w0, float visc, float dt);
 
     // Maya node ID.
     static MTypeId id;
@@ -54,16 +56,18 @@ public:
 
     // Inputs.
     static MObject aTime;               // Simulation time (sec, frame, etc.).
-    static MObject aVoxelCount;         // Number of voxels.
+    static MObject aVoxelCountWidth;    // Number of voxels.
+    static MObject aVoxelCountHeight;
+    static MObject aVoxelCountLength;
     static MObject aTimestep;           // Timestep.
-    static MObject aDiffusion;          // Diffusion rate.
+    static MObject aDiffusionRate;      // Diffusion rate.
     static MObject aViscosity;          // Viscosity.
     static MObject aForceMultipler;     // Force multipler.
     static MObject aSourceMultiplier;   // Source multipler.
-    static MObject aPrevDensity;        // Previous density field.
-    static MObject aPrevVelocityU;      // Previous u-component of velocity field.
-    static MObject aPrevVelocityV;      // Previous v-component of velocity field.
-    static MObject aPrevVelocityW;      // Previous w-component of velocity field.
+    static MObject aInitDensity;        // Previous density field.
+    static MObject aInitVelocityU;      // Previous u-component of velocity field.
+    static MObject aInitVelocityV;      // Previous v-component of velocity field.
+    static MObject aInitVelocityW;      // Previous w-component of velocity field.
 };
 
 #endif

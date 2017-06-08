@@ -27,25 +27,61 @@ public:
     // Maya node ID.
     static MTypeId id;
 
-    // Attributes.
-    static MObject aVoxelCount;      // Number of voxels.
-    static MObject aShowVoxels;        // Indicates whether voxels are shown.
-    static MObject aTimestep;          // Timestep.
-    static MObject aDiffusion;         // Diffusion rate.
-    static MObject aViscosity;         // Viscosity.
-    static MObject aForceMultiplier;   // Force multipler.
-    static MObject aSourceMultiplier;  // Source multipler.
-    static MObject aDensity;           // Density field.
-    static MObject aVelocityU;         // U-component of velocity field.
-    static MObject aVelocityV;         // V-component of velocity field.
-    static MObject aVelocityW;         // W-component of velocity field.
-    static MObject aWidth;             // Domain width.
-    static MObject aHeight;            // Domain height.
-    static MObject aLength;            // Domain length.
-    static MObject aMinTime;           // Minimum time.
-    static MObject aMaxTime;           // Maximum time.
-    static MObject aTimeScale;         // Time scale.
-    static MObject aVoxelAlpha;        // Voxel alpha channel.
+    // Input attributes.
+    static MObject aVoxelCountWidthIn;
+    static MObject aVoxelCountHeightIn;
+    static MObject aVoxelCountLengthIn;
+    static MObject aShowVoxelsIn;
+    static MObject aShowFluidIn;
+    static MObject aVoxelAlphaIn;
+    static MObject aTimestepIn;
+    static MObject aDiffusionRateIn;
+    static MObject aViscosityIn;
+    static MObject aForceMultiplierIn;
+    static MObject aSourceMultiplierIn;
+    static MObject aDomainDensity;
+    static MObject aSourceDensity;
+    static MObject aDomainVelocity;
+    static MObject aDomainOriginIn;
+    static MObject aDomainWidthIn;
+    static MObject aDomainHeightIn;
+    static MObject aDomainLengthIn;
+    static MObject aSourceOriginIn;
+    static MObject aSourceWidthIn;
+    static MObject aSourceHeightIn;
+    static MObject aSourceLengthIn;
+    static MObject aSourceVelocity;
+    static MObject aMinTimeIn;
+    static MObject aMaxTimeIn;
+    static MObject aTimeScaleIn;
+
+    // Output attributes.
+    static MObject aVoxelCountWidthOut;
+    static MObject aVoxelCountHeightOut;
+    static MObject aVoxelCountLengthOut;
+    static MObject aShowVoxelsOut;
+    static MObject aShowFluidOut;
+    static MObject aVoxelAlphaOut;
+    static MObject aTimestepOut;
+    static MObject aDiffusionRateOut;
+    static MObject aViscosityOut;
+    static MObject aForceMultiplierOut;
+    static MObject aSourceMultiplierOut;
+    static MObject aDensityOut;
+    static MObject aVelocityU;
+    static MObject aVelocityV;
+    static MObject aVelocityW;
+    static MObject aDomainOriginOut;
+    static MObject aDomainWidthOut;
+    static MObject aDomainHeightOut;
+    static MObject aDomainLengthOut;
+    static MObject aSourceOriginOut;
+    static MObject aSourceWidthOut;
+    static MObject aSourceHeightOut;
+    static MObject aSourceLengthOut;
+    static MObject aMinTimeOut;
+    static MObject aMaxTimeOut;
+    static MObject aTimeScaleOut;
 };
 
 #endif

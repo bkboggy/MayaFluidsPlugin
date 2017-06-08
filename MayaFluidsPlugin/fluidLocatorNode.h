@@ -36,21 +36,46 @@ public:
 
     static MTypeId id;
 
+    // Output attributes.
     static MObject aFluid;
-	static MObject aTime;
-    static MObject aShowVoxels;
-    static MObject aVoxelAlpha;
-    static MObject aVoxelCount;
-	static MObject aHeight;
-	static MObject aWidth;
-	static MObject aLength;
-    static MObject aDensity;
-    static MObject aVelocityU;
-    static MObject aVelocityV;
-    static MObject aVelocityW;	
+    static MObject aDensityOut;
+    static MObject aVelocityUOut;
+    static MObject aVelocityVOut;
+    static MObject aVelocityWOut;
+    static MObject aShowFluidOut;
+    static MObject aShowVoxelsOut;
+    static MObject aVoxelAlphaOut;
+    static MObject aVoxelCountWidthOut;
+    static MObject aVoxelCountHeightOut;
+    static MObject aVoxelCountLengthOut;
+    static MObject aDomainOriginOut;
+    static MObject aDomainHeightOut;
+    static MObject aDomainWidthOut;
+    static MObject aDomainLengthOut;
+    static MObject aSourceOriginOut;
+    static MObject aSourceWidthOut;
+    static MObject aSourceHeightOut;
+    static MObject aSourceLengthOut;
 
-    // Temporary
-    static MObject aRadius;
+    // Input attributes.
+    static MObject aDensityIn;
+    static MObject aVelocityUIn;
+    static MObject aVelocityVIn;
+    static MObject aVelocityWIn;
+    static MObject aShowFluidIn;
+    static MObject aShowVoxelsIn;   
+    static MObject aVoxelAlphaIn;
+    static MObject aVoxelCountWidthIn;
+    static MObject aVoxelCountHeightIn;
+    static MObject aVoxelCountLengthIn;
+    static MObject aDomainOriginIn;
+	static MObject aDomainHeightIn;
+	static MObject aDomainWidthIn;
+	static MObject aDomainLengthIn;
+    static MObject aSourceOriginIn;
+    static MObject aSourceWidthIn;
+    static MObject aSourceHeightIn;
+    static MObject aSourceLengthIn;
 };
 
 #endif

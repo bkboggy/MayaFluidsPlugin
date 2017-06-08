@@ -18,11 +18,11 @@ public:
 
 	static MTypeId id;
 
-	static MObject aInTime;
-	static MObject aOutTime;
-	static MObject aMin;
-	static MObject aMax;
-	static MObject aScale;
+	static MObject aTimeIn;
+	static MObject aTimeOut;
+	static MObject aMinTime;
+	static MObject aMaxTime;
+	static MObject aTimeScale;
 };
 
 #endif
