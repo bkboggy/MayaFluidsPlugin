@@ -324,8 +324,8 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
         velocityU, velocityV, velocityW, viscocity, timestep);
 
     // Calculate new density.
-    dens_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, densityCached, density,
-        velocityU0, velocityV0, velocityW0, diffusionRate, timestep);
+    //dens_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, densityCached, density,
+    //    velocityU0, velocityV0, velocityW0, diffusionRate, timestep);
 
     // Get output values.
     // TODO: Remove +2 in each direction.
@@ -390,7 +390,10 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
 void FluidSolverNode::add_source(int M, int N, int O, float * x, float * s, float dt)
 {
     int i, size = (M + 2)*(N + 2)*(O + 2);
-    for (i = 0; i<size; i++) x[i] += dt*s[i];
+    for (i = 0; i < size; i++)
+    {
+        x[i] += dt*s[i];
+    }
 }
 
 void FluidSolverNode::set_bnd(int M, int N, int O, int b, float * x)
@@ -437,7 +440,7 @@ void FluidSolverNode::lin_solve(int M, int N, int O, int b, float * x, float * x
     int i, j, k, l;
 
     // iterate the solver
-    for (l = 0; l<LINEARSOLVERTIMES; l++) {
+    for (l = 0; l < LINEARSOLVERTIMES; l++) {
         // update for each cell
         for (i = 1; i <= M; i++) {
             for (j = 1; j <= N; j++) {
@@ -515,19 +518,30 @@ void FluidSolverNode::project(int M, int N, int O, float * u, float * v, float *
 void FluidSolverNode::dens_step(int M, int N, int O, float * x, float * x0, float * u, float * v, float * w, float diff, float dt)
 {
     add_source(M, N, O, x, x0, dt);
-    SWAP(x0, x); diffuse(M, N, O, 0, x, x0, diff, dt);
-    SWAP(x0, x); advect(M, N, O, 0, x, x0, u, v, w, dt);
+    SWAP(x0, x); 
+    diffuse(M, N, O, 0, x, x0, diff, dt);
+    SWAP(x0, x); 
+    advect(M, N, O, 0, x, x0, u, v, w, dt);
 }
 
 void FluidSolverNode::vel_step(int M, int N, int O, float * u, float * v, float * w, float * u0, float * v0, float * w0, float visc, float dt)
 {
-    add_source(M, N, O, u, u0, dt); add_source(M, N, O, v, v0, dt); add_source(M, N, O, w, w0, dt);
-    SWAP(u0, u); diffuse(M, N, O, 1, u, u0, visc, dt);
-    SWAP(v0, v); diffuse(M, N, O, 2, v, v0, visc, dt);
-    SWAP(w0, w); diffuse(M, N, O, 3, w, w0, visc, dt);
+    add_source(M, N, O, u, u0, dt); 
+    add_source(M, N, O, v, v0, dt); 
+    add_source(M, N, O, w, w0, dt);
+    SWAP(u0, u); 
+    diffuse(M, N, O, 1, u, u0, visc, dt);
+    SWAP(v0, v); 
+    diffuse(M, N, O, 2, v, v0, visc, dt);
+    SWAP(w0, w); 
+    diffuse(M, N, O, 3, w, w0, visc, dt);
     project(M, N, O, u, v, w, u0, v0);
-    SWAP(u0, u); SWAP(v0, v); SWAP(w0, w);
-    advect(M, N, O, 1, u, u0, u0, v0, w0, dt); advect(M, N, O, 2, v, v0, u0, v0, w0, dt); advect(M, N, O, 3, w, w0, u0, v0, w0, dt);
+    SWAP(u0, u); 
+    SWAP(v0, v); 
+    SWAP(w0, w);
+    advect(M, N, O, 1, u, u0, u0, v0, w0, dt); 
+    advect(M, N, O, 2, v, v0, u0, v0, w0, dt); 
+    advect(M, N, O, 3, w, w0, u0, v0, w0, dt);
     project(M, N, O, u, v, w, u0, v0);
 }
 
