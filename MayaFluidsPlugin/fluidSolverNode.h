@@ -27,23 +27,21 @@ public:
     virtual MStatus compute(const MPlug& plug, MDataBlock& data);
     
     // Adds source density.
-    void add_source(int N, float* x, float* s, float dt);
+    void add_source(int M, int N, int O, float * x, float * s, float dt);
     // Sets boundaries.
-    void set_bnd(int N, int b, float* x);
+    void set_bnd(int M, int N, int O, int b, float * x);
     // Linear fluid solver.
-    void lin_solve(int N, int b, float* x, float* x0, float a, float c);
+    void lin_solve(int M, int N, int O, int b, float * x, float * x0, float a, float c);
     // Diffuses density.
-    void diffuse(int N, int b, float* x, float* x0, float diff, float dt);
+    void diffuse(int M, int N, int O, int b, float * x, float * x0, float diff, float dt);
     // Advects density and velocity.
-    void advect(int N, int b, float* d, float* d0, float* u, float* v, float* w, float dt);
+    void advect(int M, int N, int O, int b, float * d, float * d0, float * u, float * v, float * w, float dt);
     // Normalizes velocity.
-    void project(int N, float* u, float* v, float* w, float* p, float* div);
+    void project(int M, int N, int O, float * u, float * v, float * w, float * p, float * div);
     // Calculates new density.
-    void dens_step(int voxelCountWidth, int voxelCountHeight, int voxelCountLength,
-        float* x, float* x0, float* u, float* v, float* w, float diff, float dt);
+    void dens_step(int M, int N, int O, float * x, float * x0, float * u, float * v, float * w, float diff, float dt);
     // Calculates new velocity.
-    void vel_step(int voxelCountWidth, int voxelCountHeight, int voxelCountLength,
-        float* u, float* v, float* w, float* u0, float* v0, float* w0, float visc, float dt);
+    void vel_step(int M, int N, int O, float * u, float * v, float * w, float * u0, float * v0, float * w0, float visc, float dt);
 
     // Maya node ID.
     static MTypeId id;
