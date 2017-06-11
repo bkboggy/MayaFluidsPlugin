@@ -218,20 +218,20 @@ MStatus FluidLocatorNode::initialize()
     attributeAffects(aVelocityVIn, aVelocityVOut);
     attributeAffects(aVelocityVIn, aFluid);
 
-    aShowFluidIn = nAttr.create("showFluidIn", "showFluidIn", MFnNumericData::kBoolean, false);
+    aShowFluidIn = nAttr.create("showFluidIn", "showFluidIn", MFnNumericData::kBoolean);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aShowFluidIn);
     attributeAffects(aShowFluidIn, aShowFluidOut);
     attributeAffects(aShowFluidIn, aFluid);
 
-    aShowVoxelsIn = nAttr.create("showVoxelsIn", "showVoxelsIn", MFnNumericData::kBoolean, false);
+    aShowVoxelsIn = nAttr.create("showVoxelsIn", "showVoxelsIn", MFnNumericData::kBoolean);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aShowVoxelsIn);
     attributeAffects(aShowVoxelsIn, aShowVoxelsOut);
 
-    aVoxelAlphaIn = nAttr.create("voxelAlphaIn", "voxelAlphaIn", MFnNumericData::kFloat, 0.3f);
+    aVoxelAlphaIn = nAttr.create("voxelAlphaIn", "voxelAlphaIn", MFnNumericData::kFloat);
     nAttr.setMin(0.0f);
     nAttr.setMax(1.0f);
     nAttr.setKeyable(true);
@@ -296,7 +296,7 @@ MStatus FluidLocatorNode::initialize()
     attributeAffects(aDomainOriginZIn, aSourceOriginZOut);
     attributeAffects(aDomainOriginZIn, aFluid);
 
-    aDomainWidthIn = nAttr.create("domainWidthIn", "domainWidthIn", MFnNumericData::kFloat, 5.0f);
+    aDomainWidthIn = nAttr.create("domainWidthIn", "domainWidthIn", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aDomainWidthIn);
@@ -305,7 +305,7 @@ MStatus FluidLocatorNode::initialize()
     attributeAffects(aDomainWidthIn, aSourceOriginXOut);
     attributeAffects(aDomainWidthIn, aFluid);
 
-    aDomainHeightIn = nAttr.create("domainHeightIn", "domainHeightIn", MFnNumericData::kFloat, 5.0f);
+    aDomainHeightIn = nAttr.create("domainHeightIn", "domainHeightIn", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aDomainHeightIn);
@@ -314,7 +314,7 @@ MStatus FluidLocatorNode::initialize()
     attributeAffects(aDomainHeightIn, aSourceOriginYOut);
     attributeAffects(aDomainHeightIn, aFluid);
 
-    aDomainLengthIn = nAttr.create("domainLengthIn", "domainLengthIn", MFnNumericData::kFloat, 5.0f);
+    aDomainLengthIn = nAttr.create("domainLengthIn", "domainLengthIn", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aDomainLengthIn);
@@ -353,7 +353,7 @@ MStatus FluidLocatorNode::initialize()
     attributeAffects(aSourceOriginZIn, aSourceLengthOut);
     attributeAffects(aSourceOriginZIn, aFluid);
 
-    aSourceWidthIn = nAttr.create("sourceWidthIn", "sourceWidthIn", MFnNumericData::kFloat, 5.0f);
+    aSourceWidthIn = nAttr.create("sourceWidthIn", "sourceWidthIn", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceWidthIn);
@@ -361,7 +361,7 @@ MStatus FluidLocatorNode::initialize()
     attributeAffects(aSourceWidthIn, aSourceOriginXOut);
     attributeAffects(aSourceWidthIn, aFluid);
 
-    aSourceHeightIn = nAttr.create("sourceHeightIn", "sourceHeightIn", MFnNumericData::kFloat, 5.0f);
+    aSourceHeightIn = nAttr.create("sourceHeightIn", "sourceHeightIn", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceHeightIn);
@@ -369,7 +369,7 @@ MStatus FluidLocatorNode::initialize()
     attributeAffects(aSourceHeightIn, aSourceOriginYOut);
     attributeAffects(aSourceHeightIn, aFluid);
 
-    aSourceLengthIn = nAttr.create("sourceLengthIn", "sourceLengthIn", MFnNumericData::kFloat, 5.0f);
+    aSourceLengthIn = nAttr.create("sourceLengthIn", "sourceLengthIn", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceLengthIn);
@@ -545,6 +545,12 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     // If showFluid flag is not set to false, simulate the fluid.
     if (showFluid)
     {
+        int size = voxelCountWidth * voxelCountHeight * voxelCountLength;
+        if (fluid.length() < size)
+        {
+            fluid.setLength(size);
+        }
+        fluid.setLength(size);
         simulateFluid(name, fluid, density, domainWidth, domainHeight, domainLength,
             voxelCountWidth, voxelCountHeight, voxelCountLength);
     }
@@ -1110,19 +1116,21 @@ void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, M
                 MString pos = x_pos + " " + y_pos + " " + z_pos;
                 // +1 density offset is needed to account for boundaries
                 MString radius(std::to_string((smallest / 2) * density[d_i]).c_str());
-                MString fluidParticle = "fSphere_" + x_name + "_" + y_name + "_" + z_name;
-                if (fluid[i] != fluidParticle)
+                MString fluidParticleName = "fSphere_" + x_name + "_" + y_name + "_" + z_name;
+                MString existingName = fluid[i];
+                if (fluid[i] != fluidParticleName)
                 {
-                    fluid.set(fluidParticle, i);
-                    MGlobal::executeCommand("sphere -n " + fluidParticle + " -r " + radius);
+                    fluid.set(fluidParticleName, i);
+                    MGlobal::executeCommand("sphere -n " + fluidParticleName + " -r " + radius);
                     MGlobal::executeCommand("move -r " + pos);
                     MGlobal::executeCommand("select " + locatorName);
-                    MGlobal::executeCommand("parent -a -s " + fluidParticle);
+                    MGlobal::executeCommand("parent -a -s " + fluidParticleName);
                 }
                 else
                 {
-                    MGlobal::executeCommand("sphere -e -r " + radius + " " + fluidParticle);
+                    MGlobal::executeCommand("sphere -e -r " + radius + " " + fluidParticleName);
                 }
+                MString temp = fluid[i];
             }
         }
     }
