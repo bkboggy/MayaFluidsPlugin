@@ -1110,25 +1110,31 @@ void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, M
             for (int z = 0; z < voxelCountLength; z++) {
                 int i = x + (y * voxelCountWidth) + (z * voxelCountWidth * voxelCountHeight);
                 // Density index must be calculated separately, since it's larger by 2 in each dimension.
-                int d_i = x + ((y + 1) * (voxelCountWidth + 2)) + ((z + 1) * (voxelCountWidth + 2) * (voxelCountHeight + 2));
+                int d_i = (x + 1) + ((y + 1) * (voxelCountWidth + 2)) + ((z + 1) * (voxelCountWidth + 2) * (voxelCountHeight + 2));
                 MString z_name(std::to_string(z).c_str());
                 MString z_pos(std::to_string(z_init + ((float)z * z_offset)).c_str());
                 MString pos = x_pos + " " + y_pos + " " + z_pos;
-                // +1 density offset is needed to account for boundaries
-                MString radius(std::to_string((smallest / 2) * density[d_i]).c_str());
+                // Cap radius multiplier at 1.
+                float densityVal = density[d_i];
+                if (densityVal > 1)
+                {
+                    densityVal = 1;
+                }
+                float radiusVal = (smallest / 2) * densityVal;
+                MString radius(std::to_string(radiusVal).c_str());
                 MString fluidParticleName = "fSphere_" + x_name + "_" + y_name + "_" + z_name;
                 MString existingName = fluid[i];
-                if (fluid[i] != fluidParticleName)
+                if (fluid[i] == fluidParticleName)
+                {
+                    MGlobal::executeCommand("sphere -e -r " + radius + " " + fluidParticleName);
+                }
+                else if (radiusVal > 0)
                 {
                     fluid.set(fluidParticleName, i);
                     MGlobal::executeCommand("sphere -n " + fluidParticleName + " -r " + radius);
                     MGlobal::executeCommand("move -r " + pos);
                     MGlobal::executeCommand("select " + locatorName);
                     MGlobal::executeCommand("parent -a -s " + fluidParticleName);
-                }
-                else
-                {
-                    MGlobal::executeCommand("sphere -e -r " + radius + " " + fluidParticleName);
                 }
                 MString temp = fluid[i];
             }

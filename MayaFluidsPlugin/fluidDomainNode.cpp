@@ -709,41 +709,24 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     //
     // Add source density to domain density, without exceeding 1.0 limit. In addition,
     // add source velocity to domain velocity, without exceeding 1.0 limit.
-    // Starting indexes (x, y, z) are padded by one to account for padding in size.
-    for (int x = 1; x < sourceVoxelsWidth && x < voxelCountWidth; x++)
+    for (int x = 0; x < sourceVoxelsWidth && x < voxelCountWidth; x++)
     {
-        for (int y = 1; y < sourceVoxelsHeight && x < voxelCountHeight; y++)
+        for (int y = 0; y < sourceVoxelsHeight && y < voxelCountHeight; y++)
         {
-            for (int z = 1; y < sourceVoxelsLength && z < voxelCountLength; z++)
+            for (int z = 0; z < sourceVoxelsLength && z < voxelCountLength; z++)
             {
-                int i = x + (y * voxelCountWidth) + (z * voxelCountWidth * voxelCountHeight);
+                int i = (x + 1) + ((y + 1) * (voxelCountWidth + 2)) + ((z + 1) * (voxelCountWidth + 2) * (voxelCountHeight + 2));
 
-                float dValue = domainDensity + sourceDensity;
-                if (dValue > 1.0f)
-                {
-                    dValue = 1.0f;
-                }
+                float dValue = domainDensity + sourceDensity * sourceMultiplier;
                 density.set(dValue, i);
 
-                float vUValue = domainVelocityU + sourceVelocityU;
-                if (vUValue > 1.0f)
-                {
-                    vUValue = 1.0f;
-                }
+                float vUValue = domainVelocityU + sourceVelocityU * forceMultiplier;
                 velocityUOut.set(vUValue, i);
 
-                float vVValue = domainVelocityV + sourceVelocityV;
-                if (vVValue > 1.0f)
-                {
-                    vVValue = 1.0f;
-                }
+                float vVValue = domainVelocityV + sourceVelocityV * forceMultiplier;
                 velocityVOut.set(vVValue, i);
 
-                float vWValue = domainVelocityW + sourceVelocityW;
-                if (vWValue > 1.0f)
-                {
-                    vWValue = 1.0f;
-                }
+                float vWValue = domainVelocityW + sourceVelocityW * forceMultiplier;
                 velocityWOut.set(vWValue, i);
             }
         }

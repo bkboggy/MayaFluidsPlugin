@@ -320,19 +320,19 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     Utilities::initializeFloatArray(density, size, 0.0f);
 
     // Calculate new velocity.
-    vel_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, velocityU0, velocityV0, velocityW0,
-        velocityU, velocityV, velocityW, viscocity, timestep);
+    //vel_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, velocityU, velocityV, velocityW0,
+    //    velocityU0, velocityV0, velocityW0, viscocity, timestep);
 
     // Calculate new density.
-    dens_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, density0, density,
-        velocityU0, velocityV0, velocityW0, diffusionRate, timestep);
+    //dens_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, density, density,
+    //    velocityU, velocityV, velocityW, diffusionRate, timestep);
 
     // Get output values.
     // TODO: Remove +2 in each direction.
-    MFloatArray velocityUOut(velocityU, size);
-    MFloatArray velocityVOut(velocityV, size);
-    MFloatArray velocityWOut(velocityW, size);
-    MFloatArray densityOut(density, size);
+    MFloatArray velocityUOut(velocityU0, size);
+    MFloatArray velocityVOut(velocityV0, size);
+    MFloatArray velocityWOut(velocityW0, size);
+    MFloatArray densityOut(density0, size);
 
     // Pass new density and velocity fields as outputs.
     MDataHandle hOut = data.outputValue(aVelocityUOut, &status);
