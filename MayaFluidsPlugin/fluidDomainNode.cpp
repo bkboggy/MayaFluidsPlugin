@@ -17,16 +17,24 @@ MObject FluidDomainNode::aForceMultiplierIn;
 MObject FluidDomainNode::aSourceMultiplierIn;
 MObject FluidDomainNode::aDomainDensity;
 MObject FluidDomainNode::aSourceDensity;
-MObject FluidDomainNode::aDomainVelocity;
-MObject FluidDomainNode::aDomainOriginIn;
+MObject FluidDomainNode::aDomainVelocityU;
+MObject FluidDomainNode::aDomainVelocityV;
+MObject FluidDomainNode::aDomainVelocityW;
+MObject FluidDomainNode::aDomainOriginXIn;
+MObject FluidDomainNode::aDomainOriginYIn;
+MObject FluidDomainNode::aDomainOriginZIn;
 MObject FluidDomainNode::aDomainWidthIn;
 MObject FluidDomainNode::aDomainHeightIn;
 MObject FluidDomainNode::aDomainLengthIn;
-MObject FluidDomainNode::aSourceOriginIn;
+MObject FluidDomainNode::aSourceOriginXIn;
+MObject FluidDomainNode::aSourceOriginYIn;
+MObject FluidDomainNode::aSourceOriginZIn;
 MObject FluidDomainNode::aSourceWidthIn;
 MObject FluidDomainNode::aSourceHeightIn;
 MObject FluidDomainNode::aSourceLengthIn;
-MObject FluidDomainNode::aSourceVelocity;
+MObject FluidDomainNode::aSourceVelocityU;
+MObject FluidDomainNode::aSourceVelocityV;
+MObject FluidDomainNode::aSourceVelocityW;
 MObject FluidDomainNode::aMinTimeIn;
 MObject FluidDomainNode::aMaxTimeIn;
 MObject FluidDomainNode::aTimeScaleIn;
@@ -43,14 +51,18 @@ MObject FluidDomainNode::aViscosityOut;
 MObject FluidDomainNode::aForceMultiplierOut;
 MObject FluidDomainNode::aSourceMultiplierOut;
 MObject FluidDomainNode::aDensityOut;
-MObject FluidDomainNode::aVelocityU;
-MObject FluidDomainNode::aVelocityV;
-MObject FluidDomainNode::aVelocityW;
-MObject FluidDomainNode::aDomainOriginOut;
+MObject FluidDomainNode::aVelocityUOut;
+MObject FluidDomainNode::aVelocityVOut;
+MObject FluidDomainNode::aVelocityWOut;
+MObject FluidDomainNode::aDomainOriginXOut;
+MObject FluidDomainNode::aDomainOriginYOut;
+MObject FluidDomainNode::aDomainOriginZOut;
 MObject FluidDomainNode::aDomainWidthOut;
 MObject FluidDomainNode::aDomainHeightOut;
 MObject FluidDomainNode::aDomainLengthOut;
-MObject FluidDomainNode::aSourceOriginOut;
+MObject FluidDomainNode::aSourceOriginXOut;
+MObject FluidDomainNode::aSourceOriginYOut;
+MObject FluidDomainNode::aSourceOriginZOut;
 MObject FluidDomainNode::aSourceWidthOut;
 MObject FluidDomainNode::aSourceHeightOut;
 MObject FluidDomainNode::aSourceLengthOut;
@@ -141,25 +153,35 @@ MStatus FluidDomainNode::initialize()
     tAttr.setWritable(false);
     addAttribute(aDensityOut);
 
-    aVelocityU = tAttr.create("velocityU", "velocityU", MFnData::kFloatArray);
+    aVelocityUOut = tAttr.create("velocityUOut", "velocityUOut", MFnData::kFloatArray);
     tAttr.setKeyable(false);
     tAttr.setWritable(false);
-    addAttribute(aVelocityU);
+    addAttribute(aVelocityUOut);
 
-    aVelocityV = tAttr.create("velocityV", "velocityV", MFnData::kFloatArray);
+    aVelocityVOut = tAttr.create("velocityVOut", "velocityVOut", MFnData::kFloatArray);
     tAttr.setKeyable(false);
     tAttr.setWritable(false);
-    addAttribute(aVelocityV);
+    addAttribute(aVelocityVOut);
 
-    aVelocityW = tAttr.create("velocityW", "velocityW", MFnData::kFloatArray);
+    aVelocityWOut = tAttr.create("velocityWOut", "velocityWOut", MFnData::kFloatArray);
     tAttr.setKeyable(false);
     tAttr.setWritable(false);
-    addAttribute(aVelocityW);
+    addAttribute(aVelocityWOut);
 
-    aDomainOriginOut = nAttr.create("domainOriginOut", "domainOriginOut", MFnNumericData::k3Float);
+    aDomainOriginXOut = nAttr.create("domainOriginXOut", "domainOriginXOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
     nAttr.setWritable(false);
-    addAttribute(aDomainOriginOut);
+    addAttribute(aDomainOriginXOut);
+
+    aDomainOriginYOut = nAttr.create("domainOriginYOut", "domainOriginYOut", MFnNumericData::kFloat);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aDomainOriginYOut);
+
+    aDomainOriginZOut = nAttr.create("domainOriginZOut", "domainOriginZOut", MFnNumericData::kFloat);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aDomainOriginZOut);
 
     aDomainWidthOut = nAttr.create("domainWidthOut", "domainWidthOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
@@ -176,10 +198,20 @@ MStatus FluidDomainNode::initialize()
     nAttr.setWritable(false);
     addAttribute(aDomainLengthOut);
 
-    aSourceOriginOut = nAttr.create("sourceOriginOut", "sourceOriginOut", MFnNumericData::k3Float);
+    aSourceOriginXOut = nAttr.create("sourceOriginXOut", "sourceOriginXOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
     nAttr.setWritable(false);
-    addAttribute(aSourceOriginOut);
+    addAttribute(aSourceOriginXOut);
+
+    aSourceOriginYOut = nAttr.create("sourceOriginYOut", "sourceOriginYOut", MFnNumericData::kFloat);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aSourceOriginYOut);
+
+    aSourceOriginZOut = nAttr.create("sourceOriginZOut", "sourceOriginZOut", MFnNumericData::kFloat);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aSourceOriginZOut);
 
     aSourceWidthOut = nAttr.create("sourceWidthOut", "sourceWidthOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
@@ -212,35 +244,38 @@ MStatus FluidDomainNode::initialize()
     addAttribute(aTimeScaleOut);
 
     // Input attributes.
-    aVoxelCountWidthIn = nAttr.create("voxelCountWidthIn", "voxelCountWidthIn", MFnNumericData::kInt);
+    aVoxelCountWidthIn = nAttr.create("voxelCountWidthIn", "voxelCountWidthIn", MFnNumericData::kInt, 10);
+    nAttr.setMin(1);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aVoxelCountWidthIn);
     attributeAffects(aVoxelCountWidthIn, aVoxelCountWidthOut);
     attributeAffects(aVoxelCountWidthIn, aDensityOut);
-    attributeAffects(aVoxelCountWidthIn, aVelocityU);
-    attributeAffects(aVoxelCountWidthIn, aVelocityV);
-    attributeAffects(aVoxelCountWidthIn, aVelocityW);
+    attributeAffects(aVoxelCountWidthIn, aVelocityUOut);
+    attributeAffects(aVoxelCountWidthIn, aVelocityVOut);
+    attributeAffects(aVoxelCountWidthIn, aVelocityWOut);
 
-    aVoxelCountHeightIn = nAttr.create("voxelCountHeightIn", "voxelCountHeightIn", MFnNumericData::kInt);
+    aVoxelCountHeightIn = nAttr.create("voxelCountHeightIn", "voxelCountHeightIn", MFnNumericData::kInt, 10);
+    nAttr.setMin(1);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aVoxelCountHeightIn);
     attributeAffects(aVoxelCountHeightIn, aVoxelCountHeightOut);
     attributeAffects(aVoxelCountHeightIn, aDensityOut);
-    attributeAffects(aVoxelCountHeightIn, aVelocityU);
-    attributeAffects(aVoxelCountHeightIn, aVelocityV);
-    attributeAffects(aVoxelCountHeightIn, aVelocityW);
+    attributeAffects(aVoxelCountHeightIn, aVelocityUOut);
+    attributeAffects(aVoxelCountHeightIn, aVelocityVOut);
+    attributeAffects(aVoxelCountHeightIn, aVelocityWOut);
 
-    aVoxelCountLengthIn = nAttr.create("voxelCountLengthIn", "voxelCountLengthIn", MFnNumericData::kInt);
+    aVoxelCountLengthIn = nAttr.create("voxelCountLengthIn", "voxelCountLengthIn", MFnNumericData::kInt, 10);
+    nAttr.setMin(1);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aVoxelCountLengthIn);
     attributeAffects(aVoxelCountLengthIn, aVoxelCountLengthOut);
     attributeAffects(aVoxelCountLengthIn, aDensityOut);
-    attributeAffects(aVoxelCountLengthIn, aVelocityU);
-    attributeAffects(aVoxelCountLengthIn, aVelocityV);
-    attributeAffects(aVoxelCountLengthIn, aVelocityW);
+    attributeAffects(aVoxelCountLengthIn, aVelocityUOut);
+    attributeAffects(aVoxelCountLengthIn, aVelocityVOut);
+    attributeAffects(aVoxelCountLengthIn, aVelocityWOut);
 
     aShowVoxelsIn = nAttr.create("showVoxelsIn", "showVoxelsIn", MFnNumericData::kBoolean, false);
     nAttr.setKeyable(true);
@@ -263,18 +298,21 @@ MStatus FluidDomainNode::initialize()
     attributeAffects(aVoxelAlphaIn, aVoxelAlphaOut);
 
     aTimestepIn = nAttr.create("timestepIn", "timestepIn", MFnNumericData::kFloat, 0.001f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aTimestepIn);
     attributeAffects(aTimestepIn, aTimestepOut);
 
     aDiffusionRateIn = nAttr.create("diffusionRateIn", "diffusionRateIn", MFnNumericData::kFloat, 0.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aDiffusionRateIn);
     attributeAffects(aDiffusionRateIn, aDiffusionRateOut);
 
     aViscosityIn = nAttr.create("viscosityIn", "viscosityIn", MFnNumericData::kFloat, 0.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aViscosityIn);
@@ -287,99 +325,172 @@ MStatus FluidDomainNode::initialize()
     attributeAffects(aForceMultiplierIn, aForceMultiplierOut);
 
     aSourceMultiplierIn = nAttr.create("sourceMultiplierIn", "sourceMultiplierIn", MFnNumericData::kFloat, 200.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceMultiplierIn);
     attributeAffects(aSourceMultiplierIn, aSourceMultiplierOut);
 
     aDomainDensity = nAttr.create("domainDensity", "domainDensity", MFnNumericData::kFloat, 0.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aDomainDensity);
     attributeAffects(aDomainDensity, aDensityOut);
 
-    aSourceDensity = nAttr.create("sourceDensity", "sourceDensity", MFnNumericData::kFloat, 0.0f);
+    aSourceDensity = nAttr.create("sourceDensity", "sourceDensity", MFnNumericData::kFloat, 1.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceDensity);
     attributeAffects(aSourceDensity, aDensityOut);
 
-    aDomainVelocity = nAttr.create("domainVelocity", "domainVelocity", MFnNumericData::k3Float);
+    aDomainVelocityU = nAttr.create("domainVelocityU", "domainVelocityU", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
-    addAttribute(aDomainVelocity);
-    attributeAffects(aDomainVelocity, aVelocityU);
-    attributeAffects(aDomainVelocity, aVelocityV);
-    attributeAffects(aDomainVelocity, aVelocityW);
+    addAttribute(aDomainVelocityU);
+    attributeAffects(aDomainVelocityU, aVelocityUOut);
 
-    aDomainOriginIn = nAttr.create("domainOriginIn", "domainOriginIn", MFnNumericData::k3Float);
+    aDomainVelocityV = nAttr.create("domainVelocityV", "domainVelocityV", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
-    addAttribute(aDomainOriginIn);
-    attributeAffects(aDomainOriginIn, aDomainOriginOut);
-    attributeAffects(aDomainOriginIn, aSourceOriginOut);
+    addAttribute(aDomainVelocityV);
+    attributeAffects(aDomainVelocityV, aVelocityVOut);
 
-    aDomainWidthIn = nAttr.create("domainWidthIn", "domainWidthIn", MFnNumericData::kFloat, 5.0f);
+    aDomainVelocityW = nAttr.create("domainVelocityW", "domainVelocityW", MFnNumericData::kFloat);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aDomainVelocityW);
+    attributeAffects(aDomainVelocityW, aVelocityWOut);
+
+    aDomainOriginXIn = nAttr.create("domainOriginXIn", "domainOriginXIn", MFnNumericData::kFloat);
+    nAttr.setMin(0.0f);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aDomainOriginXIn);
+    attributeAffects(aDomainOriginXIn, aDomainOriginXOut);
+    attributeAffects(aDomainOriginXIn, aSourceOriginXOut);
+
+    aDomainOriginYIn = nAttr.create("domainOriginYIn", "domainOriginYIn", MFnNumericData::kFloat);
+    nAttr.setMin(0.0f);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aDomainOriginYIn);
+    attributeAffects(aDomainOriginYIn, aDomainOriginYOut);
+    attributeAffects(aDomainOriginYIn, aSourceOriginYOut);
+
+    aDomainOriginZIn = nAttr.create("domainOriginZIn", "domainOriginZIn", MFnNumericData::kFloat);
+    nAttr.setMin(0.0f);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aDomainOriginZIn);
+    attributeAffects(aDomainOriginZIn, aDomainOriginZOut);
+    attributeAffects(aDomainOriginZIn, aSourceOriginZOut);
+
+    aDomainWidthIn = nAttr.create("domainWidthIn", "domainWidthIn", MFnNumericData::kFloat, 10.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aDomainWidthIn);
     attributeAffects(aDomainWidthIn, aDomainWidthOut);
     attributeAffects(aDomainWidthIn, aSourceWidthOut);
-    attributeAffects(aDomainWidthIn, aSourceOriginOut);
+    attributeAffects(aDomainWidthIn, aSourceOriginXOut);
+    attributeAffects(aDomainWidthIn, aSourceOriginYOut);
+    attributeAffects(aDomainWidthIn, aSourceOriginZOut);
 
-    aDomainHeightIn = nAttr.create("domainHeightIn", "domainHeightIn", MFnNumericData::kFloat, 5.0f);
+    aDomainHeightIn = nAttr.create("domainHeightIn", "domainHeightIn", MFnNumericData::kFloat, 10.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aDomainHeightIn);
     attributeAffects(aDomainHeightIn, aDomainHeightOut);
     attributeAffects(aDomainHeightIn, aSourceHeightOut);
-    attributeAffects(aDomainHeightIn, aSourceOriginOut);
+    attributeAffects(aDomainHeightIn, aSourceOriginXOut);
+    attributeAffects(aDomainHeightIn, aSourceOriginYOut);
+    attributeAffects(aDomainHeightIn, aSourceOriginZOut);
 
-    aDomainLengthIn = nAttr.create("domainLengthIn", "domainLengthIn", MFnNumericData::kFloat, 5.0f);
+    aDomainLengthIn = nAttr.create("domainLengthIn", "domainLengthIn", MFnNumericData::kFloat, 10.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aDomainLengthIn);
     attributeAffects(aDomainLengthIn, aDomainLengthOut);
     attributeAffects(aDomainLengthIn, aSourceLengthOut);
-    attributeAffects(aDomainLengthIn, aSourceOriginOut);
+    attributeAffects(aDomainLengthIn, aSourceOriginXOut);
+    attributeAffects(aDomainLengthIn, aSourceOriginYOut);
+    attributeAffects(aDomainLengthIn, aSourceOriginZOut);
 
-    aSourceOriginIn = nAttr.create("sourceOriginIn", "sourceOriginIn", MFnNumericData::k3Float);
+    aSourceOriginXIn = nAttr.create("sourceOriginXIn", "sourceOriginXIn", MFnNumericData::kFloat);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
-    addAttribute(aSourceOriginIn);
-    attributeAffects(aSourceOriginIn, aSourceOriginOut);
-    attributeAffects(aSourceOriginIn, aSourceHeightOut);
-    attributeAffects(aSourceOriginIn, aSourceWidthOut);
-    attributeAffects(aSourceOriginIn, aSourceLengthOut);
+    addAttribute(aSourceOriginXIn);
+    attributeAffects(aSourceOriginXIn, aSourceOriginXOut);
+    attributeAffects(aSourceOriginXIn, aSourceHeightOut);
+    attributeAffects(aSourceOriginXIn, aSourceWidthOut);
+    attributeAffects(aSourceOriginXIn, aSourceLengthOut);
 
-    aSourceWidthIn = nAttr.create("sourceWidthIn", "sourceWidthIn", MFnNumericData::kFloat, 5.0f);
+    aSourceOriginYIn = nAttr.create("sourceOriginYIn", "sourceOriginYIn", MFnNumericData::kFloat);
+    nAttr.setMin(0.0f);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aSourceOriginYIn);
+    attributeAffects(aSourceOriginYIn, aSourceOriginYOut);
+    attributeAffects(aSourceOriginYIn, aSourceHeightOut);
+    attributeAffects(aSourceOriginYIn, aSourceWidthOut);
+    attributeAffects(aSourceOriginYIn, aSourceLengthOut);
+
+    aSourceOriginZIn = nAttr.create("sourceOriginZIn", "sourceOriginZIn", MFnNumericData::kFloat);
+    nAttr.setMin(0.0f);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aSourceOriginZIn);
+    attributeAffects(aSourceOriginZIn, aSourceOriginZOut);
+    attributeAffects(aSourceOriginZIn, aSourceHeightOut);
+    attributeAffects(aSourceOriginZIn, aSourceWidthOut);
+    attributeAffects(aSourceOriginZIn, aSourceLengthOut);
+
+    aSourceWidthIn = nAttr.create("sourceWidthIn", "sourceWidthIn", MFnNumericData::kFloat, 1.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceWidthIn);
     attributeAffects(aSourceWidthIn, aSourceWidthOut);
-    attributeAffects(aSourceWidthIn, aSourceOriginOut);
+    attributeAffects(aSourceWidthIn, aSourceOriginXOut);
 
-    aSourceHeightIn = nAttr.create("sourceHeightIn", "sourceHeightIn", MFnNumericData::kFloat, 5.0f);
+    aSourceHeightIn = nAttr.create("sourceHeightIn", "sourceHeightIn", MFnNumericData::kFloat, 1.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceHeightIn);
     attributeAffects(aSourceHeightIn, aSourceHeightOut);
-    attributeAffects(aSourceHeightIn, aSourceOriginOut);
+    attributeAffects(aSourceHeightIn, aSourceOriginYOut);
 
-    aSourceLengthIn = nAttr.create("sourceLengthIn", "sourceLengthIn", MFnNumericData::kFloat, 5.0f);
+    aSourceLengthIn = nAttr.create("sourceLengthIn", "sourceLengthIn", MFnNumericData::kFloat, 1.0f);
+    nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceLengthIn);
     attributeAffects(aSourceLengthIn, aSourceLengthOut);
-    attributeAffects(aSourceLengthIn, aSourceOriginOut);
+    attributeAffects(aSourceLengthIn, aSourceOriginZOut);
 
-    aSourceVelocity = nAttr.create("sourceVelocity", "sourceVelocity", MFnNumericData::k3Float);
+    aSourceVelocityU = nAttr.create("sourceVelocityU", "sourceVelocityU", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
-    addAttribute(aSourceVelocity);
-    attributeAffects(aSourceVelocity, aVelocityU);
-    attributeAffects(aSourceVelocity, aVelocityV);
-    attributeAffects(aSourceVelocity, aVelocityW);
+    addAttribute(aSourceVelocityU);
+    attributeAffects(aSourceVelocityU, aVelocityUOut);
+
+    aSourceVelocityV = nAttr.create("sourceVelocityV", "sourceVelocityV", MFnNumericData::kFloat);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aSourceVelocityV);
+    attributeAffects(aSourceVelocityV, aVelocityVOut);
+
+    aSourceVelocityW = nAttr.create("sourceVelocityW", "sourceVelocityW", MFnNumericData::kFloat);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aSourceVelocityW);
+    attributeAffects(aSourceVelocityW, aVelocityWOut);
 
     aMinTimeIn = nAttr.create("minTimeIn", "minTimeIn", MFnNumericData::kDouble, 1.0);
     nAttr.setMin(1.0);
@@ -424,14 +535,18 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
         plug != aForceMultiplierOut &&
         plug != aSourceMultiplierOut &&
         plug != aDensityOut &&
-        plug != aVelocityU &&
-        plug != aVelocityV &&
-        plug != aVelocityW &&
-        plug != aDomainOriginOut &&
+        plug != aVelocityUOut &&
+        plug != aVelocityVOut &&
+        plug != aVelocityWOut &&
+        plug != aDomainOriginXOut &&
+        plug != aDomainOriginYOut &&
+        plug != aDomainOriginZOut &&
         plug != aDomainWidthOut &&
         plug != aDomainHeightOut &&
         plug != aDomainLengthOut &&
-        plug != aSourceOriginOut &&
+        plug != aSourceOriginXOut &&
+        plug != aSourceOriginYOut &&
+        plug != aSourceOriginZOut &&
         plug != aSourceWidthOut &&
         plug != aSourceHeightOut &&
         plug != aSourceLengthOut &&
@@ -481,10 +596,22 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     float sourceDensity = data.inputValue(aSourceDensity, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float3& domainVelocity = data.inputValue(aDomainVelocity, &status).asFloat3();
+    float domainVelocityU = data.inputValue(aDomainVelocityU, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float3& domainOrigin = data.inputValue(aDomainOriginIn, &status).asFloat3();
+    float domainVelocityV = data.inputValue(aDomainVelocityV, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float domainVelocityW = data.inputValue(aDomainVelocityW, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float domainOriginX = data.inputValue(aDomainOriginXIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float domainOriginY = data.inputValue(aDomainOriginYIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float domainOriginZ = data.inputValue(aDomainOriginZIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     float domainWidth = data.inputValue(aDomainWidthIn, &status).asFloat();
@@ -496,7 +623,13 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     float domainLength = data.inputValue(aDomainLengthIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float3& sourceOrigin = data.inputValue(aSourceOriginIn, &status).asFloat3();
+    float sourceOriginX = data.inputValue(aSourceOriginXIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceOriginY = data.inputValue(aSourceOriginYIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceOriginZ = data.inputValue(aSourceOriginZIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     float sourceWidth = data.inputValue(aSourceWidthIn, &status).asFloat();
@@ -508,7 +641,13 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     float sourceLength = data.inputValue(aSourceLengthIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float3& sourceVelocity = data.inputValue(aSourceVelocity, &status).asFloat3();
+    float sourceVelocityU = data.inputValue(aSourceVelocityU, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceVelocityV = data.inputValue(aSourceVelocityV, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceVelocityW = data.inputValue(aSourceVelocityW, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     double minTime = data.inputValue(aMinTimeIn, &status).asDouble();
@@ -521,42 +660,30 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     // Make sure that the source is constrained within the domain. Adjust values accordingly.
-    if (sourceOrigin[0] < 0)
+    if (sourceOriginX > domainWidth)
     {
-        sourceOrigin[0] = 0;
+        sourceOriginX = domainWidth;
     }
-    else if (sourceOrigin[0] > domainWidth)
+    if (sourceOriginY > domainHeight)
     {
-        sourceOrigin[0] = domainWidth;
+        sourceOriginY = domainHeight;
     }
-    if (sourceOrigin[1] < 0)
+    if (sourceOriginZ > domainLength)
     {
-        sourceOrigin[1] = 0;
-    }
-    else if (sourceOrigin[1] > domainHeight)
-    {
-        sourceOrigin[1] = domainHeight;
-    }
-    if (sourceOrigin[2] < 0)
-    {
-        sourceOrigin[2] = 0;
-    }
-    else if (sourceOrigin[2] > domainLength)
-    {
-        sourceOrigin[2] = domainLength;
+        sourceOriginZ = domainHeight;
     }
 
-    if (sourceOrigin[0] + sourceWidth > domainWidth)
+    if (sourceOriginX + sourceWidth > domainWidth)
     {
-        sourceWidth -= (sourceOrigin[0] + sourceWidth - domainWidth);
+        sourceWidth -= (sourceOriginX + sourceWidth - domainWidth);
     }
-    if (sourceOrigin[1] + sourceHeight > domainHeight)
+    if (sourceOriginY + sourceHeight > domainHeight)
     {
-        sourceHeight -= (sourceOrigin[1] + sourceHeight - domainHeight);
+        sourceHeight -= (sourceOriginY + sourceHeight - domainHeight);
     }
-    if (sourceOrigin[2] + sourceLength > domainLength)
+    if (sourceOriginZ + sourceLength > domainLength)
     {
-        sourceLength -= (sourceOrigin[2] + sourceLength - domainLength);
+        sourceLength -= (sourceOriginZ + sourceLength - domainLength);
     }
 
     // Calculate number of voxels in each dimension for the source.
@@ -564,23 +691,28 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     int sourceVoxelsHeight = (sourceHeight / domainHeight) * voxelCountHeight;
     int sourceVoxelsLength = (sourceLength / domainLength) * voxelCountLength;
 
+    // Flattened 3D array size with +2 padding in each dimension to account for boundary
+    // used by the solver.
+    int size = (voxelCountWidth + 2) * (voxelCountHeight + 2) * (voxelCountLength + 2);
+
     // Create output velocity fields. Set default velocity for each vector to the specified domain
     // velocity value (default is 0.0f).
-    MFloatArray velocityU(voxelCountWidth*voxelCountHeight*voxelCountLength, domainVelocity[0]);
-    MFloatArray velocityV(voxelCountWidth*voxelCountHeight*voxelCountLength, domainVelocity[1]);
-    MFloatArray velocityW(voxelCountWidth*voxelCountHeight*voxelCountLength, domainVelocity[2]);
+    MFloatArray velocityUOut(size, domainVelocityU);
+    MFloatArray velocityVOut(size, domainVelocityV);
+    MFloatArray velocityWOut(size, domainVelocityW);
 
     // Create an output density array. Set default density at each coordinate to the
     // specified domain density (default is 0.0f).
-    MFloatArray density(voxelCountWidth*voxelCountHeight*voxelCountLength, domainDensity);
+    MFloatArray density(size, domainDensity);
 
     // Add source density to domain density, without exceeding 1.0 limit. In addition,
     // add source velocity to domain velocity, without exceeding 1.0 limit.
-    for (int x = sourceOrigin[0]; x < sourceVoxelsWidth && x < voxelCountWidth; x++)
+    // Starting indexes (x, y, z) are padded by one to account for padding in size.
+    for (int x = sourceOriginX + 1; x < sourceVoxelsWidth && x < voxelCountWidth; x++)
     {
-        for (int y = sourceOrigin[1]; y < sourceVoxelsHeight && x < voxelCountHeight; y++)
+        for (int y = sourceOriginY + 1; y < sourceVoxelsHeight && x < voxelCountHeight; y++)
         {
-            for (int z = sourceOrigin[2]; y < sourceVoxelsLength && z < voxelCountLength; z++)
+            for (int z = sourceOriginZ + 1; y < sourceVoxelsLength && z < voxelCountLength; z++)
             {
                 int i = x + (y * voxelCountWidth) + (z * voxelCountWidth * voxelCountHeight);
 
@@ -591,26 +723,26 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
                 }
                 density.set(dValue, i);
 
-                float vUValue = domainVelocity[0] + sourceVelocity[0];
+                float vUValue = domainVelocityU + sourceVelocityU;
                 if (vUValue > 1.0f)
                 {
                     vUValue = 1.0f;
                 }
-                velocityU.set(vUValue, i);
+                velocityUOut.set(vUValue, i);
 
-                float vVValue = domainVelocity[1] + sourceVelocity[1];
+                float vVValue = domainVelocityV + sourceVelocityV;
                 if (vVValue > 1.0f)
                 {
                     vVValue = 1.0f;
                 }
-                velocityV.set(vVValue, i);
+                velocityVOut.set(vVValue, i);
 
-                float vWValue = domainVelocity[2] + sourceVelocity[2];
+                float vWValue = domainVelocityW + sourceVelocityW;
                 if (vWValue > 1.0f)
                 {
                     vWValue = 1.0f;
                 }
-                velocityW.set(vWValue, i);
+                velocityWOut.set(vWValue, i);
             }
         }
     }
@@ -690,36 +822,48 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     hOutput.setClean();
     data.setClean(plug);
 
-    hOutput = data.outputValue(aVelocityU, &status);
+    hOutput = data.outputValue(aVelocityUOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData vUFnDataOut;
-    dataOut = vUFnDataOut.create(velocityU, &status);
+    dataOut = vUFnDataOut.create(velocityUOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOutput.set(dataOut);
     hOutput.setClean();
     data.setClean(plug);
 
-    hOutput = data.outputValue(aVelocityV, &status);
+    hOutput = data.outputValue(aVelocityVOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData vVFnDataOut;
-    dataOut = vVFnDataOut.create(velocityV, &status);
+    dataOut = vVFnDataOut.create(velocityVOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOutput.set(dataOut);
     hOutput.setClean();
     data.setClean(plug);
 
-    hOutput = data.outputValue(aVelocityW, &status);
+    hOutput = data.outputValue(aVelocityWOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData vWFnDataOut;
-    dataOut = vWFnDataOut.create(velocityW, &status);
+    dataOut = vWFnDataOut.create(velocityWOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOutput.set(dataOut);
     hOutput.setClean();
     data.setClean(plug);
 
-    hOutput = data.outputValue(aDomainOriginOut, &status);
+    hOutput = data.outputValue(aDomainOriginXOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    hOutput.set(domainOrigin);
+    hOutput.set(domainOriginX);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aDomainOriginYOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(domainOriginY);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aDomainOriginZOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(domainOriginZ);
     hOutput.setClean();
     data.setClean(plug);
 
@@ -741,9 +885,21 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     hOutput.setClean();
     data.setClean(plug);
 
-    hOutput = data.outputValue(aSourceOriginOut, &status);
+    hOutput = data.outputValue(aSourceOriginXOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    hOutput.set(sourceOrigin);
+    hOutput.set(sourceOriginX);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aSourceOriginYOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(sourceOriginY);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aSourceOriginZOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(sourceOriginZ);
     hOutput.setClean();
     data.setClean(plug);
 

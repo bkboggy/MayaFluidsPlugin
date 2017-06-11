@@ -14,11 +14,15 @@ MObject FluidLocatorNode::aVoxelAlphaOut;
 MObject FluidLocatorNode::aVoxelCountWidthOut;
 MObject FluidLocatorNode::aVoxelCountHeightOut;
 MObject FluidLocatorNode::aVoxelCountLengthOut;
-MObject FluidLocatorNode::aDomainOriginOut;
+MObject FluidLocatorNode::aDomainOriginXOut;
+MObject FluidLocatorNode::aDomainOriginYOut;
+MObject FluidLocatorNode::aDomainOriginZOut;
 MObject FluidLocatorNode::aDomainHeightOut;
 MObject FluidLocatorNode::aDomainWidthOut;
 MObject FluidLocatorNode::aDomainLengthOut;
-MObject FluidLocatorNode::aSourceOriginOut;
+MObject FluidLocatorNode::aSourceOriginXOut;
+MObject FluidLocatorNode::aSourceOriginYOut;
+MObject FluidLocatorNode::aSourceOriginZOut;
 MObject FluidLocatorNode::aSourceWidthOut;
 MObject FluidLocatorNode::aSourceHeightOut;
 MObject FluidLocatorNode::aSourceLengthOut;
@@ -34,11 +38,15 @@ MObject FluidLocatorNode::aVoxelAlphaIn;
 MObject FluidLocatorNode::aVoxelCountWidthIn;
 MObject FluidLocatorNode::aVoxelCountHeightIn;
 MObject FluidLocatorNode::aVoxelCountLengthIn;
-MObject FluidLocatorNode::aDomainOriginIn;
+MObject FluidLocatorNode::aDomainOriginXIn;
+MObject FluidLocatorNode::aDomainOriginYIn;
+MObject FluidLocatorNode::aDomainOriginZIn;
 MObject FluidLocatorNode::aDomainHeightIn;
 MObject FluidLocatorNode::aDomainWidthIn;
 MObject FluidLocatorNode::aDomainLengthIn;
-MObject FluidLocatorNode::aSourceOriginIn;
+MObject FluidLocatorNode::aSourceOriginXIn;
+MObject FluidLocatorNode::aSourceOriginYIn;
+MObject FluidLocatorNode::aSourceOriginZIn;
 MObject FluidLocatorNode::aSourceWidthIn;
 MObject FluidLocatorNode::aSourceHeightIn;
 MObject FluidLocatorNode::aSourceLengthIn;
@@ -121,10 +129,20 @@ MStatus FluidLocatorNode::initialize()
     nAttr.setStorable(false);
     addAttribute(aVoxelCountLengthOut);
 
-    aDomainOriginOut = nAttr.create("domainOriginOut", "domainOriginOut", MFnNumericData::k3Float);
+    aDomainOriginXOut = nAttr.create("domainOriginXOut", "domainOriginXOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
     nAttr.setWritable(false);
-    addAttribute(aDomainOriginOut);
+    addAttribute(aDomainOriginXOut);
+
+    aDomainOriginYOut = nAttr.create("domainOriginYOut", "domainOriginYOut", MFnNumericData::kFloat);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aDomainOriginYOut);
+
+    aDomainOriginZOut = nAttr.create("domainOriginZOut", "domainOriginZOut", MFnNumericData::kFloat);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aDomainOriginZOut);
 
     aDomainWidthOut = nAttr.create("domainWidthOut", "domainWidthOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
@@ -141,10 +159,20 @@ MStatus FluidLocatorNode::initialize()
     nAttr.setWritable(false);
     addAttribute(aDomainLengthOut);
 
-    aSourceOriginOut = nAttr.create("sourceOriginOut", "sourceOriginOut", MFnNumericData::k3Float);
+    aSourceOriginXOut = nAttr.create("sourceOriginXOut", "sourceOriginXOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
     nAttr.setWritable(false);
-    addAttribute(aSourceOriginOut);
+    addAttribute(aSourceOriginXOut);
+
+    aSourceOriginYOut = nAttr.create("sourceOriginYOut", "sourceOriginYOut", MFnNumericData::kFloat);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aSourceOriginYOut);
+
+    aSourceOriginZOut = nAttr.create("sourceOriginZOut", "sourceOriginZOut", MFnNumericData::kFloat);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aSourceOriginZOut);
 
     aSourceWidthOut = nAttr.create("sourceWidthOut", "sourceWidthOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
@@ -244,13 +272,29 @@ MStatus FluidLocatorNode::initialize()
     attributeAffects(aVoxelCountLengthIn, aVelocityWOut);
     attributeAffects(aVoxelCountLengthIn, aFluid);
 
-    aDomainOriginIn = nAttr.create("domainOriginIn", "domainOriginIn", MFnNumericData::k3Float);
+    aDomainOriginXIn = nAttr.create("domainOriginXIn", "domainOriginXIn", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
-    addAttribute(aDomainOriginIn);
-    attributeAffects(aDomainOriginIn, aDomainOriginOut);
-    attributeAffects(aDomainOriginIn, aSourceOriginOut);
-    attributeAffects(aDomainOriginIn, aFluid);
+    addAttribute(aDomainOriginXIn);
+    attributeAffects(aDomainOriginXIn, aDomainOriginXOut);
+    attributeAffects(aDomainOriginXIn, aSourceOriginXOut);
+    attributeAffects(aDomainOriginXIn, aFluid);
+
+    aDomainOriginYIn = nAttr.create("domainOriginYIn", "domainOriginYIn", MFnNumericData::kFloat);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aDomainOriginYIn);
+    attributeAffects(aDomainOriginYIn, aDomainOriginYOut);
+    attributeAffects(aDomainOriginYIn, aSourceOriginYOut);
+    attributeAffects(aDomainOriginYIn, aFluid);
+
+    aDomainOriginZIn = nAttr.create("domainOriginZIn", "domainOriginZIn", MFnNumericData::kFloat);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aDomainOriginZIn);
+    attributeAffects(aDomainOriginZIn, aDomainOriginZOut);
+    attributeAffects(aDomainOriginZIn, aSourceOriginZOut);
+    attributeAffects(aDomainOriginZIn, aFluid);
 
     aDomainWidthIn = nAttr.create("domainWidthIn", "domainWidthIn", MFnNumericData::kFloat, 5.0f);
     nAttr.setKeyable(true);
@@ -258,7 +302,7 @@ MStatus FluidLocatorNode::initialize()
     addAttribute(aDomainWidthIn);
     attributeAffects(aDomainWidthIn, aDomainWidthOut);
     attributeAffects(aDomainWidthIn, aSourceWidthOut);
-    attributeAffects(aDomainWidthIn, aSourceOriginOut);
+    attributeAffects(aDomainWidthIn, aSourceOriginXOut);
     attributeAffects(aDomainWidthIn, aFluid);
 
     aDomainHeightIn = nAttr.create("domainHeightIn", "domainHeightIn", MFnNumericData::kFloat, 5.0f);
@@ -267,7 +311,7 @@ MStatus FluidLocatorNode::initialize()
     addAttribute(aDomainHeightIn);
     attributeAffects(aDomainHeightIn, aDomainHeightOut);
     attributeAffects(aDomainHeightIn, aSourceHeightOut);
-    attributeAffects(aDomainHeightIn, aSourceOriginOut);
+    attributeAffects(aDomainHeightIn, aSourceOriginYOut);
     attributeAffects(aDomainHeightIn, aFluid);
 
     aDomainLengthIn = nAttr.create("domainLengthIn", "domainLengthIn", MFnNumericData::kFloat, 5.0f);
@@ -276,25 +320,45 @@ MStatus FluidLocatorNode::initialize()
     addAttribute(aDomainLengthIn);
     attributeAffects(aDomainLengthIn, aDomainLengthOut);
     attributeAffects(aDomainLengthIn, aSourceLengthOut);
-    attributeAffects(aDomainLengthIn, aSourceOriginOut);
+    attributeAffects(aDomainLengthIn, aSourceOriginZOut);
     attributeAffects(aDomainLengthIn, aFluid);
 
-    aSourceOriginIn = nAttr.create("sourceOriginIn", "sourceOriginIn", MFnNumericData::k3Float);
+    aSourceOriginXIn = nAttr.create("sourceOriginXIn", "sourceOriginXIn", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
-    addAttribute(aSourceOriginIn);
-    attributeAffects(aSourceOriginIn, aSourceOriginOut);
-    attributeAffects(aSourceOriginIn, aSourceHeightOut);
-    attributeAffects(aSourceOriginIn, aSourceWidthOut);
-    attributeAffects(aSourceOriginIn, aSourceLengthOut);
-    attributeAffects(aSourceOriginIn, aFluid);
+    addAttribute(aSourceOriginXIn);
+    attributeAffects(aSourceOriginXIn, aSourceOriginXOut);
+    attributeAffects(aSourceOriginXIn, aSourceHeightOut);
+    attributeAffects(aSourceOriginXIn, aSourceWidthOut);
+    attributeAffects(aSourceOriginXIn, aSourceLengthOut);
+    attributeAffects(aSourceOriginXIn, aFluid);
+
+    aSourceOriginYIn = nAttr.create("sourceOriginYIn", "sourceOriginYIn", MFnNumericData::kFloat);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aSourceOriginYIn);
+    attributeAffects(aSourceOriginYIn, aSourceOriginYOut);
+    attributeAffects(aSourceOriginYIn, aSourceHeightOut);
+    attributeAffects(aSourceOriginYIn, aSourceWidthOut);
+    attributeAffects(aSourceOriginYIn, aSourceLengthOut);
+    attributeAffects(aSourceOriginYIn, aFluid);
+
+    aSourceOriginZIn = nAttr.create("sourceOriginZIn", "sourceOriginZIn", MFnNumericData::kFloat);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aSourceOriginZIn);
+    attributeAffects(aSourceOriginZIn, aSourceOriginZOut);
+    attributeAffects(aSourceOriginZIn, aSourceHeightOut);
+    attributeAffects(aSourceOriginZIn, aSourceWidthOut);
+    attributeAffects(aSourceOriginZIn, aSourceLengthOut);
+    attributeAffects(aSourceOriginZIn, aFluid);
 
     aSourceWidthIn = nAttr.create("sourceWidthIn", "sourceWidthIn", MFnNumericData::kFloat, 5.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceWidthIn);
     attributeAffects(aSourceWidthIn, aSourceWidthOut);
-    attributeAffects(aSourceWidthIn, aSourceOriginOut);
+    attributeAffects(aSourceWidthIn, aSourceOriginXOut);
     attributeAffects(aSourceWidthIn, aFluid);
 
     aSourceHeightIn = nAttr.create("sourceHeightIn", "sourceHeightIn", MFnNumericData::kFloat, 5.0f);
@@ -302,7 +366,7 @@ MStatus FluidLocatorNode::initialize()
     nAttr.setWritable(true);
     addAttribute(aSourceHeightIn);
     attributeAffects(aSourceHeightIn, aSourceHeightOut);
-    attributeAffects(aSourceHeightIn, aSourceOriginOut);
+    attributeAffects(aSourceHeightIn, aSourceOriginYOut);
     attributeAffects(aSourceHeightIn, aFluid);
 
     aSourceLengthIn = nAttr.create("sourceLengthIn", "sourceLengthIn", MFnNumericData::kFloat, 5.0f);
@@ -310,7 +374,7 @@ MStatus FluidLocatorNode::initialize()
     nAttr.setWritable(true);
     addAttribute(aSourceLengthIn);
     attributeAffects(aSourceLengthIn, aSourceLengthOut);
-    attributeAffects(aSourceLengthIn, aSourceOriginOut);
+    attributeAffects(aSourceLengthIn, aSourceOriginZOut);
     attributeAffects(aSourceLengthIn, aFluid);
 
     return MS::kSuccess;
@@ -331,11 +395,15 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
         plug != aVoxelCountWidthOut &&
         plug != aVoxelCountHeightOut &&
         plug != aVoxelCountLengthOut &&
-        plug != aDomainOriginOut &&
+        plug != aDomainOriginXOut &&
+        plug != aDomainOriginYOut &&
+        plug != aDomainOriginZOut &&
         plug != aDomainHeightOut &&
         plug != aDomainWidthOut &&
         plug != aDomainLengthOut &&
-        plug != aSourceOriginOut &&
+        plug != aSourceOriginXOut &&
+        plug != aSourceOriginYOut &&
+        plug != aSourceOriginZOut &&
         plug != aSourceWidthOut &&
         plug != aSourceHeightOut &&
         plug != aSourceLengthOut)
@@ -381,7 +449,13 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     int voxelCountLength = data.inputValue(aVoxelCountLengthIn, &status).asInt();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float3& domainOrigin = data.inputValue(aDomainOriginIn, &status).asFloat3();
+    float domainOriginX = data.inputValue(aDomainOriginXIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float domainOriginY = data.inputValue(aDomainOriginYIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float domainOriginZ = data.inputValue(aDomainOriginZIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
 	float domainHeight = data.inputValue(aDomainHeightIn, &status).asFloat();
@@ -393,7 +467,13 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 	float domainLength = data.inputValue(aDomainLengthIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    float3& sourceOrigin = data.inputValue(aSourceOriginIn, &status).asFloat3();
+    float sourceOriginX = data.inputValue(aSourceOriginXIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceOriginY = data.inputValue(aSourceOriginYIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceOriginZ = data.inputValue(aSourceOriginZIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     float sourceWidth = data.inputValue(aSourceWidthIn, &status).asFloat();
@@ -418,37 +498,54 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     // Get output values which may have an affect on how fluids is drawn.
     int voxelCountWidthOut = data.outputValue(aVoxelCountWidthOut, &status).asInt();
     CHECK_MSTATUS_AND_RETURN_IT(status);
+
     int voxelCountHeightOut = data.outputValue(aVoxelCountHeightOut, &status).asInt();
     CHECK_MSTATUS_AND_RETURN_IT(status);
+
     int voxelCountLengthOut = data.outputValue(aVoxelCountLengthOut, &status).asInt();
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    float3& domainOriginOut = data.outputValue(aDomainOriginOut, &status).asFloat3();
+
+    float domainOriginOutX = data.outputValue(aDomainOriginXOut, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float domainOriginOutY = data.outputValue(aDomainOriginYOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float domainOriginOutZ = data.outputValue(aDomainOriginZOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
     float domainHeightOut = data.outputValue(aDomainHeightOut, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
+
     float domainWidthOut = data.outputValue(aDomainWidthOut, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
+
     float domainLengthOut = data.outputValue(aDomainLengthOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    bool showFluidOut = data.outputValue(aShowFluidOut, &status).asBool();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     // Compare the cached outputs with the inputs to see if any changes were made.  If there
     // were, clear the fluid. This is equivalent of the user adjusting the simluation, so there's 
     // a cost to pay. This may be optimized later on, if necessary.
-    bool reset = false;
     if (voxelCountWidth != voxelCountWidthOut || voxelCountHeight != voxelCountHeightOut ||
         voxelCountLength != voxelCountLengthOut || domainWidth != domainWidthOut ||
         domainHeight != domainHeightOut || domainLength != domainLengthOut || 
-        domainOrigin[0] != domainOriginOut[0] || domainOrigin[1] != domainOriginOut[1] ||
-        domainOrigin[2] != domainOriginOut[2])
+        domainOriginX != domainOriginOutX || domainOriginY != domainOriginOutY ||
+        domainOriginZ != domainOriginOutZ || ((showFluid != showFluidOut) && !showFluid))
     {
-        int size = voxelCountWidth*voxelCountHeight*voxelCountLength;
-        Utilities::resetFluid(fluid, size);
+        // Desired size.
+        int size = voxelCountWidth * voxelCountHeight * voxelCountLength;
+        resetFluid(fluid, size);
     }
 
-    // Simulate the fluid. Reset flag is passed in order to fascillitate reset of the fluid.
-    // If there is any existing fluid, it'll be deleted.
-    Utilities::simulateFluid(name, fluid, density, domainWidth, domainHeight, domainLength, 
-        voxelCountWidth, voxelCountHeight, voxelCountLength);
+    // If showFluid flag is not set to false, simulate the fluid.
+    if (showFluid)
+    {
+        simulateFluid(name, fluid, density, domainWidth, domainHeight, domainLength,
+            voxelCountWidth, voxelCountHeight, voxelCountLength);
+    }
  
     MDataHandle hOutput = data.outputValue(aFluid, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -531,9 +628,21 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     hOutput.setClean();
     data.setClean(plug);
 
-    hOutput = data.outputValue(aDomainOriginOut, &status);
+    hOutput = data.outputValue(aDomainOriginXOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    hOutput.set(domainOrigin);
+    hOutput.set(domainOriginX);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aDomainOriginYOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(domainOriginY);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aDomainOriginZOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(domainOriginZ);
     hOutput.setClean();
     data.setClean(plug);
 
@@ -555,9 +664,21 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     hOutput.setClean();
     data.setClean(plug);
 
-    hOutput = data.outputValue(aSourceOriginOut, &status);
+    hOutput = data.outputValue(aSourceOriginXOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    hOutput.set(sourceOrigin);
+    hOutput.set(sourceOriginX);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aSourceOriginYOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(sourceOriginY);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aSourceOriginZOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(sourceOriginZ);
     hOutput.setClean();
     data.setClean(plug);
 
@@ -588,11 +709,20 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
 	float domainHeight;
 	float domainWidth;
 	float domainLength;
+    float sourceHeight;
+    float sourceWidth;
+    float sourceLength;
     int voxelCountWidth;
     int voxelCountHeight;
     int voxelCountLength;
     bool showVoxels;
     float voxelAlpha;
+    float domainOriginX;
+    float domainOriginY;
+    float domainOriginZ;
+    float sourceOriginX;
+    float sourceOriginY;
+    float sourceOriginZ;
 
 	MFnDependencyNode dFn(thisMObject(), &status);
 	if (status != MS::kSuccess)
@@ -615,42 +745,42 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
         return;
     }
 
-	MPlug valPlug = dFn.findPlug(aDomainHeightIn, &status);
+    MPlug valPlug = dFn.findPlug(aDomainWidthIn, &status);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to get height plug.");
-		return;
-	}
-	status = valPlug.getValue(domainHeight);
-	if (status != MS::kSuccess)
-	{
-		MGlobal::displayError("Unable to get height value.");
-		return;
-	}
-
-	valPlug = dFn.findPlug(aDomainWidthIn, &status);
-	if (status != MS::kSuccess)
-	{
-		MGlobal::displayError("Unable to get width plug.");
+		MGlobal::displayError("Unable to get domain width plug.");
 		return;
 	}
 	status = valPlug.getValue(domainWidth);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to get width value.");
+		MGlobal::displayError("Unable to get domain width value.");
 		return;
 	}
+
+    valPlug = dFn.findPlug(aDomainHeightIn, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get domain height plug.");
+        return;
+    }
+    status = valPlug.getValue(domainHeight);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get domain height value.");
+        return;
+    }
 
 	valPlug = dFn.findPlug(aDomainLengthIn, &status);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to get length plug.");
+		MGlobal::displayError("Unable to get domain length plug.");
 		return;
 	}
 	status = valPlug.getValue(domainLength);
 	if (status != MS::kSuccess)
 	{
-		MGlobal::displayError("Unable to get length value.");
+		MGlobal::displayError("Unable to get domain length value.");
 		return;
 	}
 
@@ -719,6 +849,123 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
         return;
     }
 
+    valPlug = dFn.findPlug(aSourceWidthIn, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source width plug.");
+        return;
+    }
+    status = valPlug.getValue(sourceWidth);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source width value.");
+        return;
+    }
+
+    valPlug = dFn.findPlug(aSourceHeightIn, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source height plug.");
+        return;
+    }
+    status = valPlug.getValue(sourceHeight);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source height value.");
+        return;
+    }
+
+    valPlug = dFn.findPlug(aSourceLengthIn, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source length plug.");
+        return;
+    }
+    status = valPlug.getValue(sourceLength);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source length value.");
+        return;
+    }
+
+    valPlug = dFn.findPlug(aSourceOriginXIn, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source origin x plug.");
+        return;
+    }
+    status = valPlug.getValue(sourceOriginX);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source origin x value.");
+        return;
+    }
+
+    valPlug = dFn.findPlug(aSourceOriginYIn, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source origin y plug.");
+        return;
+    }
+    status = valPlug.getValue(sourceOriginY);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source origin y value.");
+        return;
+    }
+
+    valPlug = dFn.findPlug(aSourceOriginZIn, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source origin z plug.");
+        return;
+    }
+    status = valPlug.getValue(sourceOriginZ);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get source origin z value.");
+        return;
+    }
+
+    valPlug = dFn.findPlug(aDomainOriginXIn, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get domain origin x plug.");
+        return;
+    }
+    status = valPlug.getValue(domainOriginX);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get domain origin x value.");
+        return;
+    }
+
+    valPlug = dFn.findPlug(aDomainOriginYIn, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get domain origin y plug.");
+        return;
+    }
+    status = valPlug.getValue(domainOriginY);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get domain origin y value.");
+        return;
+    }
+
+    valPlug = dFn.findPlug(aDomainOriginZIn, &status);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get domain origin z plug.");
+        return;
+    }
+    status = valPlug.getValue(domainOriginZ);
+    if (status != MS::kSuccess)
+    {
+        MGlobal::displayError("Unable to get domain origin z value.");
+        return;
+    }
+
 	view.beginGL();
     glPushAttrib(GL_CURRENT_BIT);
 
@@ -745,49 +992,159 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
         {
             for (int j = 0; j <= voxelCountHeight; j++)
             {
-                glVertex3f(wIncrement*i, 0, lIncrement*j);
-                glVertex3f(wIncrement*i, domainHeight, lIncrement*j);
+                glVertex3f(domainOriginX + wIncrement*i, domainOriginY, domainOriginZ + lIncrement*j);
+                glVertex3f(domainOriginX + wIncrement*i, domainOriginY + domainHeight, domainOriginZ + lIncrement*j);
 
-                glVertex3f(wIncrement*i, hIncrement*j, 0);
-                glVertex3f(wIncrement*i, hIncrement*j, domainLength);
+                glVertex3f(domainOriginX + wIncrement*i, domainOriginY + hIncrement*j, domainOriginZ);
+                glVertex3f(domainOriginX + wIncrement*i, domainOriginY + hIncrement*j, domainLength);
 
-                glVertex3f(0, hIncrement*i, lIncrement*j);
-                glVertex3f(domainWidth, hIncrement*i, lIncrement*j);
+                glVertex3f(domainOriginX, hIncrement*i, domainOriginY + lIncrement*j);
+                glVertex3f(domainOriginX + domainWidth, domainOriginY + hIncrement*i, domainOriginZ + lIncrement*j);
             }
         }
         glEnd();
     }
     else
     {
+        // Draw domain.
         glBegin(GL_LINE_LOOP);
-        glVertex3f(0, 0, 0);
-        glVertex3f(0, domainHeight, 0);
-        glVertex3f(domainWidth, domainHeight, 0);
-        glVertex3f(domainWidth, 0, 0);
+        glVertex3f(domainOriginX, domainOriginY, domainOriginZ);
+        glVertex3f(domainOriginX, domainOriginY + domainHeight, domainOriginZ);
+        glVertex3f(domainOriginX + domainWidth, domainOriginY + domainHeight, domainOriginZ);
+        glVertex3f(domainOriginX + domainWidth, domainOriginY, domainOriginZ);
         glEnd();
 
         glBegin(GL_LINE_LOOP);
-        glVertex3f(0, 0, domainLength);
-        glVertex3f(0, domainHeight, domainLength);
-        glVertex3f(domainWidth, domainHeight, domainLength);
-        glVertex3f(domainWidth, 0, domainLength);
+        glVertex3f(domainOriginX, domainOriginY, domainOriginZ + domainLength);
+        glVertex3f(domainOriginX, domainOriginY + domainHeight, domainOriginZ + domainLength);
+        glVertex3f(domainOriginX + domainWidth, domainOriginY + domainHeight, domainOriginZ + domainLength);
+        glVertex3f(domainOriginX + domainWidth, domainOriginY, domainOriginZ + domainLength);
         glEnd();
 
         glBegin(GL_LINES);
-        glVertex3f(0, 0, 0);
-        glVertex3f(0, 0, domainLength);
+        glVertex3f(domainOriginX, domainOriginY, domainOriginZ);
+        glVertex3f(domainOriginX, domainOriginY, domainOriginZ + domainLength);
 
-        glVertex3f(domainWidth, 0, 0);
-        glVertex3f(domainWidth, 0, domainLength);
+        glVertex3f(domainOriginX + domainWidth, domainOriginY, domainOriginZ);
+        glVertex3f(domainOriginX + domainWidth, domainOriginY, domainOriginZ + domainLength);
 
-        glVertex3f(0, domainHeight, 0);
-        glVertex3f(0, domainHeight, domainLength);
+        glVertex3f(domainOriginX, domainOriginY + domainHeight, domainOriginZ);
+        glVertex3f(domainOriginX, domainOriginY + domainHeight, domainOriginZ + domainLength);
 
-        glVertex3f(domainWidth, domainHeight, 0);
-        glVertex3f(domainWidth, domainHeight, domainLength);
+        glVertex3f(domainOriginX + domainWidth, domainOriginY + domainHeight, domainOriginZ);
+        glVertex3f(domainOriginX + domainWidth, domainOriginY + domainHeight, domainOriginZ + domainLength);
         glEnd();
     }
+
+    // Draw source.
+    if (stat == M3dView::kLead)
+    {
+        glColor3f(0.26f, 1.0f, 0.64f);
+    }
+    else
+    {
+        glColor3f(1.0f, 0.0f, 0.0f);
+    }
+
+    glLineWidth(2.0f);
+
+    glBegin(GL_LINE_LOOP);
+    glVertex3f(domainOriginX + sourceOriginX, domainOriginY + sourceOriginY, domainOriginZ + sourceOriginZ);
+    glVertex3f(domainOriginX + sourceOriginX, domainOriginY + sourceOriginY + sourceHeight, domainOriginZ + sourceOriginZ);
+    glVertex3f(domainOriginX + sourceOriginX + sourceWidth, domainOriginY + sourceOriginY + sourceHeight, domainOriginZ + sourceOriginZ);
+    glVertex3f(domainOriginX + sourceOriginX + sourceWidth, domainOriginY + sourceOriginY, domainOriginZ + sourceOriginZ);
+    glEnd();
+
+    glBegin(GL_LINE_LOOP);
+    glVertex3f(domainOriginX + sourceOriginX, domainOriginY + sourceOriginY, domainOriginZ + sourceOriginZ + sourceLength);
+    glVertex3f(domainOriginX + sourceOriginX, domainOriginY + sourceOriginY + sourceHeight, domainOriginZ + sourceOriginZ + sourceLength);
+    glVertex3f(domainOriginX + sourceOriginX + sourceWidth, domainOriginY + sourceOriginY + sourceHeight, domainOriginZ + sourceOriginZ + sourceLength);
+    glVertex3f(domainOriginX + sourceOriginX + sourceWidth, domainOriginY + sourceOriginY, domainOriginZ + sourceOriginZ + sourceLength);
+    glEnd();
+
+    glBegin(GL_LINES);
+    glVertex3f(domainOriginX + sourceOriginX, domainOriginY + sourceOriginY, domainOriginZ + sourceOriginZ);
+    glVertex3f(domainOriginX + sourceOriginX, domainOriginY + sourceOriginY, domainOriginZ + sourceOriginZ + sourceLength);
+
+    glVertex3f(domainOriginX + sourceOriginX + sourceWidth, domainOriginY + sourceOriginY, domainOriginZ + sourceOriginZ);
+    glVertex3f(domainOriginX + sourceOriginX + sourceWidth, domainOriginY + sourceOriginY, domainOriginZ + sourceOriginZ + sourceLength);
+
+    glVertex3f(domainOriginX + sourceOriginX, domainOriginY + sourceOriginY + sourceHeight, domainOriginZ + sourceOriginZ);
+    glVertex3f(domainOriginX + sourceOriginX, domainOriginY + sourceOriginY + sourceHeight, domainOriginZ + sourceOriginZ + sourceLength);
+
+    glVertex3f(domainOriginX + sourceOriginX + sourceWidth, domainOriginY + sourceOriginY + sourceHeight, domainOriginZ + sourceOriginZ);
+    glVertex3f(domainOriginX + sourceOriginX + sourceWidth, domainOriginY + sourceOriginY + sourceHeight, domainOriginZ + sourceOriginZ + sourceLength);
+    glEnd();
 
     glPopAttrib();
 	view.endGL();
 }
+
+// Simulated fluid by drawing spheres in the Maya viewport.
+void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, MFloatArray &density,
+    float domainWidth, float domainHeight, float domainLength, int voxelCountWidth, int voxelCountHeight, int voxelCountLength)
+{
+    float x_offset = domainWidth / voxelCountWidth;
+    float x_init = x_offset / 2;
+    float y_offset = domainHeight / voxelCountHeight;
+    float y_init = y_offset / 2;
+    float z_offset = domainLength / voxelCountLength;
+    float z_init = z_offset / 2;
+
+    float smallest = std::fminf(std::fminf(x_offset, y_offset), z_offset);
+
+    for (int x = 0; x < voxelCountWidth; x++) {
+        MString x_name(std::to_string(x).c_str());
+        MString x_pos(std::to_string(x_init + ((float)x * x_offset)).c_str());
+        for (int y = 0; y < voxelCountHeight; y++) {
+            MString y_name(std::to_string(y).c_str());
+            MString y_pos(std::to_string(y_init + ((float)y * y_offset)).c_str());
+            for (int z = 0; z < voxelCountLength; z++) {
+                int i = x + (y * voxelCountWidth) + (z * voxelCountWidth * voxelCountHeight);
+                // Density index must be calculated separately, since it's larger by 2 in each dimension.
+                int d_i = x + ((y + 1) * (voxelCountWidth + 2)) + ((z + 1) * (voxelCountWidth + 2) * (voxelCountHeight + 2));
+                MString z_name(std::to_string(z).c_str());
+                MString z_pos(std::to_string(z_init + ((float)z * z_offset)).c_str());
+                MString pos = x_pos + " " + y_pos + " " + z_pos;
+                // +1 density offset is needed to account for boundaries
+                MString radius(std::to_string((smallest / 2) * density[d_i]).c_str());
+                MString fluidParticle = "fSphere_" + x_name + "_" + y_name + "_" + z_name;
+                if (fluid[i + 1] != fluidParticle)
+                {
+                    fluid.set(fluidParticle, i + 1);
+                    MGlobal::executeCommand("sphere -n " + fluidParticle + " -r " + radius);
+                    MGlobal::executeCommand("move -r " + pos);
+                    MGlobal::executeCommand("select " + locatorName);
+                    MGlobal::executeCommand("parent -a -s " + fluidParticle);
+                }
+                else
+                {
+                    MGlobal::executeCommand("sphere -e -r " + radius + " " + fluidParticle);
+                }
+            }
+        }
+    }
+    MGlobal::executeCommand("select " + locatorName);
+}
+
+// Clears fluid by deleting spheres and setting the desired size.
+void FluidLocatorNode::resetFluid(MStringArray &fluid, int size)
+{
+    // If empty, just set the desired size.
+    int length = fluid.length();
+    if (length == 0)
+    {
+        fluid.setLength(size);
+        return;
+    }
+
+    // If there are any elements, delete them.
+    for (int i = 0; i < length; i++)
+    {
+        MGlobal::executeCommand("delete " + fluid[i]);
+    }
+    // Clear and set the new size;
+    fluid.clear();
+    fluid.setLength(size);
+}
+

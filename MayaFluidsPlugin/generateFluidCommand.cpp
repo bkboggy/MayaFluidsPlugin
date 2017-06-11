@@ -98,53 +98,54 @@ MStatus GenerateFluidCommand::redoIt()
 	solverFn.create(FluidSolverNode::id);
 	fSolverName = solverFn.name();
 
-	//connect fTime to fSolver
-	MGlobal::executeCommand("connectAttr " + fTimeName + ".timeOut " + fSolverName + ".time");
-
-	//connect fDomain to fSolver
-    MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityU " + fSolverName + ".prevVelocityU");
-    MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityV " + fSolverName + ".prevVelocityV");
-    MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityW " + fSolverName + ".prevVelocityW");
-    MGlobal::executeCommand("connectAttr " + fDomainName + ".densityOut " + fSolverName + ".prevDensity");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountWidthOut " + fSolverName + ".voxelCountWidth");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountHeightOut " + fSolverName + ".voxelCountHeight");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountLengthOut " + fSolverName + ".voxelCountLength");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".diffusionRateOut " + fSolverName + ".diffusionRate");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".timestepOut " + fSolverName + ".timestep");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".forceMultiplierOut " + fSolverName + ".forceMultiplier");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceMultiplierOut " + fSolverName + ".sourceMultiplier");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".viscosityOut " + fSolverName + ".viscosity");
-
-    // Connect fDomain to fLocator.
-    MGlobal::executeCommand("connectAttr " + fDomainName + ".domainHeightOut " + fLocatorName + ".domainHeightIn");
-    MGlobal::executeCommand("connectAttr " + fDomainName + ".domainWidthOut " + fLocatorName + ".domainWidthIn");
-    MGlobal::executeCommand("connectAttr " + fDomainName + ".domainLengthOut " + fLocatorName + ".domainLengthIn");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".domainOriginOut0 " + fLocatorName + ".domainOriginIn0");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".domainOriginOut1 " + fLocatorName + ".domainOriginIn1");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".domainOriginOut2 " + fLocatorName + ".domainOriginIn2");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".showFluidOut " + fLocatorName + ".showFluidIn");
-    MGlobal::executeCommand("connectAttr " + fDomainName + ".showVoxelsOut " + fLocatorName + ".showVoxelsIn");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceHeightOut " + fLocatorName + ".sourceHeightIn");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceLengthOut " + fLocatorName + ".sourceLengthIn");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceOriginOut0 " + fLocatorName + ".sourceOriginIn0");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceOriginOut1 " + fLocatorName + ".sourceOriginIn1");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceOriginOut2 " + fLocatorName + ".sourceOriginIn2");
-	MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceWidthOut " + fLocatorName + ".sourceWidthIn");
-    MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelAlphaOut " + fLocatorName + ".voxelAlphaIn");
-
-    // Connect fDomain to fTime
+    // Connect fDomain to fTime.
     MGlobal::executeCommand("connectAttr " + fDomainName + ".minTimeOut " + fTimeName + ".minTime");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".maxTimeOut " + fTimeName + ".maxTime");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".timeScaleOut " + fTimeName + ".timeScale");
 
+    //connect fDomain to fSolver
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountWidthOut " + fSolverName + ".voxelCountWidthIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountHeightOut " + fSolverName + ".voxelCountHeightIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountLengthOut " + fSolverName + ".voxelCountLengthIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityUOut " + fSolverName + ".velocityUIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityVOut " + fSolverName + ".velocityVIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityWOut " + fSolverName + ".velocityWIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".densityOut " + fSolverName + ".densityIn");   
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".diffusionRateOut " + fSolverName + ".diffusionRateIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".timestepOut " + fSolverName + ".timestepIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".forceMultiplierOut " + fSolverName + ".forceMultiplierIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceMultiplierOut " + fSolverName + ".sourceMultiplierIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".viscosityOut " + fSolverName + ".viscosityIn");
+
+
+    // Connect fDomain to fLocator.
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".showVoxelsOut " + fLocatorName + ".showVoxelsIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelAlphaOut " + fLocatorName + ".voxelAlphaIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".showFluidOut " + fLocatorName + ".showFluidIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountWidthOut " + fLocatorName + ".voxelCountWidthIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountHeightOut " + fLocatorName + ".voxelCountHeightIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountLengthOut " + fLocatorName + ".voxelCountLengthIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".domainOriginXOut " + fLocatorName + ".domainOriginXIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".domainOriginYOut " + fLocatorName + ".domainOriginYIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".domainOriginZOut " + fLocatorName + ".domainOriginZIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".domainHeightOut " + fLocatorName + ".domainHeightIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".domainWidthOut " + fLocatorName + ".domainWidthIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".domainLengthOut " + fLocatorName + ".domainLengthIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceOriginXOut " + fLocatorName + ".sourceOriginXIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceOriginYOut " + fLocatorName + ".sourceOriginYIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceOriginZOut " + fLocatorName + ".sourceOriginZIn");   
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceHeightOut " + fLocatorName + ".sourceHeightIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceLengthOut " + fLocatorName + ".sourceLengthIn"); 
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceWidthOut " + fLocatorName + ".sourceWidthIn");
+    
+	// Connect fTime to fSolver.
+	MGlobal::executeCommand("connectAttr " + fTimeName + ".timeOut " + fSolverName + ".timeIn");  
+
 	// Connect fSolver to fLocator.
-    MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityU " + fLocatorName + ".velocityUIn");
-    MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityV " + fLocatorName + ".velocityVIn");
-    MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityW " + fLocatorName + ".velocityWIn");
-    MGlobal::executeCommand("connectAttr " + fSolverName + ".density " + fLocatorName + ".densityIn");
-    MGlobal::executeCommand("connectAttr " + fSolverName + ".voxelCountHeight " + fLocatorName + ".voxelCountHeightIn");
-	MGlobal::executeCommand("connectAttr " + fSolverName + ".voxelCountLength " + fLocatorName + ".voxelCountLengthIn");
-	MGlobal::executeCommand("connectAttr " + fSolverName + ".voxelCountWidth " + fLocatorName + ".voxelCountWidthIn");
+    MGlobal::executeCommand("connectAttr " + fSolverName + ".densityOut " + fLocatorName + ".densityIn");
+    MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityUOut " + fLocatorName + ".velocityUIn");
+    MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityVOut " + fLocatorName + ".velocityVIn");
+    MGlobal::executeCommand("connectAttr " + fSolverName + ".velocityWOut " + fLocatorName + ".velocityWIn");
 
 	// Restore the selection list.
 	status = MGlobal::setActiveSelectionList(previous_list);

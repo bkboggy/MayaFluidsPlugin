@@ -34,6 +34,13 @@ public:
 	static void* creator(); 
 	static MStatus initialize();
 
+    // Simulated fluid by drawing spheres in the Maya viewport.
+    static void simulateFluid(MString locatorName, MStringArray &fluid, MFloatArray &density,
+        float domainWidth, float domainHeight, float domainLength, int voxelCountWidth, int voxelCountHeight, int voxelCountLength);
+
+    // Clears fluid by deleting spheres and setting the desired size.
+    static void resetFluid(MStringArray &fluid, int size);
+
     static MTypeId id;
 
     // Output attributes.
@@ -48,11 +55,15 @@ public:
     static MObject aVoxelCountWidthOut;
     static MObject aVoxelCountHeightOut;
     static MObject aVoxelCountLengthOut;
-    static MObject aDomainOriginOut;
+    static MObject aDomainOriginXOut;
+    static MObject aDomainOriginYOut;
+    static MObject aDomainOriginZOut;
     static MObject aDomainHeightOut;
     static MObject aDomainWidthOut;
     static MObject aDomainLengthOut;
-    static MObject aSourceOriginOut;
+    static MObject aSourceOriginXOut;
+    static MObject aSourceOriginYOut;
+    static MObject aSourceOriginZOut;
     static MObject aSourceWidthOut;
     static MObject aSourceHeightOut;
     static MObject aSourceLengthOut;
@@ -68,11 +79,15 @@ public:
     static MObject aVoxelCountWidthIn;
     static MObject aVoxelCountHeightIn;
     static MObject aVoxelCountLengthIn;
-    static MObject aDomainOriginIn;
+    static MObject aDomainOriginXIn;
+    static MObject aDomainOriginYIn;
+    static MObject aDomainOriginZIn;
 	static MObject aDomainHeightIn;
 	static MObject aDomainWidthIn;
 	static MObject aDomainLengthIn;
-    static MObject aSourceOriginIn;
+    static MObject aSourceOriginXIn;
+    static MObject aSourceOriginYIn;
+    static MObject aSourceOriginZIn;
     static MObject aSourceWidthIn;
     static MObject aSourceHeightIn;
     static MObject aSourceLengthIn;

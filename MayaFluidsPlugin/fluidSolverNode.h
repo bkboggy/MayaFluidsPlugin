@@ -43,31 +43,34 @@ public:
         float* x, float* x0, float* u, float* v, float* w, float diff, float dt);
     // Calculates new velocity.
     void vel_step(int voxelCountWidth, int voxelCountHeight, int voxelCountLength,
-        float* u, float* v, float* u0, float* v0, float* w0, float visc, float dt);
+        float* u, float* v, float* w, float* u0, float* v0, float* w0, float visc, float dt);
 
     // Maya node ID.
     static MTypeId id;
 
     // Outputs.
-    static MObject aDensity;            // New density field.
-    static MObject aVelocityU;          // New u-component of velocity field.
-    static MObject aVelocityV;          // New v-component of velocity field.
-    static MObject aVelocityW;          // New w-component of velocity field.
+    static MObject aDensityOut;           // New density field.
+    static MObject aVelocityUOut;         // New u-component of velocity field.
+    static MObject aVelocityVOut;         // New v-component of velocity field.
+    static MObject aVelocityWOut;         // New w-component of velocity field.
+    static MObject aVoxelCountWidthOut;    // Number of voxels.
+    static MObject aVoxelCountHeightOut;
+    static MObject aVoxelCountLengthOut;
 
     // Inputs.
-    static MObject aTime;               // Simulation time (sec, frame, etc.).
-    static MObject aVoxelCountWidth;    // Number of voxels.
-    static MObject aVoxelCountHeight;
-    static MObject aVoxelCountLength;
-    static MObject aTimestep;           // Timestep.
-    static MObject aDiffusionRate;      // Diffusion rate.
-    static MObject aViscosity;          // Viscosity.
-    static MObject aForceMultipler;     // Force multipler.
-    static MObject aSourceMultiplier;   // Source multipler.
-    static MObject aInitDensity;        // Previous density field.
-    static MObject aInitVelocityU;      // Previous u-component of velocity field.
-    static MObject aInitVelocityV;      // Previous v-component of velocity field.
-    static MObject aInitVelocityW;      // Previous w-component of velocity field.
+    static MObject aTimeIn;               // Simulation time (sec, frame, etc.).
+    static MObject aVoxelCountWidthIn;    // Number of voxels.
+    static MObject aVoxelCountHeightIn;
+    static MObject aVoxelCountLengthIn;
+    static MObject aVelocityUIn;          // Previous u-component of velocity field.
+    static MObject aVelocityVIn;          // Previous v-component of velocity field.
+    static MObject aVelocityWIn;          // Previous w-component of velocity field.
+    static MObject aDensityIn;            // Previous density field.
+    static MObject aDiffusionRateIn;      // Diffusion rate.
+    static MObject aTimestepIn;           // Timestep.
+    static MObject aForceMultiplerIn;     // Force multipler.
+    static MObject aSourceMultiplierIn;   // Source multipler.
+    static MObject aViscosityIn;          // Viscosity.
 };
 
 #endif
