@@ -705,14 +705,16 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     // specified domain density (default is 0.0f).
     MFloatArray density(size, domainDensity);
 
+    // TODO: ADD PROPER STARTING X Y Z BASED ON SOURCE ORIGIN.
+    //
     // Add source density to domain density, without exceeding 1.0 limit. In addition,
     // add source velocity to domain velocity, without exceeding 1.0 limit.
     // Starting indexes (x, y, z) are padded by one to account for padding in size.
-    for (int x = sourceOriginX + 1; x < sourceVoxelsWidth && x < voxelCountWidth; x++)
+    for (int x = 1; x < sourceVoxelsWidth && x < voxelCountWidth; x++)
     {
-        for (int y = sourceOriginY + 1; y < sourceVoxelsHeight && x < voxelCountHeight; y++)
+        for (int y = 1; y < sourceVoxelsHeight && x < voxelCountHeight; y++)
         {
-            for (int z = sourceOriginZ + 1; y < sourceVoxelsLength && z < voxelCountLength; z++)
+            for (int z = 1; y < sourceVoxelsLength && z < voxelCountLength; z++)
             {
                 int i = x + (y * voxelCountWidth) + (z * voxelCountWidth * voxelCountHeight);
 

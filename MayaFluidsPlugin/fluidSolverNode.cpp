@@ -307,7 +307,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
         densityCachedArr.get(density0);
     }
 
-    // New calculations(what is going to be used for the new output).
+    // New calculations (what is going to be used for the new output).
     float* velocityU = new float[size];
     float* velocityV = new float[size];
     float* velocityW = new float[size];
@@ -324,8 +324,8 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
         velocityU, velocityV, velocityW, viscocity, timestep);
 
     // Calculate new density.
-    //dens_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, densityCached, density,
-    //    velocityU0, velocityV0, velocityW0, diffusionRate, timestep);
+    dens_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, density0, density,
+        velocityU0, velocityV0, velocityW0, diffusionRate, timestep);
 
     // Get output values.
     // TODO: Remove +2 in each direction.

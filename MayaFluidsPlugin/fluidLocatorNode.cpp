@@ -526,6 +526,7 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     bool showFluidOut = data.outputValue(aShowFluidOut, &status).asBool();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    /*
     // Compare the cached outputs with the inputs to see if any changes were made.  If there
     // were, clear the fluid. This is equivalent of the user adjusting the simluation, so there's 
     // a cost to pay. This may be optimized later on, if necessary.
@@ -539,6 +540,7 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
         int size = voxelCountWidth * voxelCountHeight * voxelCountLength;
         resetFluid(fluid, size);
     }
+    */
 
     // If showFluid flag is not set to false, simulate the fluid.
     if (showFluid)
@@ -1109,9 +1111,9 @@ void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, M
                 // +1 density offset is needed to account for boundaries
                 MString radius(std::to_string((smallest / 2) * density[d_i]).c_str());
                 MString fluidParticle = "fSphere_" + x_name + "_" + y_name + "_" + z_name;
-                if (fluid[i + 1] != fluidParticle)
+                if (fluid[i] != fluidParticle)
                 {
-                    fluid.set(fluidParticle, i + 1);
+                    fluid.set(fluidParticle, i);
                     MGlobal::executeCommand("sphere -n " + fluidParticle + " -r " + radius);
                     MGlobal::executeCommand("move -r " + pos);
                     MGlobal::executeCommand("select " + locatorName);
