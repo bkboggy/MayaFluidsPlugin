@@ -199,7 +199,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
         return MS::kUnknownParameter;
     }
 
-    float timeIn = data.inputValue(aTimeIn, &status).asFloat();
+    double timeIn = data.inputValue(aTimeIn, &status).asDouble();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     int voxelCountWidthIn = data.inputValue(aVoxelCountWidthIn, &status).asInt();
@@ -287,8 +287,12 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     float* velocityW0 = new float[size];
     float* density0 = new float[size];     
 
+    // Get minimum and current times.
+    double mTime = MAnimControl::minTime().value();
+    double cTime = MAnimControl::currentTime().value();
+
     // If this is an initial frame or voxel counts changed, use input information to setup ararys.
-    if (timeIn == 0.0f || voxelCountWidthOut != voxelCountWidthIn || 
+    if (mTime == cTime || voxelCountWidthOut != voxelCountWidthIn ||
         voxelCountHeightOut != voxelCountHeightIn || voxelCountLengthOut != voxelCountLengthIn)
     {
         // Copy information from input arrays.
@@ -296,24 +300,6 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
         velocityVInArr.get(velocityV0);
         velocityWInArr.get(velocityW0);
         densityInArr.get(density0);
-
-		MDataHandle hOutput = data.outputValue(aVoxelCountWidthOut, &status);
-		CHECK_MSTATUS_AND_RETURN_IT(status);
-		hOutput.set(voxelCountWidthIn);
-		hOutput.setClean();
-		data.setClean(plug);
-
-		hOutput = data.outputValue(aVoxelCountHeightOut, &status);
-		CHECK_MSTATUS_AND_RETURN_IT(status);
-		hOutput.set(voxelCountHeightIn);
-		hOutput.setClean();
-		data.setClean(plug);
-
-		hOutput = data.outputValue(aVoxelCountLengthOut, &status);
-		CHECK_MSTATUS_AND_RETURN_IT(status);
-		hOutput.set(voxelCountLengthIn);
-		hOutput.setClean();
-		data.setClean(plug);
 
     }
     // Otherwise, use cached data.
@@ -338,16 +324,18 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     Utilities::initializeFloatArray(velocityW, size, 0.0f);
     Utilities::initializeFloatArray(density, size, 0.0f);
 
-    // Calculate new velocity.
-    vel_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, velocityU, velocityV, velocityW,
-        velocityU0, velocityV0, velocityW0, viscocity, timestep);
+    if (mTime != cTime)
+    {
+        // Calculate new velocity.
+        vel_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, velocityU, velocityV, velocityW,
+            velocityU0, velocityV0, velocityW0, viscocity, timestep);
 
-    // Calculate new density.
-    dens_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, density, density0,
-        velocityU, velocityV, velocityW, diffusionRate, timestep);
+        // Calculate new density.
+        dens_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, density, density0,
+            velocityU, velocityV, velocityW, diffusionRate, timestep);
+    }
 
     // Get output values.
-    // TODO: Remove +2 in each direction.
     MFloatArray velocityUOut(velocityU, size);
     MFloatArray velocityVOut(velocityV, size);
     MFloatArray velocityWOut(velocityW, size);
@@ -357,7 +345,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     MDataHandle hOut = data.outputValue(aVelocityUOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     MFnFloatArrayData fnDataOut;
-    MObject dataOut = fnDataOut.create(velocityUOut, &status);
+    MObject dataOut = (mTime != cTime) ? fnDataOut.create(velocityUOut, &status) : fnDataOut.create(velocityUInArr, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOut.set(dataOut);
     hOut.setClean();
@@ -365,7 +353,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
 
     hOut = data.outputValue(aVelocityVOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    dataOut = fnDataOut.create(velocityVOut, &status);
+    dataOut = (mTime != cTime) ? fnDataOut.create(velocityVOut, &status) : fnDataOut.create(velocityVInArr, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOut.set(dataOut);
     hOut.setClean();
@@ -373,7 +361,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
 
     hOut = data.outputValue(aVelocityWOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    dataOut = fnDataOut.create(velocityWOut, &status);
+    dataOut = (mTime != cTime) ? fnDataOut.create(velocityWOut, &status) : fnDataOut.create(velocityWInArr, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOut.set(dataOut);
     hOut.setClean();
@@ -381,9 +369,27 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
 
     hOut = data.outputValue(aDensityOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
-    dataOut = fnDataOut.create(densityOut, &status);
+    dataOut = (mTime != cTime) ? fnDataOut.create(densityOut, &status) : fnDataOut.create(densityInArr, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOut.set(dataOut);
+    hOut.setClean();
+    data.setClean(plug);
+
+    hOut = data.outputValue(aVoxelCountWidthOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOut.set(voxelCountWidthIn);
+    hOut.setClean();
+    data.setClean(plug);
+
+    hOut = data.outputValue(aVoxelCountHeightOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOut.set(voxelCountHeightIn);
+    hOut.setClean();
+    data.setClean(plug);
+
+    hOut = data.outputValue(aVoxelCountLengthOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOut.set(voxelCountLengthIn);
     hOut.setClean();
     data.setClean(plug);
 

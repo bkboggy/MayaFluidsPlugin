@@ -6,6 +6,7 @@
 #include <maya/MFnNumericAttribute.h>
 #include <maya/MFnTypedAttribute.h>
 #include <maya/MFnUnitAttribute.h>
+#include <maya/MAnimControl.h>
 #include <maya/MTime.h>
 #include <maya/MPxNode.h>
 #include "utilities.h"

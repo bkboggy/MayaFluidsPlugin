@@ -62,7 +62,7 @@ MStatus FluidTimeNode::compute(const MPlug& plug, MDataBlock& data)
 		return MS::kUnknownParameter;
 	}
 
-	MTime inTime = data.inputValue(aTimeIn, &status).asTime();
+    double inTime = data.inputValue(aTimeIn, &status).asDouble();
 	double minTime = data.inputValue(aMinTime, &status).asDouble();
 	double maxTime = data.inputValue(aMaxTime, &status).asDouble();
 	double timeScale = data.inputValue(aTimeScale, &status).asDouble();
@@ -75,15 +75,15 @@ MStatus FluidTimeNode::compute(const MPlug& plug, MDataBlock& data)
 	MTime outTime;
 	if (inTime > maxTime)
 	{
-		outTime = ((inTime + maxTime) - inTime) / timeScale;
+		outTime = MTime((maxTime - inTime) / timeScale);
 	}
 	else if (inTime < minTime)
 	{
-		outTime = MTime(1.0);
+		outTime = MTime(1.0f);
 	}
 	else
 	{
-		outTime = (inTime - minTime) / timeScale;
+		outTime = MTime((inTime - minTime) / timeScale);
 	}
 
 	MDataHandle hOutput = data.outputValue(aTimeOut, &status);
