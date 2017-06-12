@@ -22,12 +22,12 @@ MStatus FluidTimeNode::initialize()
     MFnUnitAttribute uAttr;
     MFnNumericAttribute nAttr;
 
-    aTimeOut = uAttr.create("timeOut", "timeOut", MTime(1.0));
+    aTimeOut = uAttr.create("timeOut", "timeOut", MFnUnitAttribute::kTime, 1.0);
     nAttr.setWritable(false);
     nAttr.setStorable(false);
     addAttribute(aTimeOut);
 
-    aTimeIn = uAttr.create("timeIn", "timeIn", MTime(1.0));
+    aTimeIn = uAttr.create("timeIn", "timeIn", MFnUnitAttribute::kTime, 1.0);
     nAttr.setKeyable(true);
     addAttribute(aTimeIn);
     attributeAffects(aTimeIn, aTimeOut);
@@ -79,7 +79,7 @@ MStatus FluidTimeNode::compute(const MPlug& plug, MDataBlock& data)
 	}
 	else if (inTime < minTime)
 	{
-		outTime = MTime(0.0);
+		outTime = MTime(1.0);
 	}
 	else
 	{

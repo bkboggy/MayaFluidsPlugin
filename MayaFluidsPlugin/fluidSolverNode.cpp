@@ -287,7 +287,6 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     float* velocityW0 = new float[size];
     float* density0 = new float[size];     
 
-	//cout << "Time: "<<timeIn << endl;
     // If this is an initial frame or voxel counts changed, use input information to setup ararys.
     if (timeIn == 0.0f || voxelCountWidthOut != voxelCountWidthIn || 
         voxelCountHeightOut != voxelCountHeightIn || voxelCountLengthOut != voxelCountLengthIn)

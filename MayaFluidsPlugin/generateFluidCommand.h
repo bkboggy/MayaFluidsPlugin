@@ -41,4 +41,5 @@ private:
 	MString fDomainName;
 	MString fSolverName;
 };
+
 #endif
