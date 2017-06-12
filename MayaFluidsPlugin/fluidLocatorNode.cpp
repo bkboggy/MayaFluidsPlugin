@@ -1127,6 +1127,9 @@ void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, M
 	MSelectionList previous_list;
 	MGlobal::getActiveSelectionList(previous_list);
 
+    // Minimum radius to render.
+    float minRadius = 0.01;
+
     float x_offset = domainWidth / voxelCountWidth;
     float x_init = x_offset / 2;
     float y_offset = domainHeight / voxelCountHeight;
@@ -1161,9 +1164,17 @@ void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, M
                 MString existingName = fluid[i];
                 if (fluid[i] == fluidParticleName)
                 {
-                    MGlobal::executeCommand("sphere -e -r " + radius + " " + fluidParticleName);
+                    if (radiusVal > minRadius)
+                    {
+                        MGlobal::executeCommand("sphere -e -r " + radius + " " + fluidParticleName);
+                    }
+                    else
+                    {
+                        MGlobal::executeCommand("delete " + fluid[i]);
+                        fluid.set("", i);
+                    }
                 }
-                else if (radiusVal > 0)
+                else if (radiusVal > minRadius)
                 {
                     fluid.set(fluidParticleName, i);
                     MGlobal::executeCommand("sphere -n " + fluidParticleName + " -r " + radius);
