@@ -1124,6 +1124,9 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
 void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, MFloatArray &density,
     float domainWidth, float domainHeight, float domainLength, int voxelCountWidth, int voxelCountHeight, int voxelCountLength)
 {
+	MSelectionList previous_list;
+	MGlobal::getActiveSelectionList(previous_list);
+
     float x_offset = domainWidth / voxelCountWidth;
     float x_init = x_offset / 2;
     float y_offset = domainHeight / voxelCountHeight;
@@ -1172,7 +1175,9 @@ void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, M
             }
         }
     }
-    MGlobal::executeCommand("select " + locatorName);
+    //MGlobal::executeCommand("select " + locatorName);
+	// Restore the selection list.
+	MGlobal::setActiveSelectionList(previous_list);
 }
 
 // Clears fluid by deleting spheres and setting the desired size.

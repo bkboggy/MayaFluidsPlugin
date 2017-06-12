@@ -287,8 +287,9 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     float* velocityW0 = new float[size];
     float* density0 = new float[size];     
 
+	//cout << "Time: "<<timeIn << endl;
     // If this is an initial frame or voxel counts changed, use input information to setup ararys.
-    if (timeIn == 1.0f || voxelCountWidthOut != voxelCountWidthIn || 
+    if (timeIn == 0.0f || voxelCountWidthOut != voxelCountWidthIn || 
         voxelCountHeightOut != voxelCountHeightIn || voxelCountLengthOut != voxelCountLengthIn)
     {
         // Copy information from input arrays.
@@ -296,6 +297,25 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
         velocityVInArr.get(velocityV0);
         velocityWInArr.get(velocityW0);
         densityInArr.get(density0);
+
+		MDataHandle hOutput = data.outputValue(aVoxelCountWidthOut, &status);
+		CHECK_MSTATUS_AND_RETURN_IT(status);
+		hOutput.set(voxelCountWidthIn);
+		hOutput.setClean();
+		data.setClean(plug);
+
+		hOutput = data.outputValue(aVoxelCountHeightOut, &status);
+		CHECK_MSTATUS_AND_RETURN_IT(status);
+		hOutput.set(voxelCountHeightIn);
+		hOutput.setClean();
+		data.setClean(plug);
+
+		hOutput = data.outputValue(aVoxelCountLengthOut, &status);
+		CHECK_MSTATUS_AND_RETURN_IT(status);
+		hOutput.set(voxelCountLengthIn);
+		hOutput.setClean();
+		data.setClean(plug);
+
     }
     // Otherwise, use cached data.
     else
@@ -320,19 +340,19 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     Utilities::initializeFloatArray(density, size, 0.0f);
 
     // Calculate new velocity.
-    //vel_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, velocityU, velocityV, velocityW0,
-    //    velocityU0, velocityV0, velocityW0, viscocity, timestep);
+    vel_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, velocityU, velocityV, velocityW0,
+        velocityU0, velocityV0, velocityW0, viscocity, timestep);
 
     // Calculate new density.
-    //dens_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, density, density,
-    //    velocityU, velocityV, velocityW, diffusionRate, timestep);
+    dens_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, density, density0,
+        velocityU, velocityV, velocityW, diffusionRate, timestep);
 
     // Get output values.
     // TODO: Remove +2 in each direction.
-    MFloatArray velocityUOut(velocityU0, size);
-    MFloatArray velocityVOut(velocityV0, size);
-    MFloatArray velocityWOut(velocityW0, size);
-    MFloatArray densityOut(density0, size);
+    MFloatArray velocityUOut(velocityU, size);
+    MFloatArray velocityVOut(velocityV, size);
+    MFloatArray velocityWOut(velocityW, size);
+    MFloatArray densityOut(density, size);
 
     // Pass new density and velocity fields as outputs.
     MDataHandle hOut = data.outputValue(aVelocityUOut, &status);
