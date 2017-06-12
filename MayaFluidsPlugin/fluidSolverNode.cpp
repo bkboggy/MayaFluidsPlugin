@@ -340,7 +340,7 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     Utilities::initializeFloatArray(density, size, 0.0f);
 
     // Calculate new velocity.
-    vel_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, velocityU, velocityV, velocityW0,
+    vel_step(voxelCountWidthIn, voxelCountHeightIn, voxelCountLengthIn, velocityU, velocityV, velocityW,
         velocityU0, velocityV0, velocityW0, viscocity, timestep);
 
     // Calculate new density.
