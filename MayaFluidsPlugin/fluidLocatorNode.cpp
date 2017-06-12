@@ -523,34 +523,66 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     float domainLengthOut = data.outputValue(aDomainLengthOut, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    float sourceOriginOutX = data.outputValue(aSourceOriginXOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceOriginOutY = data.outputValue(aSourceOriginYOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceOriginOutZ = data.outputValue(aSourceOriginZOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceHeightOut = data.outputValue(aSourceHeightOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceWidthOut = data.outputValue(aSourceWidthOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceLengthOut = data.outputValue(aSourceLengthOut, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
     bool showFluidOut = data.outputValue(aShowFluidOut, &status).asBool();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    /*
+    // Fluid size (not counting the boundary buffers).
+    int size = voxelCountWidth * voxelCountHeight * voxelCountLength;
+
     // Compare the cached outputs with the inputs to see if any changes were made.  If there
     // were, clear the fluid. This is equivalent of the user adjusting the simluation, so there's 
     // a cost to pay. This may be optimized later on, if necessary.
-    if (voxelCountWidth != voxelCountWidthOut || voxelCountHeight != voxelCountHeightOut ||
-        voxelCountLength != voxelCountLengthOut || domainWidth != domainWidthOut ||
-        domainHeight != domainHeightOut || domainLength != domainLengthOut || 
-        domainOriginX != domainOriginOutX || domainOriginY != domainOriginOutY ||
-        domainOriginZ != domainOriginOutZ || ((showFluid != showFluidOut) && !showFluid))
+    if (voxelCountWidth != voxelCountWidthOut || voxelCountHeight != voxelCountHeightOut || voxelCountLength != voxelCountLengthOut || 
+        domainWidth != domainWidthOut || domainHeight != domainHeightOut || domainLength != domainLengthOut || 
+        domainOriginX != domainOriginOutX || domainOriginY != domainOriginOutY || domainOriginZ != domainOriginOutZ || 
+        sourceWidth != sourceWidthOut || sourceHeight != sourceHeightOut || sourceLength != sourceLengthOut ||
+        sourceOriginX != sourceOriginOutX || sourceOriginY != sourceOriginOutY || sourceOriginZ != sourceOriginOutZ ||
+        fluid.length() != size ||
+        ((showFluid != showFluidOut) && !showFluid))
     {
-        // Desired size.
-        int size = voxelCountWidth * voxelCountHeight * voxelCountLength;
-        resetFluid(fluid, size);
+        // Calling this causes R6025 error.  Not sure why.
+        //resetFluid(fluid, size);
+
+        // Ge the current size/length.
+        int length = fluid.length();
+        if (length != 0)
+        {
+            // If there are any elements, delete them.
+            for (int i = 0; i < length; i++)
+            {
+                MString name = fluid[i];
+                if (name != NULL || name.length() != 0 || name != "")
+                {
+                    MGlobal::executeCommand("delete " + fluid[i]);
+                    fluid.set("", i);
+                }
+            }
+        }
+        // Set the new size;
+        fluid.setLength(size);
     }
-    */
 
     // If showFluid flag is not set to false, simulate the fluid.
     if (showFluid)
     {
-        int size = voxelCountWidth * voxelCountHeight * voxelCountLength;
-        if (fluid.length() < size)
-        {
-            fluid.setLength(size);
-        }
-        fluid.setLength(size);
         simulateFluid(name, fluid, density, domainWidth, domainHeight, domainLength,
             voxelCountWidth, voxelCountHeight, voxelCountLength);
     }
@@ -1157,10 +1189,13 @@ void FluidLocatorNode::resetFluid(MStringArray &fluid, int size)
     // If there are any elements, delete them.
     for (int i = 0; i < length; i++)
     {
-        MGlobal::executeCommand("delete " + fluid[i]);
+        MString name = fluid[i];
+        if (name != NULL || name.length() != 0 || name != "")
+        {
+            MGlobal::executeCommand("delete " + fluid[i]);
+            fluid.set("", i);
+        }
     }
-    // Clear and set the new size;
-    fluid.clear();
+    // Set the new size;
     fluid.setLength(size);
 }
-
