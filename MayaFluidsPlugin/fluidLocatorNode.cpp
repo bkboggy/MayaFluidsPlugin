@@ -1185,7 +1185,7 @@ void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, i
                 MString existingName = fluid[i];
                 if (fluid[i] == fluidParticleName)
                 {
-                    if (radiusVal > minParticleSize)
+                    if (radiusVal >= minParticleSize)
                     {
                         MGlobal::executeCommand("sphere -e -r " + radius + " " + fluidParticleName);
                     }
