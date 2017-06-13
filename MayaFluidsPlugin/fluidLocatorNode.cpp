@@ -1145,7 +1145,7 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
 }
 
 // Simulated fluid by drawing spheres in the Maya viewport.
-void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, int minParticleSize, MFloatArray &density,
+void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, float minParticleSize, MFloatArray &density,
     float domainWidth, float domainHeight, float domainLength, int voxelCountWidth, int voxelCountHeight, int voxelCountLength)
 {
 	MSelectionList previous_list;
