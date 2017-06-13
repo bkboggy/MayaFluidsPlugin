@@ -26,6 +26,9 @@ MObject FluidSolverNode::aDensityIn;
 MObject FluidSolverNode::aVelocityUIn;
 MObject FluidSolverNode::aVelocityVIn;
 MObject FluidSolverNode::aVelocityWIn;
+MObject FluidSolverNode::aActiveSourceIn;
+MObject FluidSolverNode::aActiveSourceRateIn;
+MObject FluidSolverNode::aSourceDensityIn;
 
 // Default constructor.
 FluidSolverNode::FluidSolverNode() {}
@@ -183,6 +186,34 @@ MStatus FluidSolverNode::initialize()
     addAttribute(aVelocityWIn);
     attributeAffects(aVelocityWIn, aVelocityWOut);
     attributeAffects(aVelocityWIn, aDensityOut);
+
+    aActiveSourceIn = nAttr.create("activeSourceIn", "activeSourceIn", MFnNumericData::kBoolean, false);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aActiveSourceIn);
+    attributeAffects(aActiveSourceIn, aDensityOut);
+    attributeAffects(aActiveSourceIn, aVelocityUOut);
+    attributeAffects(aActiveSourceIn, aVelocityVOut);
+    attributeAffects(aActiveSourceIn, aVelocityWOut);
+
+    aActiveSourceRateIn = nAttr.create("activeSourceRateIn", "activeSourceRateIn", MFnNumericData::kInt, 1);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aActiveSourceRateIn);
+    attributeAffects(aActiveSourceIn, aDensityOut);
+    attributeAffects(aActiveSourceIn, aVelocityUOut);
+    attributeAffects(aActiveSourceIn, aVelocityVOut);
+    attributeAffects(aActiveSourceIn, aVelocityWOut);
+
+    aSourceDensityIn = nAttr.create("sourceDensityIn", "sourceDensityIn", MFnNumericData::kFloat, 1.0f);
+    nAttr.setMin(0.0f);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aSourceDensityIn);
+    attributeAffects(aSourceDensityIn, aDensityOut);
+    attributeAffects(aSourceDensityIn, aVelocityUOut);
+    attributeAffects(aSourceDensityIn, aVelocityVOut);
+    attributeAffects(aSourceDensityIn, aVelocityWOut);
 
     return MS::kSuccess;
 }

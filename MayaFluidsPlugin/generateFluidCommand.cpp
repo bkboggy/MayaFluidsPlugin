@@ -111,6 +111,9 @@ MStatus GenerateFluidCommand::redoIt()
     MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityVOut " + fSolverName + ".velocityVIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".velocityWOut " + fSolverName + ".velocityWIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".densityOut " + fSolverName + ".densityIn");   
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".sourceDensityOut " + fSolverName + ".sourceDensityIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".activeSourceOut " + fSolverName + ".activeSourceIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".activeSourceRateOut " + fSolverName + ".activeSourceRateIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".diffusionRateOut " + fSolverName + ".diffusionRateIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".timestepOut " + fSolverName + ".timestepIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".forceMultiplierOut " + fSolverName + ".forceMultiplierIn");
@@ -122,6 +125,7 @@ MStatus GenerateFluidCommand::redoIt()
     MGlobal::executeCommand("connectAttr " + fDomainName + ".showVoxelsOut " + fLocatorName + ".showVoxelsIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelAlphaOut " + fLocatorName + ".voxelAlphaIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".showFluidOut " + fLocatorName + ".showFluidIn");
+    MGlobal::executeCommand("connectAttr " + fDomainName + ".minParticleSizeOut " + fLocatorName + ".minParticleSizeIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountWidthOut " + fLocatorName + ".voxelCountWidthIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountHeightOut " + fLocatorName + ".voxelCountHeightIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountLengthOut " + fLocatorName + ".voxelCountLengthIn");

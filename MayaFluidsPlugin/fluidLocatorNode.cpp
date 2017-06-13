@@ -9,6 +9,7 @@ MObject FluidLocatorNode::aVelocityUOut;
 MObject FluidLocatorNode::aVelocityVOut;
 MObject FluidLocatorNode::aVelocityWOut;
 MObject FluidLocatorNode::aShowFluidOut;
+MObject FluidLocatorNode::aMinParticleSizeOut;
 MObject FluidLocatorNode::aShowVoxelsOut;
 MObject FluidLocatorNode::aVoxelAlphaOut;
 MObject FluidLocatorNode::aVoxelCountWidthOut;
@@ -33,6 +34,7 @@ MObject FluidLocatorNode::aVelocityUIn;
 MObject FluidLocatorNode::aVelocityVIn;
 MObject FluidLocatorNode::aVelocityWIn;
 MObject FluidLocatorNode::aShowFluidIn;
+MObject FluidLocatorNode::aMinParticleSizeIn;
 MObject FluidLocatorNode::aShowVoxelsIn;
 MObject FluidLocatorNode::aVoxelAlphaIn;
 MObject FluidLocatorNode::aVoxelCountWidthIn;
@@ -103,6 +105,11 @@ MStatus FluidLocatorNode::initialize()
     nAttr.setWritable(false);
     nAttr.setStorable(false);
     addAttribute(aShowFluidOut);
+
+    aMinParticleSizeOut = nAttr.create("minParticleSizeOut", "minParticleSizeOut", MFnNumericData::kFloat);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aMinParticleSizeOut);
 
     aShowVoxelsOut = nAttr.create("showVoxelsOut", "showVoxelsOut", MFnNumericData::kBoolean);
     nAttr.setWritable(false);
@@ -224,6 +231,14 @@ MStatus FluidLocatorNode::initialize()
     addAttribute(aShowFluidIn);
     attributeAffects(aShowFluidIn, aShowFluidOut);
     attributeAffects(aShowFluidIn, aFluid);
+
+    aMinParticleSizeIn = nAttr.create("minParticleSizeIn", "minParticleSizeIn", MFnNumericData::kFloat, 0.01f);
+    nAttr.setMin(0.0f);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aMinParticleSizeIn);
+    attributeAffects(aMinParticleSizeIn, aMinParticleSizeOut);
+    attributeAffects(aMinParticleSizeIn, aShowFluidOut);
 
     aShowVoxelsIn = nAttr.create("showVoxelsIn", "showVoxelsIn", MFnNumericData::kBoolean);
     nAttr.setKeyable(true);
@@ -434,6 +449,9 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     bool showFluid = data.inputValue(aShowFluidIn, &status).asBool();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    float minParticleSize = data.inputValue(aMinParticleSizeIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
     bool showVoxels = data.inputValue(aShowVoxelsIn, &status).asBool();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
@@ -583,7 +601,7 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     // If showFluid flag is not set to false, simulate the fluid.
     if (showFluid)
     {
-        simulateFluid(name, fluid, density, domainWidth, domainHeight, domainLength,
+        simulateFluid(name, fluid, minParticleSize, density, domainWidth, domainHeight, domainLength,
             voxelCountWidth, voxelCountHeight, voxelCountLength);
     }
  
@@ -635,6 +653,12 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     hOutput = data.outputValue(aShowFluidOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOutput.set(showFluid);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aMinParticleSizeOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(minParticleSize);
     hOutput.setClean();
     data.setClean(plug);
 
@@ -1121,7 +1145,7 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
 }
 
 // Simulated fluid by drawing spheres in the Maya viewport.
-void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, MFloatArray &density,
+void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, int minParticleSize, MFloatArray &density,
     float domainWidth, float domainHeight, float domainLength, int voxelCountWidth, int voxelCountHeight, int voxelCountLength)
 {
 	MSelectionList previous_list;

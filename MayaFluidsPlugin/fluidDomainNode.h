@@ -33,6 +33,7 @@ public:
     static MObject aVoxelCountLengthIn;
     static MObject aShowVoxelsIn;
     static MObject aShowFluidIn;
+    static MObject aMinParticleSizeIn;
     static MObject aVoxelAlphaIn;
     static MObject aTimestepIn;
     static MObject aDiffusionRateIn;
@@ -40,7 +41,6 @@ public:
     static MObject aForceMultiplierIn;
     static MObject aSourceMultiplierIn;
     static MObject aDomainDensity;
-    static MObject aSourceDensity;
     static MObject aDomainVelocityU;
     static MObject aDomainVelocityV;
     static MObject aDomainVelocityW;
@@ -50,6 +50,9 @@ public:
     static MObject aDomainWidthIn;
     static MObject aDomainHeightIn;
     static MObject aDomainLengthIn;
+    static MObject aActiveSourceIn;
+    static MObject aActiveSourceRateIn;
+    static MObject aSourceDensityIn;
     static MObject aSourceOriginXIn;
     static MObject aSourceOriginYIn;
     static MObject aSourceOriginZIn;
@@ -69,6 +72,7 @@ public:
     static MObject aVoxelCountLengthOut;
     static MObject aShowVoxelsOut;
     static MObject aShowFluidOut;
+    static MObject aMinParticleSizeOut;
     static MObject aVoxelAlphaOut;
     static MObject aTimestepOut;
     static MObject aDiffusionRateOut;
@@ -85,6 +89,9 @@ public:
     static MObject aDomainWidthOut;
     static MObject aDomainHeightOut;
     static MObject aDomainLengthOut;
+    static MObject aActiveSourceOut;
+    static MObject aActiveSourceRateOut;
+    static MObject aSourceDensityOut;
     static MObject aSourceOriginXOut;
     static MObject aSourceOriginYOut;
     static MObject aSourceOriginZOut;

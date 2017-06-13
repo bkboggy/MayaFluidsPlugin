@@ -69,6 +69,9 @@ public:
     static MObject aForceMultiplerIn;     // Force multipler.
     static MObject aSourceMultiplierIn;   // Source multipler.
     static MObject aViscosityIn;          // Viscosity.
+    static MObject aActiveSourceIn;
+    static MObject aActiveSourceRateIn;
+    static MObject aSourceDensityIn;
 };
 
 #endif

@@ -3,12 +3,13 @@
 // Maya node ID.
 MTypeId FluidDomainNode::id(0x00000100);
 
-// Attributes.
+// Input attributes.
 MObject FluidDomainNode::aVoxelCountWidthIn;
 MObject FluidDomainNode::aVoxelCountHeightIn;
 MObject FluidDomainNode::aVoxelCountLengthIn;
 MObject FluidDomainNode::aShowVoxelsIn;
 MObject FluidDomainNode::aShowFluidIn;
+MObject FluidDomainNode::aMinParticleSizeIn;
 MObject FluidDomainNode::aVoxelAlphaIn;
 MObject FluidDomainNode::aTimestepIn;
 MObject FluidDomainNode::aDiffusionRateIn;
@@ -16,7 +17,6 @@ MObject FluidDomainNode::aViscosityIn;
 MObject FluidDomainNode::aForceMultiplierIn;
 MObject FluidDomainNode::aSourceMultiplierIn;
 MObject FluidDomainNode::aDomainDensity;
-MObject FluidDomainNode::aSourceDensity;
 MObject FluidDomainNode::aDomainVelocityU;
 MObject FluidDomainNode::aDomainVelocityV;
 MObject FluidDomainNode::aDomainVelocityW;
@@ -26,6 +26,9 @@ MObject FluidDomainNode::aDomainOriginZIn;
 MObject FluidDomainNode::aDomainWidthIn;
 MObject FluidDomainNode::aDomainHeightIn;
 MObject FluidDomainNode::aDomainLengthIn;
+MObject FluidDomainNode::aActiveSourceIn;
+MObject FluidDomainNode::aActiveSourceRateIn;
+MObject FluidDomainNode::aSourceDensityIn;
 MObject FluidDomainNode::aSourceOriginXIn;
 MObject FluidDomainNode::aSourceOriginYIn;
 MObject FluidDomainNode::aSourceOriginZIn;
@@ -39,11 +42,13 @@ MObject FluidDomainNode::aMinTimeIn;
 MObject FluidDomainNode::aMaxTimeIn;
 MObject FluidDomainNode::aTimeScaleIn;
 
+// Output attributes.
 MObject FluidDomainNode::aVoxelCountWidthOut;
 MObject FluidDomainNode::aVoxelCountHeightOut;
 MObject FluidDomainNode::aVoxelCountLengthOut;
 MObject FluidDomainNode::aShowVoxelsOut;
 MObject FluidDomainNode::aShowFluidOut;
+MObject FluidDomainNode::aMinParticleSizeOut;
 MObject FluidDomainNode::aVoxelAlphaOut;
 MObject FluidDomainNode::aTimestepOut;
 MObject FluidDomainNode::aDiffusionRateOut;
@@ -60,6 +65,9 @@ MObject FluidDomainNode::aDomainOriginZOut;
 MObject FluidDomainNode::aDomainWidthOut;
 MObject FluidDomainNode::aDomainHeightOut;
 MObject FluidDomainNode::aDomainLengthOut;
+MObject FluidDomainNode::aActiveSourceOut;
+MObject FluidDomainNode::aActiveSourceRateOut;
+MObject FluidDomainNode::aSourceDensityOut;
 MObject FluidDomainNode::aSourceOriginXOut;
 MObject FluidDomainNode::aSourceOriginYOut;
 MObject FluidDomainNode::aSourceOriginZOut;
@@ -117,6 +125,11 @@ MStatus FluidDomainNode::initialize()
     nAttr.setKeyable(false);
     nAttr.setWritable(false);
     addAttribute(aShowFluidOut);
+
+    aMinParticleSizeOut = nAttr.create("minParticleSizeOut", "minParticleSizeOut", MFnNumericData::kFloat);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aMinParticleSizeOut);
 
     aVoxelAlphaOut = nAttr.create("voxelAlphaOut", "voxelAlphaOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
@@ -197,6 +210,21 @@ MStatus FluidDomainNode::initialize()
     nAttr.setKeyable(false);
     nAttr.setWritable(false);
     addAttribute(aDomainLengthOut);
+
+    aActiveSourceOut = nAttr.create("activeSourceOut", "activeSourceOut", MFnNumericData::kBoolean);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aActiveSourceOut);
+
+    aActiveSourceRateOut = nAttr.create("activeSourceRateOut", "activeSourceRateOut", MFnNumericData::kInt);
+    nAttr.setKeyable(false);
+    nAttr.setWritable(false);
+    addAttribute(aActiveSourceRateOut);
+
+    aSourceDensityOut = tAttr.create("sourceDensityOut", "sourceDensityOut", MFnData::kFloatArray);
+    tAttr.setKeyable(false);
+    tAttr.setWritable(false);
+    addAttribute(aDensityOut);
 
     aSourceOriginXOut = nAttr.create("sourceOriginXOut", "sourceOriginXOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
@@ -289,6 +317,13 @@ MStatus FluidDomainNode::initialize()
     addAttribute(aShowFluidIn);
     attributeAffects(aShowFluidIn, aShowFluidOut);
 
+    aMinParticleSizeIn = nAttr.create("minParticleSizeIn", "minParticleSizeIn", MFnNumericData::kFloat, 0.01f);
+    nAttr.setMin(0.0f);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aMinParticleSizeIn);
+    attributeAffects(aMinParticleSizeIn, aMinParticleSizeOut);
+
     aVoxelAlphaIn = nAttr.create("voxelAlphaIn", "voxelAlphaIn", MFnNumericData::kFloat, 0.3f);
     nAttr.setMin(0.0f);
     nAttr.setMax(1.0f);
@@ -297,7 +332,7 @@ MStatus FluidDomainNode::initialize()
     addAttribute(aVoxelAlphaIn);
     attributeAffects(aVoxelAlphaIn, aVoxelAlphaOut);
 
-    aTimestepIn = nAttr.create("timestepIn", "timestepIn", MFnNumericData::kFloat, 0.001f);
+    aTimestepIn = nAttr.create("timestepIn", "timestepIn", MFnNumericData::kFloat, 1.0f);
     nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
@@ -330,7 +365,7 @@ MStatus FluidDomainNode::initialize()
     attributeAffects(aViscosityIn, aVelocityVOut);
     attributeAffects(aViscosityIn, aVelocityWOut);
 
-    aForceMultiplierIn = nAttr.create("forceMultiplierIn", "forceMultiplierIn", MFnNumericData::kFloat, 5.0f);
+    aForceMultiplierIn = nAttr.create("forceMultiplierIn", "forceMultiplierIn", MFnNumericData::kFloat, 10.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aForceMultiplierIn);
@@ -357,13 +392,6 @@ MStatus FluidDomainNode::initialize()
     nAttr.setWritable(true);
     addAttribute(aDomainDensity);
     attributeAffects(aDomainDensity, aDensityOut);
-
-    aSourceDensity = nAttr.create("sourceDensity", "sourceDensity", MFnNumericData::kFloat, 1.0f);
-    nAttr.setMin(0.0f);
-    nAttr.setKeyable(true);
-    nAttr.setWritable(true);
-    addAttribute(aSourceDensity);
-    attributeAffects(aSourceDensity, aDensityOut);
 
     aDomainVelocityU = nAttr.create("domainVelocityU", "domainVelocityU", MFnNumericData::kFloat);
     nAttr.setKeyable(true);
@@ -464,6 +492,25 @@ MStatus FluidDomainNode::initialize()
     attributeAffects(aDomainLengthIn, aVelocityVOut);
     attributeAffects(aDomainLengthIn, aVelocityWOut);
 
+    aActiveSourceIn = nAttr.create("activeSourceIn", "activeSourceIn", MFnNumericData::kBoolean, false);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aActiveSourceIn);
+    attributeAffects(aActiveSourceIn, aActiveSourceOut);
+
+    aActiveSourceRateIn = nAttr.create("activeSourceRateIn", "activeSourceRateIn", MFnNumericData::kInt, 1);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aActiveSourceRateIn);
+    attributeAffects(aActiveSourceIn, aActiveSourceOut);
+
+    aSourceDensityIn = nAttr.create("sourceDensityIn", "sourceDensityIn", MFnNumericData::kFloat, 1.0f);
+    nAttr.setMin(0.0f);
+    nAttr.setKeyable(true);
+    nAttr.setWritable(true);
+    addAttribute(aSourceDensityIn);
+    attributeAffects(aSourceDensityIn, aDensityOut);
+
     aSourceOriginXIn = nAttr.create("sourceOriginXIn", "sourceOriginXIn", MFnNumericData::kFloat);
     nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
@@ -542,19 +589,19 @@ MStatus FluidDomainNode::initialize()
     attributeAffects(aSourceLengthIn, aVelocityVOut);
     attributeAffects(aSourceLengthIn, aVelocityWOut);
 
-    aSourceVelocityU = nAttr.create("sourceVelocityU", "sourceVelocityU", MFnNumericData::kFloat);
+    aSourceVelocityU = nAttr.create("sourceVelocityU", "sourceVelocityU", MFnNumericData::kFloat, 1.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceVelocityU);
     attributeAffects(aSourceVelocityU, aVelocityUOut);
 
-    aSourceVelocityV = nAttr.create("sourceVelocityV", "sourceVelocityV", MFnNumericData::kFloat);
+    aSourceVelocityV = nAttr.create("sourceVelocityV", "sourceVelocityV", MFnNumericData::kFloat, 1.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceVelocityV);
     attributeAffects(aSourceVelocityV, aVelocityVOut);
 
-    aSourceVelocityW = nAttr.create("sourceVelocityW", "sourceVelocityW", MFnNumericData::kFloat);
+    aSourceVelocityW = nAttr.create("sourceVelocityW", "sourceVelocityW", MFnNumericData::kFloat, 1.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
     addAttribute(aSourceVelocityW);
@@ -640,6 +687,9 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     bool showFluid = data.inputValue(aShowFluidIn, &status).asBool();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    float minParticleSize = data.inputValue(aMinParticleSizeIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
     float voxelAlpha = data.inputValue(aVoxelAlphaIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
@@ -659,9 +709,6 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     float domainDensity = data.inputValue(aDomainDensity, &status).asFloat();
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-
-    float sourceDensity = data.inputValue(aSourceDensity, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     float domainVelocityU = data.inputValue(aDomainVelocityU, &status).asFloat();
@@ -689,6 +736,15 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     float domainLength = data.inputValue(aDomainLengthIn, &status).asFloat();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    bool activeSource = data.inputValue(aActiveSourceIn, &status).asBool();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    int activeSourceRate = data.inputValue(aActiveSourceRateIn, &status).asInt();
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    float sourceDensity = data.inputValue(aSourceDensityIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     float sourceOriginX = data.inputValue(aSourceOriginXIn, &status).asFloat();
@@ -773,6 +829,11 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     // specified domain density (default is 0.0f).
     MFloatArray density(size, domainDensity);
 
+    // Source array to be used in an active source scenario. Optimize out in the future
+    // by extracing the combining operation below into a utility function so that both solver
+    // and domain nodes may add source without having to store 3D arrays.
+    MFloatArray source(size, 0.0f);
+
     // TODO: ADD PROPER STARTING X Y Z BASED ON SOURCE ORIGIN.
     //
     // Add source density to domain density, without exceeding 1.0 limit. In addition,
@@ -787,6 +848,7 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
 
                 float dValue = domainDensity + sourceDensity * sourceMultiplier;
                 density.set(dValue, i);
+                source.set(dValue, i);
 
                 float vUValue = domainVelocityU + sourceVelocityU * forceMultiplier;
                 velocityUOut.set(vUValue, i);
@@ -827,6 +889,12 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     hOutput = data.outputValue(aShowFluidOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOutput.set(showFluid);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aMinParticleSizeOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(minParticleSize);
     hOutput.setClean();
     data.setClean(plug);
 
@@ -935,6 +1003,27 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     hOutput = data.outputValue(aDomainLengthOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     hOutput.set(domainLength);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aActiveSourceOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(activeSource);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aActiveSourceRateOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(activeSourceRate);
+    hOutput.setClean();
+    data.setClean(plug);
+
+    hOutput = data.outputValue(aSourceDensityOut, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    MFnFloatArrayData sourceDensityFnDataOut;
+    dataOut = sourceDensityFnDataOut.create(source, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    hOutput.set(dataOut);
     hOutput.setClean();
     data.setClean(plug);
 
