@@ -205,10 +205,9 @@ MStatus FluidSolverNode::initialize()
     attributeAffects(aActiveSourceIn, aVelocityVOut);
     attributeAffects(aActiveSourceIn, aVelocityWOut);
 
-    aSourceDensityIn = nAttr.create("sourceDensityIn", "sourceDensityIn", MFnNumericData::kFloat, 1.0f);
-    nAttr.setMin(0.0f);
-    nAttr.setKeyable(true);
-    nAttr.setWritable(true);
+    aSourceDensityIn = tAttr.create("sourceDensityIn", "sourceDensityIn", MFnData::kFloatArray);
+    tAttr.setKeyable(true);
+    tAttr.setWritable(true);
     addAttribute(aSourceDensityIn);
     attributeAffects(aSourceDensityIn, aDensityOut);
     attributeAffects(aSourceDensityIn, aVelocityUOut);

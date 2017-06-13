@@ -224,7 +224,7 @@ MStatus FluidDomainNode::initialize()
     aSourceDensityOut = tAttr.create("sourceDensityOut", "sourceDensityOut", MFnData::kFloatArray);
     tAttr.setKeyable(false);
     tAttr.setWritable(false);
-    addAttribute(aDensityOut);
+    addAttribute(aSourceDensityOut);
 
     aSourceOriginXOut = nAttr.create("sourceOriginXOut", "sourceOriginXOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
@@ -510,6 +510,7 @@ MStatus FluidDomainNode::initialize()
     nAttr.setWritable(true);
     addAttribute(aSourceDensityIn);
     attributeAffects(aSourceDensityIn, aDensityOut);
+    attributeAffects(aSourceDensityIn, aSourceDensityOut);
 
     aSourceOriginXIn = nAttr.create("sourceOriginXIn", "sourceOriginXIn", MFnNumericData::kFloat);
     nAttr.setMin(0.0f);
