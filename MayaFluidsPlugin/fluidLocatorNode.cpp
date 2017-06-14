@@ -1189,19 +1189,49 @@ void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, f
 
     float smallest = std::fminf(std::fminf(x_offset, y_offset), z_offset);
 
+	float edgeOffset = maxParticleSize > 1.0f ? (maxParticleSize)/ 2.0f : 0.0f;
+
     for (int x = 0; x < voxelCountWidth; x++) {
         MString x_name(std::to_string(x).c_str());
         MString x_pos(std::to_string(x_init + ((float)x * x_offset)).c_str());
+		//edge offset for x
+		if (x == 0)
+		{
+			x_pos = MString(std::to_string(x_init + ((float)x * x_offset) + (edgeOffset*x_offset) - (x_offset/2.0f) ).c_str());
+		}
+		else if (x == voxelCountWidth - 1)
+		{
+			x_pos = MString(std::to_string(x_init + ((float)x * x_offset) - (edgeOffset*x_offset) + (x_offset / 2.0f)).c_str());
+		}
+
         for (int y = 0; y < voxelCountHeight; y++) {
             MString y_name(std::to_string(y).c_str());
             MString y_pos(std::to_string(y_init + ((float)y * y_offset)).c_str());
+			//edge offset for y
+			if (y == 0 )
+			{
+				y_pos = MString(std::to_string(y_init + ((float)y * y_offset) + (edgeOffset*y_offset) - (y_offset / 2.0f)).c_str());
+			}
+			else if (y == voxelCountHeight - 1)
+			{
+				y_pos = MString(std::to_string(y_init + ((float)y * y_offset) - (edgeOffset*y_offset) + (y_offset / 2.0f)).c_str());
+			}
             for (int z = 0; z < voxelCountLength; z++) {
                 int i = x + (y * voxelCountWidth) + (z * voxelCountWidth * voxelCountHeight);
                 // Density index must be calculated separately, since it's larger by 2 in each dimension.
                 int d_i = (x + 1) + ((y + 1) * (voxelCountWidth + 2)) + ((z + 1) * (voxelCountWidth + 2) * (voxelCountHeight + 2));
                 MString z_name(std::to_string(z).c_str());
                 MString z_pos(std::to_string(z_init + ((float)z * z_offset)).c_str());
-                MString pos = x_pos + " " + y_pos + " " + z_pos;
+				//edge offset for z
+				if (z == 0)
+				{
+					z_pos = MString(std::to_string(z_init + ((float)z * z_offset) + (edgeOffset*z_offset) - (z_offset / 2.0f)).c_str());
+				}
+				else if (z == voxelCountLength - 1)
+				{
+					z_pos = MString(std::to_string(z_init + ((float)z * z_offset) - (edgeOffset*z_offset) + (z_offset / 2.0f)).c_str());
+				}
+				MString pos = x_pos + " " + y_pos + " " + z_pos;
                 // Cap radius multiplier at 1.
                 float densityVal = density[d_i];
                 if (densityVal > maxParticleSize)
