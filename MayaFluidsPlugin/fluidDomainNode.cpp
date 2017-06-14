@@ -658,6 +658,8 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
         plug != aVoxelCountLengthOut &&
         plug != aShowVoxelsOut &&
         plug != aShowFluidOut &&
+        plug != aMinParticleSizeOut &&
+        plug != aMaxParticleSizeOut &&
         plug != aVoxelAlphaOut &&
         plug != aTimestepOut &&
         plug != aDiffusionRateOut &&
@@ -674,6 +676,8 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
         plug != aDomainWidthOut &&
         plug != aDomainHeightOut &&
         plug != aDomainLengthOut &&
+        plug != aActiveSourceOut &&
+        plug != aActiveSourceRateOut &&
         plug != aSourceOriginXOut &&
         plug != aSourceOriginYOut &&
         plug != aSourceOriginZOut &&

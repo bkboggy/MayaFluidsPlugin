@@ -239,7 +239,7 @@ MStatus FluidLocatorNode::initialize()
     attributeAffects(aShowFluidIn, aShowFluidOut);
     attributeAffects(aShowFluidIn, aFluid);
 
-    aMinParticleSizeIn = nAttr.create("minParticleSizeIn", "minParticleSizeIn", MFnNumericData::kFloat, 0.01f);
+    aMinParticleSizeIn = nAttr.create("minParticleSizeIn", "minParticleSizeIn", MFnNumericData::kFloat);
     nAttr.setMin(0.0f);
     nAttr.setKeyable(true);
     nAttr.setWritable(true);
@@ -247,7 +247,7 @@ MStatus FluidLocatorNode::initialize()
     attributeAffects(aMinParticleSizeIn, aMinParticleSizeOut);
     attributeAffects(aMinParticleSizeIn, aShowFluidOut);
 
-	aMaxParticleSizeIn = nAttr.create("maxParticleSizeIn", "maxParticleSizeIn", MFnNumericData::kFloat, 1.0f);
+	aMaxParticleSizeIn = nAttr.create("maxParticleSizeIn", "maxParticleSizeIn", MFnNumericData::kFloat);
 	nAttr.setMin(0.0f);
 	nAttr.setKeyable(true);
 	nAttr.setWritable(true);

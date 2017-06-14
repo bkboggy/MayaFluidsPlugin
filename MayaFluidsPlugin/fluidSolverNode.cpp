@@ -224,7 +224,13 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     MStatus status;
 
     // Check if node is working on an appropriate plug.
-    if (plug != aDensityOut && plug != aVelocityUOut && plug != aVelocityVOut && plug != aVelocityWOut)
+    if (plug != aDensityOut && 
+        plug != aVelocityUOut && 
+        plug != aVelocityVOut &&
+        plug != aVelocityWOut &&
+        plug != aVoxelCountWidthOut &&
+        plug != aVoxelCountHeightOut &&
+        plug != aVoxelCountLengthOut)
     {
         return MS::kUnknownParameter;
     }
