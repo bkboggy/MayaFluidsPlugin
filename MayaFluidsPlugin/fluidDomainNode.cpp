@@ -870,7 +870,7 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
 
                 float dValue = domainDensity + sourceDensity * sourceMultiplier;
                 density.set(dValue, i);
-                source.set(dValue, i);
+                //source.set(dValue, i);
 
                 float vUValue = domainVelocityU + sourceVelocityU * forceMultiplier;
                 velocityUOut.set(vUValue, i);

@@ -227,10 +227,11 @@ MStatus FluidSolverNode::compute(const MPlug& plug, MDataBlock& data)
     if (plug != aDensityOut && 
         plug != aVelocityUOut && 
         plug != aVelocityVOut &&
-        plug != aVelocityWOut &&
-        plug != aVoxelCountWidthOut &&
-        plug != aVoxelCountHeightOut &&
-        plug != aVoxelCountLengthOut)
+        plug != aVelocityWOut
+        //plug != aVoxelCountWidthOut &&
+        //plug != aVoxelCountHeightOut &&
+        //plug != aVoxelCountLengthOut
+        )
     {
         return MS::kUnknownParameter;
     }

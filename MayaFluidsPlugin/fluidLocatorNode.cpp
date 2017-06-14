@@ -1189,7 +1189,7 @@ void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, f
 
     float smallest = std::fminf(std::fminf(x_offset, y_offset), z_offset);
 
-	float x_edgeOffset = maxParticleSize > 1.0f ? (maxParticleSize*x_offset - x_offset)/ 2.0f : 0.0f;
+	float x_edgeOffset = maxParticleSize > 1.0f ? (maxParticleSize*x_offset - x_offset) / 2.0f : 0.0f;
 	float y_edgeOffset = maxParticleSize > 1.0f ? (maxParticleSize*y_offset - y_offset) / 2.0f : 0.0f;
 	float z_edgeOffset = maxParticleSize > 1.0f ? (maxParticleSize*z_offset - z_offset) / 2.0f : 0.0f;
 
