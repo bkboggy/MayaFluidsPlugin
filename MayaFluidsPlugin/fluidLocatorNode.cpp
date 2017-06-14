@@ -1056,14 +1056,17 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
         {
             for (int j = 0; j <= voxelCountHeight; j++)
             {
-                glVertex3f(domainOriginX + wIncrement*i, domainOriginY, domainOriginZ + lIncrement*j);
-                glVertex3f(domainOriginX + wIncrement*i, domainOriginY + domainHeight, domainOriginZ + lIncrement*j);
+				for (int k = 0; k <= voxelCountLength; k++)
+				{
+					glVertex3f(domainOriginX + wIncrement*i, domainOriginY, domainOriginZ + lIncrement*k);
+					glVertex3f(domainOriginX + wIncrement*i, domainOriginY + domainHeight, domainOriginZ + lIncrement*k);
 
-                glVertex3f(domainOriginX + wIncrement*i, domainOriginY + hIncrement*j, domainOriginZ);
-                glVertex3f(domainOriginX + wIncrement*i, domainOriginY + hIncrement*j, domainLength);
+					glVertex3f(domainOriginX + wIncrement*i, domainOriginY + hIncrement*j, domainOriginZ);
+					glVertex3f(domainOriginX + wIncrement*i, domainOriginY + hIncrement*j, domainOriginZ + domainLength);
 
-                glVertex3f(domainOriginX, hIncrement*i, domainOriginY + lIncrement*j);
-                glVertex3f(domainOriginX + domainWidth, domainOriginY + hIncrement*i, domainOriginZ + lIncrement*j);
+					glVertex3f(domainOriginX,              domainOriginY + hIncrement*j, domainOriginY + lIncrement*k);
+					glVertex3f(domainOriginX + domainWidth, domainOriginY + hIncrement*j, domainOriginZ + lIncrement*k);
+				}
             }
         }
         glEnd();
