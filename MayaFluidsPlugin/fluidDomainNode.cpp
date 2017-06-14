@@ -10,6 +10,7 @@ MObject FluidDomainNode::aVoxelCountLengthIn;
 MObject FluidDomainNode::aShowVoxelsIn;
 MObject FluidDomainNode::aShowFluidIn;
 MObject FluidDomainNode::aMinParticleSizeIn;
+MObject FluidDomainNode::aMaxParticleSizeIn;
 MObject FluidDomainNode::aVoxelAlphaIn;
 MObject FluidDomainNode::aTimestepIn;
 MObject FluidDomainNode::aDiffusionRateIn;
@@ -49,6 +50,7 @@ MObject FluidDomainNode::aVoxelCountLengthOut;
 MObject FluidDomainNode::aShowVoxelsOut;
 MObject FluidDomainNode::aShowFluidOut;
 MObject FluidDomainNode::aMinParticleSizeOut;
+MObject FluidDomainNode::aMaxParticleSizeOut;
 MObject FluidDomainNode::aVoxelAlphaOut;
 MObject FluidDomainNode::aTimestepOut;
 MObject FluidDomainNode::aDiffusionRateOut;
@@ -130,6 +132,11 @@ MStatus FluidDomainNode::initialize()
     nAttr.setKeyable(false);
     nAttr.setWritable(false);
     addAttribute(aMinParticleSizeOut);
+
+	aMaxParticleSizeOut = nAttr.create("maxParticleSizeOut", "maxParticleSizeOut", MFnNumericData::kFloat);
+	nAttr.setKeyable(false);
+	nAttr.setWritable(false);
+	addAttribute(aMaxParticleSizeOut);
 
     aVoxelAlphaOut = nAttr.create("voxelAlphaOut", "voxelAlphaOut", MFnNumericData::kFloat);
     nAttr.setKeyable(false);
@@ -323,6 +330,13 @@ MStatus FluidDomainNode::initialize()
     nAttr.setWritable(true);
     addAttribute(aMinParticleSizeIn);
     attributeAffects(aMinParticleSizeIn, aMinParticleSizeOut);
+
+	aMaxParticleSizeIn = nAttr.create("maxParticleSizeIn", "maxParticleSizeIn", MFnNumericData::kFloat, 1.0f);
+	nAttr.setMin(0.0f);
+	nAttr.setKeyable(true);
+	nAttr.setWritable(true);
+	addAttribute(aMaxParticleSizeIn);
+	attributeAffects(aMaxParticleSizeIn, aMaxParticleSizeOut);
 
     aVoxelAlphaIn = nAttr.create("voxelAlphaIn", "voxelAlphaIn", MFnNumericData::kFloat, 0.3f);
     nAttr.setMin(0.0f);
@@ -691,6 +705,9 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     float minParticleSize = data.inputValue(aMinParticleSizeIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
+	float maxParticleSize = data.inputValue(aMaxParticleSizeIn, &status).asFloat();
+	CHECK_MSTATUS_AND_RETURN_IT(status);
+
     float voxelAlpha = data.inputValue(aVoxelAlphaIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
@@ -898,6 +915,12 @@ MStatus FluidDomainNode::compute(const MPlug& plug, MDataBlock& data)
     hOutput.set(minParticleSize);
     hOutput.setClean();
     data.setClean(plug);
+
+	hOutput = data.outputValue(aMaxParticleSizeOut, &status);
+	CHECK_MSTATUS_AND_RETURN_IT(status);
+	hOutput.set(maxParticleSize);
+	hOutput.setClean();
+	data.setClean(plug);
 
     hOutput = data.outputValue(aVoxelAlphaOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);

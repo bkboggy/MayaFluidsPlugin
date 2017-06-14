@@ -34,6 +34,7 @@ public:
     static MObject aShowVoxelsIn;
     static MObject aShowFluidIn;
     static MObject aMinParticleSizeIn;
+	static MObject aMaxParticleSizeIn;
     static MObject aVoxelAlphaIn;
     static MObject aTimestepIn;
     static MObject aDiffusionRateIn;
@@ -73,6 +74,7 @@ public:
     static MObject aShowVoxelsOut;
     static MObject aShowFluidOut;
     static MObject aMinParticleSizeOut;
+	static MObject aMaxParticleSizeOut;
     static MObject aVoxelAlphaOut;
     static MObject aTimestepOut;
     static MObject aDiffusionRateOut;

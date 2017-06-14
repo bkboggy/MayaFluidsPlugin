@@ -10,6 +10,7 @@ MObject FluidLocatorNode::aVelocityVOut;
 MObject FluidLocatorNode::aVelocityWOut;
 MObject FluidLocatorNode::aShowFluidOut;
 MObject FluidLocatorNode::aMinParticleSizeOut;
+MObject FluidLocatorNode::aMaxParticleSizeOut;
 MObject FluidLocatorNode::aShowVoxelsOut;
 MObject FluidLocatorNode::aVoxelAlphaOut;
 MObject FluidLocatorNode::aVoxelCountWidthOut;
@@ -35,6 +36,7 @@ MObject FluidLocatorNode::aVelocityVIn;
 MObject FluidLocatorNode::aVelocityWIn;
 MObject FluidLocatorNode::aShowFluidIn;
 MObject FluidLocatorNode::aMinParticleSizeIn;
+MObject FluidLocatorNode::aMaxParticleSizeIn;
 MObject FluidLocatorNode::aShowVoxelsIn;
 MObject FluidLocatorNode::aVoxelAlphaIn;
 MObject FluidLocatorNode::aVoxelCountWidthIn;
@@ -110,6 +112,11 @@ MStatus FluidLocatorNode::initialize()
     nAttr.setKeyable(false);
     nAttr.setWritable(false);
     addAttribute(aMinParticleSizeOut);
+
+	aMaxParticleSizeOut = nAttr.create("maxParticleSizeOut", "maxParticleSizeOut", MFnNumericData::kFloat);
+	nAttr.setKeyable(false);
+	nAttr.setWritable(false);
+	addAttribute(aMaxParticleSizeOut);
 
     aShowVoxelsOut = nAttr.create("showVoxelsOut", "showVoxelsOut", MFnNumericData::kBoolean);
     nAttr.setWritable(false);
@@ -239,6 +246,14 @@ MStatus FluidLocatorNode::initialize()
     addAttribute(aMinParticleSizeIn);
     attributeAffects(aMinParticleSizeIn, aMinParticleSizeOut);
     attributeAffects(aMinParticleSizeIn, aShowFluidOut);
+
+	aMaxParticleSizeIn = nAttr.create("maxParticleSizeIn", "maxParticleSizeIn", MFnNumericData::kFloat, 1.0f);
+	nAttr.setMin(0.0f);
+	nAttr.setKeyable(true);
+	nAttr.setWritable(true);
+	addAttribute(aMaxParticleSizeIn);
+	attributeAffects(aMaxParticleSizeIn, aMaxParticleSizeOut);
+	attributeAffects(aMaxParticleSizeIn, aShowFluidOut);
 
     aShowVoxelsIn = nAttr.create("showVoxelsIn", "showVoxelsIn", MFnNumericData::kBoolean);
     nAttr.setKeyable(true);
@@ -405,6 +420,8 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
         plug != aVelocityVOut &&
         plug != aVelocityWOut &&
         plug != aShowFluidOut &&
+		plug != aMinParticleSizeOut &&
+		plug != aMaxParticleSizeOut &&
         plug != aShowVoxelsOut &&
         plug != aVoxelAlphaOut &&
         plug != aVoxelCountWidthOut &&
@@ -451,6 +468,9 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
 
     float minParticleSize = data.inputValue(aMinParticleSizeIn, &status).asFloat();
     CHECK_MSTATUS_AND_RETURN_IT(status);
+
+	float maxParticleSize = data.inputValue(aMaxParticleSizeIn, &status).asFloat();
+	CHECK_MSTATUS_AND_RETURN_IT(status);
 
     bool showVoxels = data.inputValue(aShowVoxelsIn, &status).asBool();
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -601,7 +621,7 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     // If showFluid flag is not set to false, simulate the fluid.
     if (showFluid)
     {
-        simulateFluid(name, fluid, minParticleSize, density, domainWidth, domainHeight, domainLength,
+        simulateFluid(name, fluid, minParticleSize, maxParticleSize, density, domainWidth, domainHeight, domainLength,
             voxelCountWidth, voxelCountHeight, voxelCountLength);
     }
  
@@ -661,6 +681,12 @@ MStatus FluidLocatorNode::compute(const MPlug& plug, MDataBlock& data)
     hOutput.set(minParticleSize);
     hOutput.setClean();
     data.setClean(plug);
+
+	hOutput = data.outputValue(aMaxParticleSizeOut, &status);
+	CHECK_MSTATUS_AND_RETURN_IT(status);
+	hOutput.set(maxParticleSize);
+	hOutput.setClean();
+	data.setClean(plug);
 
     hOutput = data.outputValue(aShowVoxelsOut, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -1148,7 +1174,7 @@ void FluidLocatorNode::draw(M3dView& view, const MDagPath& DGpath, M3dView::Disp
 }
 
 // Simulated fluid by drawing spheres in the Maya viewport.
-void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, float minParticleSize, MFloatArray &density,
+void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, float minParticleSize, float maxParticleSize, MFloatArray &density,
     float domainWidth, float domainHeight, float domainLength, int voxelCountWidth, int voxelCountHeight, int voxelCountLength)
 {
 	MSelectionList previous_list;
@@ -1178,9 +1204,9 @@ void FluidLocatorNode::simulateFluid(MString locatorName, MStringArray &fluid, f
                 MString pos = x_pos + " " + y_pos + " " + z_pos;
                 // Cap radius multiplier at 1.
                 float densityVal = density[d_i];
-                if (densityVal > 1)
+                if (densityVal > maxParticleSize)
                 {
-                    densityVal = 1;
+                    densityVal = maxParticleSize;
                 }
                 float radiusVal = (smallest / 2) * densityVal;
                 MString radius(std::to_string(radiusVal).c_str());

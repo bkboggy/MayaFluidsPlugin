@@ -126,6 +126,7 @@ MStatus GenerateFluidCommand::redoIt()
     MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelAlphaOut " + fLocatorName + ".voxelAlphaIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".showFluidOut " + fLocatorName + ".showFluidIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".minParticleSizeOut " + fLocatorName + ".minParticleSizeIn");
+	MGlobal::executeCommand("connectAttr " + fDomainName + ".maxParticleSizeOut " + fLocatorName + ".maxParticleSizeIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountWidthOut " + fLocatorName + ".voxelCountWidthIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountHeightOut " + fLocatorName + ".voxelCountHeightIn");
     MGlobal::executeCommand("connectAttr " + fDomainName + ".voxelCountLengthOut " + fLocatorName + ".voxelCountLengthIn");

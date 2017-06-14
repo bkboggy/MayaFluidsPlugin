@@ -35,7 +35,7 @@ public:
 	static MStatus initialize();
 
     // Simulated fluid by drawing spheres in the Maya viewport.
-    static void simulateFluid(MString locatorName, MStringArray &fluid, float minParticleSize, MFloatArray &density,
+    static void simulateFluid(MString locatorName, MStringArray &fluid, float minParticleSize, float maxParticleSize, MFloatArray &density,
         float domainWidth, float domainHeight, float domainLength, int voxelCountWidth, int voxelCountHeight, int voxelCountLength);
 
     // Clears fluid by deleting spheres and setting the desired size.
@@ -51,6 +51,7 @@ public:
     static MObject aVelocityWOut;
     static MObject aShowFluidOut;
     static MObject aMinParticleSizeOut;
+	static MObject aMaxParticleSizeOut;
     static MObject aShowVoxelsOut;
     static MObject aVoxelAlphaOut;
     static MObject aVoxelCountWidthOut;
@@ -76,6 +77,7 @@ public:
     static MObject aVelocityWIn;
     static MObject aShowFluidIn;
     static MObject aMinParticleSizeIn;
+	static MObject aMaxParticleSizeIn;
     static MObject aShowVoxelsIn;   
     static MObject aVoxelAlphaIn;
     static MObject aVoxelCountWidthIn;
