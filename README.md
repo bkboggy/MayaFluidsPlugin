@@ -17,13 +17,11 @@ Videos demonstrating results of this plugin may be found at:
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=Yrc4ADP0xRs
 " target="_blank"><img src="http://img.youtube.com/vi/Yrc4ADP0xRs/0.jpg" 
 alt="Result #1" width="240" height="180" border="10" /></a>
+
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=h7o_w0TVFBY
 " target="_blank"><img src="http://img.youtube.com/vi/h7o_w0TVFBY/0.jpg" 
 alt="Result #2" width="240" height="180" border="10" /></a>
+
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=rcVG6ZtEgWk
 " target="_blank"><img src="http://img.youtube.com/vi/rcVG6ZtEgWk/0.jpg" 
 alt="Result #3" width="240" height="180" border="10" /></a>
-
-https://www.youtube.com/watch?v=Yrc4ADP0xRs
-https://www.youtube.com/watch?v=h7o_w0TVFBY
-https://www.youtube.com/watch?v=rcVG6ZtEgWk
