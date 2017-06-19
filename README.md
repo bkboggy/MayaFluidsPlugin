@@ -14,6 +14,7 @@ cmds.loadPlugin(pluginPath)
 ```
 
 Videos demonstrating results of this plugin may be found at:
+
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=Yrc4ADP0xRs
 " target="_blank"><img src="http://img.youtube.com/vi/Yrc4ADP0xRs/0.jpg" 
 alt="Result #1" width="240" height="180" border="10" /></a>
