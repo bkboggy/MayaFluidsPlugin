@@ -12,3 +12,8 @@ if loaded:
   cmds.unloadPlugin(pluginName)
 cmds.loadPlugin(pluginPath)
 ```
+
+Videos demonstrating results of this plugin may be found at:
+https://www.youtube.com/watch?v=Yrc4ADP0xRs
+https://www.youtube.com/watch?v=h7o_w0TVFBY
+https://www.youtube.com/watch?v=rcVG6ZtEgWk
